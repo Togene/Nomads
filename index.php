@@ -8,6 +8,10 @@
 	</head>
 	<body>
 		<script src = "js/libs/three.min.js"></script>
+		<script src = "js/helpers/utilities.js"></script>
+		<script src = "js/helpers/matrix.js"></script>
+		<script src = "js/helpers/transform.js"></script>
+		<script src = "js/helpers/gameobject.js"></script>
 		<script src = "js/nomads/nomads.js"></script>
 		<script src = "js/main.js"></script>
 	</body>

@@ -1,0 +1,1 @@
+function dag_to_rad(d){return d * (Math.PI/180);}
