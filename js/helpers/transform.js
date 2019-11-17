@@ -61,31 +61,43 @@ transform.prototype.update = function(){
 
 
 
-transform.prototype.rotate = function(axis, angle){
-    console.error("Doing Rotation");
+transform.prototype.rotate = function(ax, an){
+    var q = new quaternion({axis : ax, angle : an});
+    q.vmul(this.rotation);
+    q.normalized();
+
+    this.rotation = q;
 }
 
 transform.prototype.look_at = function(p, up){
-    console.error("Doing Look At");
+    this.rot = this.get_look_direction(p, up);
 }
 
 transform.prototype.get_look_direction = function(p, up){
-    console.error("Doing Get Look At");
+
+    var m = new matrix();
+    m.init_rotation(p.sub(this.position).normalized, up);
+
+    var q = new quaternion({rot:m});
 }
 
 transform.prototype.get_transformed_position = function(){
     return this.get_parent_matrix().transform(this.position);
 }
 
+transform.prototype.get_transformed_scale = function(){
+    return this.get_parent_matrix().transform(this.scale);
+}
+
+
 transform.prototype.get_transformed_rotation = function(){
-    console.log("TO DO:");
     var parentRotation = new quaternion(0,0,0,1);
 
     if(this.parent != null){
         parentRotation = this.parent.get_transformed_rotation();
     }
 
-    parentRotation.mul(this.rotation);
+    parentRotation.vmul(this.rotation);
 
     return parentRotation;
 }
