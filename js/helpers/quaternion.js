@@ -83,22 +83,35 @@ quaternion.prototype.scale = function(r){
     return new quaternion(x * r, y * r, z * r, w * r);
 }
 
-quaternion.prototype.qmul = function(r){
-    var _w = this.w * r.w - this.x * r.x - this.y * r.y - this.z * r.z;
-    var _x = this.x * r.w + this.w * r.x + this.y * r.z - this.z * r.y;
-    var _y = this.y * r.w + this.w * r.y + this.z * r.x - this.x * r.z;
-    var _z = this.z * r.w + this.w * r.z + this.x * r.y - this.y * r.x;
+quaternion.prototype.q_mul = function(r){
 
-    return new quaternion(_x, _y, _z, _w);
+    if(r instanceof quaternion){
+            
+        var _w = (this.w * r.w) - (this.x * r.x) - (this.y * r.y) - (this.z * r.z);
+        var _x = (this.x * r.w) + (this.w * r.x) + (this.y * r.z) - (this.z * r.y);
+        var _y = (this.y * r.w) + (this.w * r.y) + (this.z * r.x) - (this.x * r.z);
+        var _z = (this.z * r.w) + (this.w * r.z) + (this.x * r.y) - (this.y * r.x);
+
+        return new quaternion(_x, _y, _z, _w);
+    } else {
+        console.error("needs to be quaternion");
+        return new quaternion(-1, -1, -1, -1);
+    }
+
 }
 
-quaternion.prototype.vmul = function(r){
-    var _w = -this.x * r.x - this.y * r.y - this.z * r.z;
-    var _x =  this.w * r.x + this.y * r.z - this.z * r.y;
-    var _y =  this.w * r.y + this.z * r.x - this.x * r.z;
-    var _z =  this.w * r.z + this.x * r.y - this.y * r.x;
+quaternion.prototype.v_mul = function(r){
 
-    return new quaternion(_x, _y, _z, _w);
+    if(r instanceof THREE.Vector3){
+        var _w = (-this.x * r.x) - (this.y * r.y) - (this.z * r.z);
+        var _x = ( this.w * r.x) + (this.y * r.z) - (this.z * r.y);
+        var _y = ( this.w * r.y) + (this.z * r.x) - (this.x * r.z);
+        var _z = ( this.w * r.z) + (this.x * r.y) - (this.y * r.x);
+
+        return new quaternion(_x, _y, _z, _w);
+    }
+
+    return -1;
 }
 
 quaternion.prototype.sub = function(r){

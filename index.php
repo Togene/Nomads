@@ -8,6 +8,11 @@
 	</head>
 	<body>
 		<script src = "js/libs/three.min.js"></script>
+		<script src = "js/libs/OrbitControls.js"></script>
+		<script src = "js/libs/LookControls.js"></script>
+		<script src = "data/resources.js"></script>
+		<script src = "js/helpers/instance_geometry.js"></script>
+		<script src = "js/helpers/antlion.js"></script>
 		<script src = "js/helpers/utilities.js"></script>
 		<script src = "js/helpers/matrix.js"></script>
 		<script src = "js/helpers/quaternion.js"></script>

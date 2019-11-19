@@ -5,7 +5,7 @@ function gameobject(n = "default", child = [], comp = []){
     this.transform = new transform (
         new THREE.Vector3(0,0,0),
         new THREE.Vector3(1,1,1),
-        new THREE.Vector3(0,0,0),
+        new quaternion(0,0,0,1),
     );
     Scene.push(this);
 };
