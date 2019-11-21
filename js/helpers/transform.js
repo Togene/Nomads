@@ -40,14 +40,10 @@ transform.prototype.get_parent_matrix = function(){
     if(this.parent != null && this.parent.hasChanged()){
         this.parent_matrix = (this.parent.get_transformation());
     }
-
     return this.parent_matrix;
 }
 
-
-
 transform.prototype.update = function(){
-
     if(this.old_position != null) {
         this.old_position.set(this.position.x, this.position.y, this.position.z);
         this.old_scale.set(this.scale.x, this.scale.y, this.scale.z);
@@ -58,7 +54,6 @@ transform.prototype.update = function(){
         this.old_rotation = new quaternion(this.rotation.x + 1, this.rotation.y + 1, this.rotation.z + 1,  this.rotation.w + 1);
     }
 }
-
 
 transform.prototype.rotate = function(ax, an){
     var q = new quaternion({axis : ax, angle : an});
@@ -73,7 +68,6 @@ transform.prototype.look_at = function(p, up){
 }
 
 transform.prototype.get_look_direction = function(p, up){
-
     var m = new matrix();
     m.init_rotation(p.sub(this.position).normalized, up);
 
@@ -88,15 +82,12 @@ transform.prototype.get_transformed_scale = function(){
     return this.get_parent_matrix().transform(this.scale);
 }
 
-
 transform.prototype.get_transformed_rotation = function(){
     var parentRotation = new quaternion(0,0,0,1);
 
     if(this.parent != null){
         parentRotation = this.parent.get_transformed_rotation();
-        
     }
-
     return parentRotation.q_mul(this.rotation);
 }
 

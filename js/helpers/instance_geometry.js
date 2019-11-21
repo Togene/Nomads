@@ -1,6 +1,6 @@
 function create_buffer(){
     return {
-        offsets: [],
+        translation: [],
         orientations: [],
         vector: new THREE.Vector4(),
         scales: [],
@@ -8,7 +8,11 @@ function create_buffer(){
         uvoffsets: [],
         animationFrame: [],
         type: [],
-        normals: []
+        normals: [],
+        m0: [], //matrix in segments because set attributes is a bitch :(
+        m1: [],
+        m2: [],
+        m3: []
     };
 }
 
@@ -18,7 +22,7 @@ function PopulateBuffer(position, orient, scale, buffer, renderer){
 
     buffer.vector.set(position.x, position.y, position.z, 0).normalize();
 
-    buffer.offsets.push(
+    buffer.translation.push(
         position.x + buffer.vector.x + renderer.centre_offset.x, 
         position.y + buffer.vector.y + renderer.centre_offset.y, 
         position.z + buffer.vector.z + renderer.centre_offset.z);
@@ -39,6 +43,22 @@ function PopulateBuffer(position, orient, scale, buffer, renderer){
     buffer.type.push(renderer.type);
 
     buffer.normals.push(0.0, 1.0, 0.0);
+
+    buffer.m0.push(
+        renderer.matrix.elements[0],  renderer.matrix.elements[1],  renderer.matrix.elements[2],  renderer.matrix.elements[3],
+    );
+
+    buffer.m1.push(
+        renderer.matrix.elements[4],  renderer.matrix.elements[5],  renderer.matrix.elements[6],  renderer.matrix.elements[7],
+    );
+
+    buffer.m2.push(
+        renderer.matrix.elements[8],  renderer.matrix.elements[9],  renderer.matrix.elements[10], renderer.matrix.elements[11],
+    );
+
+    buffer.m3.push(
+        renderer.matrix.elements[12], renderer.matrix.elements[13], renderer.matrix.elements[14], renderer.matrix.elements[15],
+    )
 }
 
 function CreateInstance(id, world, buffer, spritesheetsize, shader, urlindex, animate, is3D = false) {
@@ -50,7 +70,7 @@ function CreateInstance(id, world, buffer, spritesheetsize, shader, urlindex, an
     geometry.attributes.position = bufferGeometry.attributes.position;
     geometry.attributes.uv = bufferGeometry.attributes.uv;
 
-    offsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.offsets), 3);
+    translationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.translation), 3);
     orientationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.orientations), 4);
     colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.colors), 3);
     uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.uvoffsets), 2);
@@ -58,15 +78,27 @@ function CreateInstance(id, world, buffer, spritesheetsize, shader, urlindex, an
     animationFrameAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animationFrame), 2);
     typeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.type), 1);
     normalsAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.normals), 3);
-   
-    geometry.setAttribute('offset', offsetAttribute);
+    
+    m0Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m0), 4);
+    m1Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m1), 4);
+    m2Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m2), 4);
+    m3Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m3), 4);
+
+    geometry.setAttribute('translation', translationAttribute);
     geometry.setAttribute('orientation', orientationAttribute);
     geometry.setAttribute('col', colorAttribute);
     geometry.setAttribute('uvoffset', uvOffsetAttribute);
-    geometry.setAttribute('scaleInstance', scaleAttribute);
+    geometry.setAttribute('scale', scaleAttribute);
     geometry.setAttribute('animationFrame', animationFrameAttribute);
     geometry.setAttribute('type', typeAttribute);
     geometry.setAttribute('normal', normalsAttribute);
+    
+    geometry.setAttribute('m0', m0Attribute);
+    geometry.setAttribute('m1', m1Attribute);
+    geometry.setAttribute('m2', m2Attribute);
+    geometry.setAttribute('m3', m3Attribute);
+
+//    console.log(buffer.m0);
 
     var texture = new THREE.TextureLoader().load(MapFileurl[urlindex]);
 

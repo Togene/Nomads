@@ -1,3 +1,6 @@
+const pixel = 0.03125;
+const sprite_size = pixel * 32; // would be just 1 :| 
+
 function dag_to_rad(d){return d * (Math.PI/180);}
 
 //map to Sprite Shader
@@ -5,14 +8,12 @@ function MapToSS(x, y) {
     return new THREE.Vector2((1 / 8) * x, (1 / 8) * y);
 }
 
-
 function distanceXY(x0, y0, x1, y1) {
     this.dx = x1 - x0;
     this.dy = y1 - y0;
 
     return Math.sqrt(dx * dx + dy * dy);
 }
-
 
 function Clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
@@ -75,7 +76,6 @@ function GetVectorNormalize(vector) {
 
     return new THREE.Vector3(vector.x / mag, vector.y / mag, vector.z / mag);
 }
-
 
 /*
  * Easing Functions - inspired from http://gizma.com/easing/
