@@ -6,16 +6,6 @@ var animated_sprites = new THREE.Object3D();
 var solid_sprites = new THREE.Object3D();
 //--------------------------------------------
 
-//------------- MOVEMENT ----------------
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
-
-var velocity = new THREE.Vector3();
-var direction = new THREE.Vector3();
-//------------- MOVEMENT ----------------
-
 var newobject1 = new gameobject("poop");
 var newobject2 = new gameobject();
 
@@ -41,8 +31,6 @@ function game_bootstrap(data){
 
     game_resources = data;
     
-    scene.add(controls.getObject());
-
     scene.add(cube1);
     scene.add(cube2);
 
@@ -74,7 +62,7 @@ function TestCreatures(){
     for(var i = 0; i < 1000; i++){
         var crab = new gameobject("crab");
         
-        crab.transform.position = new THREE.Vector3(randomRange(-100, 100),-15,randomRange(-100, 100)),
+        crab.transform.position = new THREE.Vector3(randomRange(-100, 100),0,randomRange(-100, 100)),
         crab.transform.rotation = new quaternion( 0, 0, 0, 1 );
         crab.transform.scale = new THREE.Vector3(5,5,5);
 
@@ -105,9 +93,8 @@ function TesTTree(){
     var crab_shader = get_data("instance_shader");
     var buffer = create_buffer();
 
-
     for(var i = 0; i < 100; i++){
-        var vec = new THREE.Vector3(randomRange(-100, 100), -15, randomRange(-100, 100));
+        var vec = new THREE.Vector3(randomRange(-100, 100), 0, randomRange(-100, 100));
         create_face(0, vec, buffer);
         create_face(45, vec, buffer);
         create_face(135, vec, buffer);
@@ -217,7 +204,6 @@ function update(delta){
     newobject1.transform.rotation.y += .5;
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
-    movement(delta);
 }
 
 function shader_update(){
@@ -242,20 +228,4 @@ function shader_update(){
     }
 }
 
-function movement(delta){
-    
-    velocity.x -= velocity.x * 2.0 * delta; // drag
-    velocity.z -= velocity.z * 2.0 * delta; // drag
-
-    direction.z = Number(moveForward) - Number(moveBackward);
-    direction.x = Number(moveLeft) - Number(moveRight);
-    direction.normalize(); // this ensures consistent movements in all directions
-
-    if (moveForward  || moveBackward ) velocity.z -= direction.z * 1200.0 * delta;
-    if (moveLeft  || moveRight ) velocity.x -= direction.x * 1200.0 * delta;
-
-    controls.getObject().translateX(velocity.x * delta);
-    controls.getObject().translateY(velocity.y * delta);
-    controls.getObject().translateZ(velocity.z * delta);
-}
 
