@@ -24,6 +24,14 @@
 		float AbsoluteAngle(float angle) {
     		return (mod(angle, 360.0)) >= 0.0 ? angle : (angle + 360.0);
 		}
+		
+		// Author @patriciogv - 2015
+		// http://patriciogonzalezvivo.com
+		float random (vec2 st) {
+				return fract(sin(dot(st.xy,
+									vec2(12.9898,78.233)))*
+					43758.5453123);
+		}
 
 		void main() {
 			float uvTime = 1.0;
@@ -42,6 +50,7 @@
 				float index = ceil(mod(normalizedAngle * 4.0, 4.0) - 1.0);
 
 				uvTime = time;
+				float randx = clamp(random(framePass), 0.0, framePass.x);
 				float timeOffsetX = ceil(mod(time*2.0, (framePass.x))-1.0)/spritesheetsizePass.x;
 				
 				float yUvOffset = vUv.y;

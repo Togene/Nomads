@@ -2,6 +2,7 @@
 const MapFileurl =[
     'img/sprite_sheets/critters.png',
     'img/sprite_sheets/trees.png',
+    'img/sprite_sheets/sky.png',
 ];
 
 function raw_resource(n, t, d){

@@ -123,6 +123,11 @@ function CreateInstance(id, world, buffer, spritesheetsize, shader, urlindex, an
         time: { type: "f", value: 1.0 },
     }
 
+    if(shader == undefined){
+        console.error("shader wasnt found, using defualt.");
+        shader = get_data("instance_shader");
+    }
+
     var material = new THREE.RawShaderMaterial({
         uniforms:
             THREE.UniformsUtils.merge([
