@@ -29,7 +29,7 @@ function animate(){
     game_update(clock.getDelta());
 
     renderer.render(scene, camera);
-};
+}
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;

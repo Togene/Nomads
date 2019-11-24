@@ -12,6 +12,7 @@
 				<script src = "js/libs/PointerLockControls.js"></script>
 			<!-- THREE libs -->
 			<script src = "data/resources.js"></script>
+			
 			<script src = "js/helpers/antlion.js"></script>
 			<script src = "js/helpers/instance_geometry.js"></script>
 			<script src = "js/helpers/utilities.js"></script>

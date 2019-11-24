@@ -17,10 +17,11 @@ var material2 = new THREE.MeshBasicMaterial({color:0xff0000});
 var cube1 = new THREE.Mesh(geometry, material1);
 var cube2 = new THREE.Mesh(geometry, material2);
 
-
 var game_resources;
 var game_time = 0;
 var game_speed = 2;
+
+var test_trees = [];
 
 function game_bootstrap(data){
     
@@ -52,57 +53,73 @@ function game_bootstrap(data){
     cube2.matrixAutoUpdate = false;
 
     TestCreatures();
-    TesTTree();
+    TestTree();
 }
 
 function TestCreatures(){
     var crab_shader = get_data("instance_shader");
     var buffer = create_buffer();
+    var attributes = [];
 
-    for(var i = 0; i < 1000; i++){
+    for(var i = 0; i < 10; i++){
         var crab = new gameobject("crab");
-        
+   
         crab.transform.position = new THREE.Vector3(randomRange(-100, 100),0,randomRange(-100, 100)),
         crab.transform.rotation = new quaternion( 0, 0, 0, 1 );
         crab.transform.scale = new THREE.Vector3(1,1,1);
 
-        var decomposer = {
-            ssIndex : [ MapToSS(0, 0),],
-            animationFrames : new THREE.Vector2(3, 1),
-            colors : [ new THREE.Color(0xff5a5b) ],
-            centre_offset :   new THREE.Vector3(0, 0, 0),
-            type :    0,
-            matrix : crab.transform.get_transformation().toMatrix4()
-        };
+        var crab_decomposer = new decomposer(
+            [ MapToSS(0, 0),],
+            new THREE.Vector2(3, 1),
+            [ new THREE.Color(0xff5a5b) ],
+            new THREE.Vector3(0, 0, 0),
+           crab.transform,
+           0,
+           attributes,
+           buffer.index,
+        );
         
+        crab.add_componenent(crab_decomposer);
+
         PopulateBuffer(
             crab.transform.position, 
             crab.transform.rotation, 
             crab.transform.scale,
             buffer, 
-            decomposer)
+            crab_decomposer);
+
     }
 
-    CreateInstance("Test", animated_sprites, buffer, SpriteSheetSize, crab_shader, 0, true, false)
+    CreateInstance(
+    "Test", 
+    animated_sprites, 
+    buffer, 
+    attributes, 
+    SpriteSheetSize, 
+    crab_shader, 
+    0, 
+    true, 
+    false);
 
     scene.add(animated_sprites);
 }
 
-function TesTTree(){
+function TestTree(){
 
     var shader = get_data("instance_shader");
-    
     var buffer = create_buffer();
+    var attributes = [];
 
     for(var i = 0; i < 100; i++){
-
+        
         var root = new gameobject("root");
+        
         root.transform.position = new THREE.Vector3(0, -110, 0);
 
         var vec = new THREE.Vector3(randomRange(-100, 100), 0, randomRange(-100, 100));
-        create_face(0, vec, buffer, root);
-        create_face(45, vec, buffer, root);
-        create_face(135, vec, buffer, root);
+        create_face(0, vec, buffer, attributes, root);
+        create_face(45, vec, buffer, attributes, root);
+        create_face(135, vec, buffer, attributes, root);
         
         leaves = new gameobject("leaves");
         root.add_child(leaves);
@@ -114,10 +131,14 @@ function TesTTree(){
             new THREE.Vector2(1, 1),
             [ new THREE.Color(0x008B00) ],
             new THREE.Vector3(0, 0, 0),
-            root.transform.get_transformation().toMatrix4(),
+            root.transform,
             0,
+            attributes,
+            buffer.index,
         );
-    
+        
+        leaves.add_componenent(leaves_decomposer);
+
         PopulateBuffer(
             leaves.transform.get_transformed_position(), 
             leaves.transform.get_transformed_rotation(), 
@@ -126,13 +147,15 @@ function TesTTree(){
             leaves_decomposer);
     }
 
-    CreateInstance("Test", solid_sprites, buffer, SpriteSheetSize, shader, 1, false, false);
+    test_trees.push(root);
+    CreateInstance("Test", solid_sprites, buffer, attributes, SpriteSheetSize, shader, 1, false, false);
+
 }
 
-function create_face(y_rot, position, buffer, root){
+function create_face(y_rot, position, buffer, attributes, root){
          
-    var trunk = new gameobject();
-    var branch = new gameobject();
+    var trunk = new gameobject("trunk");
+    var branch = new gameobject("branch");
 
     root.add_child(trunk);
     trunk.add_child(branch);
@@ -146,9 +169,13 @@ function create_face(y_rot, position, buffer, root){
         new THREE.Vector2(1, 1),
         [ new THREE.Color(0x78664c) ],
         new THREE.Vector3(0, 0, 0),
-        root.transform.get_transformation().toMatrix4(),
+        root.transform,
         1,
+        attributes,
+        buffer.index,
     );
+    
+    root.add_componenent(root_decomposer);
 
     PopulateBuffer(
         root.transform.get_transformed_position(), 
@@ -164,9 +191,13 @@ function create_face(y_rot, position, buffer, root){
         new THREE.Vector2(1, 2),
        [ new THREE.Color(0x78664c) ],
         new THREE.Vector3(0, 0, 0),
-        trunk.transform.get_transformation().toMatrix4(),
+        trunk.transform,
         1,
+        attributes,
+        buffer.index,
     );
+    
+    trunk.add_componenent(trunk_decomposer);
 
     PopulateBuffer(
         trunk.transform.get_transformed_position(), 
@@ -185,9 +216,13 @@ function create_face(y_rot, position, buffer, root){
         new THREE.Vector2(1, 3),
         [ new THREE.Color(0x78664c) ],
         new THREE.Vector3(0, 0, 0),
-        branch.transform.get_transformation().toMatrix4(),
+        branch.transform,
         1,
+        attributes,
+        buffer.index,
     );
+    
+    branch.add_componenent(branch_decomposer);
 
     PopulateBuffer(
         branch.transform.get_transformed_position(),
@@ -204,8 +239,10 @@ function game_update(delta){
         Scene[i].update();
     }
 
-    shader_update();
+    shader_update(delta);
     update(delta);
+    movement(delta);
+    update_sky(delta);
 }
 
 function update(delta){
@@ -213,11 +250,15 @@ function update(delta){
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
     
-    movement(delta);
-    update_sky(delta);
+        
+    for(var i = 0; i < test_trees.length; i++){
+        test_trees[i].transform.position = new THREE.Vector3(
+            0,0,0
+        );
+    }
 }
 
-function shader_update(){
+function shader_update(delta){
     if (animated_sprites.children.length != 0) {
         for (var i = 0; i < animated_sprites.children.length; i++) {
             if (animated_sprites.children[i] != undefined) {

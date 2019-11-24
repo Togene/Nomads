@@ -23,17 +23,22 @@ gameobject.prototype.update = function(){
 
     this.transform.update();
 
+    if(this.components != null){
+        for(var i = 0; i < this.components.length; i++){
+            this.components[i].update();
+        }
+    }
+    
     if(this.children != null){
         for(var i = 0; i < this.children.length; i++){
             this.children[i].update();
         }
     }
-
-    
 }
 
 gameobject.prototype.add_componenent = function(c){
     this.components.push(c);
+    c.set_parent(this);
 }
 
 gameobject.prototype.information = function(){

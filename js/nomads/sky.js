@@ -14,13 +14,23 @@ var sky_colors = [
 function sky_init(){
     var shader = get_data("instance_shader");
     var buffer = create_buffer();
+    var attributes = [];
 
+    star_init(buffer, attributes);
+    sun_init(buffer, attributes);
+    moon_init(buffer, attributes);
 
-    star_init(buffer);
-    sun_init(buffer);
-    moon_init(buffer);
-
-    CreateInstance("stars", animated_sprites, buffer, SpriteSheetSize, shader, 2, true, false);
+    CreateInstance(
+        "stars", 
+        animated_sprites, 
+        buffer, 
+        attributes,
+        SpriteSheetSize, 
+        shader, 
+        2, 
+        true, 
+        false
+        );
 }
 
 function update_sky(delta){
@@ -41,11 +51,12 @@ function update_sky(delta){
         sky_lerp_index);
     renderer.setClearColor(current_color.getHex(), 1 );
 
-   sky.transform.rotation.x += 90;
+    sky.transform.rotation.y += 1;
 }
 
 //TODO: Create Star Map :|
-function star_init(buffer, parent){
+function star_init(buffer, attributes){
+
     var stars = new gameobject("stars");
     sky.add_child(stars);
     var min_distance = 300;
@@ -55,8 +66,7 @@ function star_init(buffer, parent){
         var star = new gameobject("star");
         stars.add_child(star);
 
-        var direction = new THREE.Vector3
-        (
+        var direction = new THREE.Vector3(
             randomRange(-1, 1), 
             randomRange(-1, 1), 
             randomRange(-1, 1)
@@ -64,8 +74,7 @@ function star_init(buffer, parent){
         
         direction.normalize();
 
-        stars.transform.position = new THREE.Vector3
-        (
+        stars.transform.position = new THREE.Vector3(
             direction.x * randomRange(min_distance, max_distance), 
             direction.y * randomRange(min_distance, max_distance), 
             direction.z * randomRange(min_distance, max_distance)
@@ -89,8 +98,10 @@ function star_init(buffer, parent){
               new THREE.Color(0xA87BFF),
             ],
             new THREE.Vector3(0, 0, 0),
-            star.transform.get_transformation().toMatrix4(),
+            star.transform,
             0,
+            attributes,
+            buffer.index,
         );
 
         PopulateBuffer(
@@ -98,11 +109,13 @@ function star_init(buffer, parent){
             star.transform.get_transformed_rotation(), //dont need this anymore
             new THREE.Vector3(15, 15, 15), //dont need this anymore
             buffer, 
-            star_decomposer);
+            star_decomposer
+            );
     }
 }
 
-function sun_init(buffer, parent){
+function sun_init(buffer, attributes){
+
     var sun = new gameobject("sun");
     sky.add_child(sun);
     sun.transform.position = new THREE.Vector3(0, 1000, 0);
@@ -118,8 +131,10 @@ function sun_init(buffer, parent){
           new THREE.Color(0xA87BFF),
         ],
         new THREE.Vector3(0, 0, 0),
-        sun.transform.get_transformation().toMatrix4(),
+        sun.transform,
         0,
+        attributes,
+        buffer.index,
     );
 
     PopulateBuffer(
@@ -128,22 +143,27 @@ function sun_init(buffer, parent){
         new THREE.Vector3(100, 100, 100), //dont need this anymore
         buffer, 
         sun_decomposer);
+
+    console.log(buffer.index);
 }
 
-function moon_init(buffer, parent){
+function moon_init(buffer, attributes){
+
     var moon = new gameobject("moon");
     sky.add_child(moon);
     moon.transform.position = new THREE.Vector3(0, -1000, 0);
 
-    var moon_decomposer = new decomposer(
+    var moon_decomposer = new decomposer (
         [ MapToSS(0, 2),],
         new THREE.Vector2(1,1),
         [ 
           new THREE.Color(0xFFD27D),
         ],
         new THREE.Vector3(0, 0, 0),
-        moon.transform.get_transformation().toMatrix4(),
+        moon.transform,
         0,
+        attributes,
+        buffer.index,
     );
 
     PopulateBuffer(
@@ -153,4 +173,5 @@ function moon_init(buffer, parent){
         buffer, 
         moon_decomposer);
 
+    console.log(buffer.index);
 }
