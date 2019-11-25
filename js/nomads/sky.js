@@ -16,9 +16,9 @@ function sky_init(){
     var buffer = create_buffer();
     var attributes = [];
 
-    star_init(buffer, attributes);
-    sun_init(buffer, attributes);
-    moon_init(buffer, attributes);
+    //star_init(buffer, attributes);
+   // sun_init(buffer, attributes);
+   // moon_init(buffer, attributes);
 
     CreateInstance(
         "stars", 

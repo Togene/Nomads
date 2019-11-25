@@ -21,8 +21,6 @@ gameobject.prototype.add_child = function(o){
 
 gameobject.prototype.update = function(){
 
-    this.transform.update();
-
     if(this.components != null){
         for(var i = 0; i < this.components.length; i++){
             this.components[i].update();
@@ -34,6 +32,9 @@ gameobject.prototype.update = function(){
             this.children[i].update();
         }
     }
+
+    this.transform.update();
+
 }
 
 gameobject.prototype.add_componenent = function(c){

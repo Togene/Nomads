@@ -59,12 +59,12 @@
 		void main() {
 
 			vec4 finalPosition = vec4(0);
-			mat4 transform_matrix = mat4( m0, m1, m2, m3);
+			mat4 transform_matrix = mat4(m0, m1, m2, m3);
 
 			if(type == 0.0){
 				//---------------------------------------------------Normal Sprite ---------------------------------------------------
 				/* Sprites Face The Camera*/
-				vec4 mvPosition = modelViewMatrix * vec4( translation * 1.0, 1.0 );
+				vec4 mvPosition = viewMatrix * transform_matrix * vec4( translation * 1.0, 1.0 );
 				mvPosition.xyz += (position * scale);
 				finalPosition = projectionMatrix * mvPosition;
 				//---------------------------------------------------Normal Sprite ---------------------------------------------------

@@ -19,31 +19,27 @@ function decomposer(ss, frames, colors, offset, trans, type, attributes, index){
 }
 
 decomposer.prototype.update = function(){
-    //if diffrent that is
-    this.update_attributes_test();
     if(this.transform.hasChanged()){
-       //this.matrix = this.transform.get_transformation().toMatrix4();
-       //this.update_attributes();
-       // this.transform.update();
+       //this.attribute_debug();
+       this.matrix = this.transform.get_transformation().toMatrix4();
+       //have to tell the buffer/instance_geometry to update aswell
+       this.update_attributes();
     }
-    //have to tell the buffer/instance_geometry to update aswell
-}
+}    
 
-decomposer.prototype.update_attributes_test = function(){
+decomposer.prototype.attribute_debug = function(){
     var color_attribute = this.attributes_refrence[4];
 
-    color_attribute.setXYZ(this.buffer_idx, 0,1,0);
+    color_attribute.setXYZ(this.buffer_idx, 0,randomRange(0, 1),0);
     color_attribute.needsUpdate = true;
 }
 
 decomposer.prototype.update_attributes = function(){
-
-    //console.log(this.parent.name);
-
     var m0_attribute = this.attributes_refrence[0];
     var m1_attribute = this.attributes_refrence[1];
     var m2_attribute = this.attributes_refrence[2];
     var m3_attribute = this.attributes_refrence[3];
+
     //buffer is a temp data pass
     //data is stored in attributes that the GPU uses
     //here we access the attributes array's stored in "attributes"
