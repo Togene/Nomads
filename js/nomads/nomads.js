@@ -43,9 +43,11 @@ function game_bootstrap(data){
 
     newobject2.transform.position = new THREE.Vector3(0,1,0);
     newobject1.add_child(newobject2);
-    for(var i = 0; i < Scene.length; i++){
-        Scene[i].information();
-    }
+    
+   //for(var i = 0; i < Scene.length; i++){
+   //    Scene[i].information();
+   //}
+    
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
     cube1.matrixAutoUpdate = false;
@@ -99,8 +101,6 @@ function TestCreatures(){
     0, 
     true, 
     false);
-
-    scene.add(animated_sprites);
 }
 
 function TestTree(){
@@ -230,6 +230,8 @@ function create_face(y_rot, tree, buffer, attributes){
         new THREE.Vector3(5, 5, 5),
         buffer, 
         branch_decomposer);
+
+    return branch.transform.get_transformed_position().y;
 }
 
 
@@ -256,16 +258,15 @@ function update(delta){
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
 
-   for(var i = 0; i < test_trees.length; i++){
-        test_trees[i].transform.position.y = Math.sin(game_time);
-
-        test_trees[i].transform.rotation.y += 1;
-   }
-
-    for(var i = 0; i < test_crabs.length; i++){
-        test_crabs[i].transform.position.y = Math.sin(game_time);
-        test_trees[i].transform.rotation.y += 1;
-    }
+   //for(var i = 0; i < test_trees.length; i++){
+   //     test_trees[i].transform.position.y = Math.sin(game_time);
+   //     test_trees[i].transform.rotation.y += 1;
+   //}
+//
+   // for(var i = 0; i < test_crabs.length; i++){
+   //     test_crabs[i].transform.position.y = Math.sin(game_time);
+   //     test_trees[i].transform.rotation.y += 1;
+   // }
 
 }
 
