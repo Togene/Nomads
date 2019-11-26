@@ -22,22 +22,28 @@ transform.prototype.hasChanged = function(){
     return false;
 }
 
-transform.prototype.get_transformation = function(){
+transform.prototype.get_transformation = function(no_rot){
     var t = new matrix();
     t.init_translation(this.position.x, this.position.y, this.position.z);
     var r = new matrix();
-    r.init_rotation(this.rotation.x, this.rotation.y, this.rotation.z);
+    
+    if(!no_rot){
+        r.init_rotation(this.rotation.x, this.rotation.y, this.rotation.z);
+    } else {
+        r.init_identity();
+    }
+    
     var s = new matrix();
     s.init_scale(this.scale.x, this.scale.y, this.scale.z);
 
-    var p = this.get_parent_matrix();
+    var p = this.get_parent_matrix(no_rot);
 
     return p.mul(t.mul(r.mul(s)));
 }
 
-transform.prototype.get_parent_matrix = function(){
+transform.prototype.get_parent_matrix = function(no_rot){
     if(this.parent != null && this.parent.hasChanged()){
-        this.parent_matrix = (this.parent.get_transformation());
+        this.parent_matrix = (this.parent.get_transformation(no_rot));
     }
     return this.parent_matrix;
 }

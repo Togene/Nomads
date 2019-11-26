@@ -112,6 +112,7 @@ function CreateInstance(id, world, buffer, attributes, spritesheetsize, shader, 
         m2Attribute,
         m3Attribute,
         colorAttribute,
+        typeAttribute
     );
 
     var texture = new THREE.TextureLoader().load(MapFileurl[urlindex]);

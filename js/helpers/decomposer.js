@@ -21,7 +21,14 @@ function decomposer(ss, frames, colors, offset, trans, type, attributes, index){
 decomposer.prototype.update = function(){
     if(this.transform.hasChanged()){
        //this.attribute_debug();
-       this.matrix = this.transform.get_transformation().toMatrix4();
+
+       if(this.attributes_refrence[5].getX(this.buffer_idx) == 1){
+            this.matrix = this.transform.get_transformation().toMatrix4();
+       } else {
+            this.matrix = this.transform.get_transformation(true).toMatrix4();
+       }
+      
+       
        //have to tell the buffer/instance_geometry to update aswell
        this.update_attributes();
     }

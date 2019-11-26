@@ -65,7 +65,7 @@ function TestCreatures(){
         test_crabs.push(crab);
         crab.transform.position = new THREE.Vector3(randomRange(-100, 100),0,randomRange(-100, 100)),
         crab.transform.rotation = new quaternion( 0, 0, 0, 1 );
-        crab.transform.scale = new THREE.Vector3(1,1,1);
+        crab.transform.scale = new THREE.Vector3(5,5,5);
 
         var crab_decomposer = new decomposer(
             [ MapToSS(0, 0),],
@@ -111,35 +111,40 @@ function TestTree(){
 
     for(var i = 0; i < 122; i++){
         
-        var vec = new THREE.Vector3(randomRange(-100, 100), 0, randomRange(-100, 100));
-        create_face(0, vec, buffer, attributes);
-        create_face(45, vec, buffer, attributes);
-        create_face(135, vec, buffer, attributes);
+        var tree = new gameobject("tree");
+        test_trees.push(tree);
+        tree.transform.position = new THREE.Vector3(randomRange(-100, 100), 0, randomRange(-100, 100));
+        tree.transform.scale = new THREE.Vector3(5,5,5);
+
+        create_face(0, tree, buffer, attributes);
+        create_face(45, tree, buffer, attributes);
+        create_face(135, tree, buffer, attributes);
         
-        //leaves = new gameobject("leaves");
-        //root.add_child(leaves);
+        leaves = new gameobject("leaves");
+        
+        tree.add_child(leaves);
 
-        //leaves.transform.position = new THREE.Vector3(0, pixel*50, 0);
+        leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
 
-        //var leaves_decomposer = new decomposer(
-        //    [ MapToSS(3, 0),],
-        //    new THREE.Vector2(1, 1),
-        //    [ new THREE.Color(0x008B00) ],
-        //    new THREE.Vector3(0, 0, 0),
-        //    root.transform,
-        //    0,
-        //    attributes,
-        //    buffer.index,
-        //);
-        //
-        //leaves.add_componenent(leaves_decomposer);
+        var leaves_decomposer = new decomposer(
+            [ MapToSS(3, 0),],
+            new THREE.Vector2(1, 1),
+            [ new THREE.Color(0x008B00) ],
+            new THREE.Vector3(0, 0, 0),
+            leaves.transform,
+            0,
+            attributes,
+            buffer.index,
+        );
+        
+        leaves.add_componenent(leaves_decomposer);
 
-        //PopulateBuffer(
-        //    leaves.transform.get_transformed_position(), 
-        //    leaves.transform.get_transformed_rotation(), 
-        //    new THREE.Vector3(10, 10, 10), 
-        //    buffer, 
-        //    leaves_decomposer);
+        PopulateBuffer(
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(10, 10, 10), 
+            buffer, 
+            leaves_decomposer);
     }
 
     
@@ -147,19 +152,17 @@ function TestTree(){
 
 }
 
-function create_face(y_rot, p, buffer, attributes){
+function create_face(y_rot, tree, buffer, attributes){
     
     var root = new gameobject("root");
     var trunk = new gameobject("trunk");
     var branch = new gameobject("branch");
 
+    tree.add_child(root);
     root.add_child(trunk);
-    test_trees.push(root);
     trunk.add_child(branch);
 
-    root.transform.position = new THREE.Vector3(p.x,p.y,p.z);;
     root.transform.rotation = new quaternion(0, y_rot, 0, 1 );
-    root.transform.scale = new THREE.Vector3(5,5,5);
     
     var root_decomposer = new decomposer(
         [ MapToSS(0, 0),],
@@ -261,6 +264,7 @@ function update(delta){
 
     for(var i = 0; i < test_crabs.length; i++){
         test_crabs[i].transform.position.y = Math.sin(game_time);
+        test_trees[i].transform.rotation.y += 1;
     }
 
 }
