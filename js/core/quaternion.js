@@ -244,3 +244,6 @@ quaternion.prototype.qset = function(q){
 quaternion.prototype.equals = function(q){
     return this.x == q.x && this.y == q.y && this.z == q.z && this.w == q.w;
 }
+
+
+quaternion.prototype.name = "quaternion";

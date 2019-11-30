@@ -37,7 +37,7 @@ gameobject.prototype.update = function(){
 
 }
 
-gameobject.prototype.add_componenent = function(c){
+gameobject.prototype.add_component = function(c){
     this.components.push(c);
     c.set_parent(this);
 }
@@ -46,3 +46,35 @@ gameobject.prototype.information = function(){
     console.log("Object:", this);
     console.log("Transform: ", this.transform);
 }
+
+gameobject.prototype.get_component = function(n){
+
+    if(typeof n !== "string"){
+        console.error("Must Be of Type String.");
+        return undefined;
+    }
+
+    for(var i = 0; i < this.components.length; i++){
+        if(this.components[i].name == n){
+            return this.components[i];
+        }
+    }
+}
+
+gameobject.prototype.has_component = function(n){
+    
+    if(typeof n !== "string"){
+        console.error("Must Be of Type String.");
+        return false;
+    }
+
+    for(var i = 0; i < this.components.length; i++){
+        if(this.components[i].name == n){
+            return true
+        }
+    }
+
+    return false;
+}
+
+gameobject.prototype.name = "gameobject";

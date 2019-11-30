@@ -30,6 +30,7 @@ function game_bootstrap(data){
     
     controller_init();
     sky_init();
+    collision_init();
 
     scene.add(cube1);
     scene.add(cube2);
@@ -55,6 +56,15 @@ function game_bootstrap(data){
     
     TestCreatures();
     TestTree();
+
+
+    for(var i = 0; i < Scene.length; i++){
+
+        if(Scene[i].has_component("aabb"))
+            far_quad_tree_insert(Scene[i]);
+        //Scene[i].information();
+    }
+
 }
 
 function TestCreatures(){
@@ -62,10 +72,13 @@ function TestCreatures(){
     var buffer = create_buffer();
     var attributes = [];
 
-    for(var i = 0; i < 100; i++){
+    for(var i = 0; i < 2; i++){
+        for(var j = 0; j < 2; j++){
         var crab = new gameobject("crab");
+        crab.add_component(new aabb(1));
+
         test_crabs.push(crab);
-        crab.transform.position = new THREE.Vector3(randomRange(-100, 100),0,randomRange(-100, 100)),
+        crab.transform.position = new THREE.Vector3(i*4,0,j*4),
         crab.transform.rotation = new quaternion( 0, 0, 0, 1 );
         crab.transform.scale = new THREE.Vector3(5,5,5);
 
@@ -80,7 +93,7 @@ function TestCreatures(){
            buffer.index,
         );
         
-        crab.add_componenent(crab_decomposer);
+        crab.add_component(crab_decomposer);
 
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),
@@ -88,6 +101,7 @@ function TestCreatures(){
             crab.transform.scale,
             buffer, 
             crab_decomposer);
+        }
 
     }
 
@@ -109,9 +123,13 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    for(var i = 0; i < 122; i++){
+    for(var i = 0; i < 4; i++){
         
         var tree = new gameobject("tree");
+
+        tree.add_component(new aabb(1));
+        
+        
         test_trees.push(tree);
         tree.transform.position = new THREE.Vector3(randomRange(-100, 100), 0, randomRange(-100, 100));
         tree.transform.scale = new THREE.Vector3(5,5,5);
@@ -125,7 +143,7 @@ function TestTree(){
         tree.add_child(leaves);
 
         leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
-
+        tree.get_component("aabb");
         var leaves_decomposer = new decomposer(
             [ MapToSS(3, 0),],
             new THREE.Vector2(1, 1),
@@ -137,7 +155,7 @@ function TestTree(){
             buffer.index,
         );
         
-        leaves.add_componenent(leaves_decomposer);
+        leaves.add_component(leaves_decomposer);
 
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),
@@ -175,7 +193,7 @@ function create_face(y_rot, tree, buffer, attributes){
         buffer.index,
     );
     
-    root.add_componenent(root_decomposer);
+    root.add_component(root_decomposer);
 
     PopulateBuffer(
         root.transform.get_transformed_position(), 
@@ -197,7 +215,7 @@ function create_face(y_rot, tree, buffer, attributes){
         buffer.index,
     );
     
-    trunk.add_componenent(trunk_decomposer);
+    trunk.add_component(trunk_decomposer);
 
     PopulateBuffer(
         trunk.transform.get_transformed_position(), 
@@ -222,7 +240,7 @@ function create_face(y_rot, tree, buffer, attributes){
         buffer.index,
     );
     
-    branch.add_componenent(branch_decomposer);
+    branch.add_component(branch_decomposer);
 
     PopulateBuffer(
         branch.transform.get_transformed_position(),
@@ -242,6 +260,7 @@ function create_face(y_rot, tree, buffer, attributes){
 function game_update(delta){
     game_time += delta * game_speed;
 
+    collision_update(delta);
 
     for(var i = 0; i < Scene.length; i++){
         Scene[i].update();

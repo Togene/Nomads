@@ -102,3 +102,5 @@ matrix.prototype.toMatrix4 = function(){
         this.m[3][0], this.m[3][1], this.m[3][2], this.m[3][3],
     );
 }
+
+matrix.prototype.name = "matrix";

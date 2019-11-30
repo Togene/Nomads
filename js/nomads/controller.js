@@ -17,6 +17,7 @@ function controller_init(){
 }
 
 function controller_gui_init(){
+
     var blocker = document.getElementById( 'blocker' );
     var instructions = document.getElementById( 'instructions' );
     instructions.addEventListener( 'click', function () {
@@ -100,6 +101,8 @@ function movement(delta){
             direction.normalize(); // this ensures consistent movements in all directions
             if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
             if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
+
+
             if ( onObject === true ) {
                 velocity.y = Math.max( 0, velocity.y );
                 canJump = true;
@@ -107,11 +110,13 @@ function movement(delta){
             controls.moveRight( - velocity.x * delta );
             controls.moveForward( - velocity.z * delta );
             controls.getObject().position.y += ( velocity.y * delta ); // new behavior
+            
             if ( controls.getObject().position.y < 0 ) {
                 velocity.y = 0;
                 controls.getObject().position.y = 0;
                 canJump = true;
             }
+
             prevTime = time;
         }
     }

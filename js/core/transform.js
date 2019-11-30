@@ -97,3 +97,5 @@ transform.prototype.set_parent = function(t){
 transform.prototype.set_position = function(p){
     this.position = p;
 }
+
+transform.prototype.name = "transform";

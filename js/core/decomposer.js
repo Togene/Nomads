@@ -87,3 +87,5 @@ decomposer.prototype.update_attributes = function(){
 decomposer.prototype.set_parent = function(p){
     this.parent = p;
 }
+
+decomposer.prototype.name = "decomposer";

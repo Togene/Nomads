@@ -94,7 +94,7 @@ function prime_star_init(buffer, attributes){
             buffer.index,
         );
         
-        star.add_componenent(star_decomposer);
+        star.add_component(star_decomposer);
 
         PopulateBuffer(
             new THREE.Vector3(
@@ -133,7 +133,7 @@ function sun_init(buffer, attributes){
         buffer.index,
     );
     
-    sun.add_componenent(sun_decomposer);
+    sun.add_component(sun_decomposer);
 
     PopulateBuffer(
         new THREE.Vector3(0, 1000, 0), //dont need this anymore
@@ -162,7 +162,7 @@ function moon_init(buffer, attributes){
         buffer.index,
     );
     
-    moon.add_componenent(moon_decomposer);
+    moon.add_component(moon_decomposer);
 
     PopulateBuffer(
         new THREE.Vector3(0, -1000, 0), //dont need this anymore

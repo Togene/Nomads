@@ -13,16 +13,20 @@
 			<!-- THREE libs -->
 			<script src = "data/resources.js"></script>
 			
-			<script src = "js/helpers/antlion.js"></script>
-			<script src = "js/helpers/instance_geometry.js"></script>
-			<script src = "js/helpers/utilities.js"></script>
-			<script src = "js/helpers/matrix.js"></script>
-			<script src = "js/helpers/quaternion.js"></script>
-			<script src = "js/helpers/transform.js"></script>
-			<script src = "js/helpers/decomposer.js"></script>
-			<script src = "js/helpers/gameobject.js"></script>
-			<script src = "js/nomads/controller.js"></script>
+			<script src = "js/core/antlion.js"></script>
+			<script src = "js/core/instance_geometry.js"></script>
+			<script src = "js/core/utilities.js"></script>
+			<script src = "js/core/matrix.js"></script>
+			<script src = "js/core/quaternion.js"></script>
+			<script src = "js/core/transform.js"></script>
+			<script src = "js/core/decomposer.js"></script>
+			<script src = "js/core/gameobject.js"></script>
+			<script src = "js/core/quadtree.js"></script>
+		
 
+			<script src = "js/nomads/aabb.js"></script>
+			<script src = "js/nomads/collision.js"></script>
+			<script src = "js/nomads/controller.js"></script>
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/nomads/sky.js"></script>
 
