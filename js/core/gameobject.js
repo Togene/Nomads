@@ -19,22 +19,21 @@ gameobject.prototype.add_child = function(o){
     }
 }
 
-gameobject.prototype.update = function(){
+gameobject.prototype.update = function(delta){
 
     if(this.components != null){
         for(var i = 0; i < this.components.length; i++){
-            this.components[i].update();
+            this.components[i].update(delta);
         }
     }
     
     if(this.children != null){
         for(var i = 0; i < this.children.length; i++){
-            this.children[i].update();
+            this.children[i].update(delta);
         }
     }
 
     this.transform.update();
-
 }
 
 gameobject.prototype.add_component = function(c){
@@ -51,7 +50,7 @@ gameobject.prototype.get_component = function(n){
 
     if(typeof n !== "string"){
         console.error("Must Be of Type String.");
-        return undefined;
+        return null;
     }
 
     for(var i = 0; i < this.components.length; i++){
@@ -59,6 +58,8 @@ gameobject.prototype.get_component = function(n){
             return this.components[i];
         }
     }
+
+    return null;
 }
 
 gameobject.prototype.has_component = function(n){

@@ -77,6 +77,14 @@ function GetVectorNormalize(vector) {
     return new THREE.Vector3(vector.x / mag, vector.y / mag, vector.z / mag);
 }
 
+function traverse_list(l){
+    if(l.length > 0){
+        for(var i = 0; i < l.length; i++){console.log(l[i].name);}
+    } else {
+        console.log("");
+    }
+}
+
 /*
  * Easing Functions - inspired from http://gizma.com/easing/
  * only considering the t value for the range [0, 1] => [0, 1]
@@ -110,3 +118,6 @@ EasingFunctions = {
     // acceleration until halfway, then deceleration 
     easeInOutQuint: function (t) { return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t }
 }
+
+
+//Javascript related utils

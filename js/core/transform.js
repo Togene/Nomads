@@ -38,7 +38,7 @@ transform.prototype.get_parent_matrix = function(){
     return this.parent_matrix;
 }
 
-transform.prototype.update = function(){
+transform.prototype.update = function(delta){
         if(this.old_position != null) {
             this.old_position.set(this.position.x, this.position.y, this.position.z);
             this.old_scale.set(this.scale.x, this.scale.y, this.scale.z);

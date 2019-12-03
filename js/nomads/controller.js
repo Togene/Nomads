@@ -3,10 +3,13 @@ var moveForward = false;
 var moveBackward = false;
 var moveLeft = false;
 var moveRight = false;
+var shift = false;
 var canJump = false;
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
+var old_dir = new THREE.Vector3();
+var bounce_distance = 8;
 
 function controller_init(){
     controls = new THREE.PointerLockControls( camera, document.body );
@@ -57,6 +60,9 @@ function controller_key_init(){
                 if ( canJump === true ) velocity.y += 350;
                 canJump = false;
                 break;
+            case 16: // SHIFT
+                shift = true;
+                break;
         }
     };
     var onKeyUp = function ( event ) {
@@ -77,6 +83,9 @@ function controller_key_init(){
             case 68: // d
                 moveRight = false;
                 break;
+            case 16: // SHIFT
+                shift = false;
+                break;
         }
     };
     document.addEventListener( 'keydown', onKeyDown, false );
@@ -84,33 +93,74 @@ function controller_key_init(){
 }
 
 function movement(delta){
-    
+    delta = delta/2
     if(controls !== undefined){
         if ( controls.isLocked === true ) {
             //raycaster.ray.origin.copy( controls.getObject().position );
-           // raycaster.ray.origin.y -= 10;
+            //raycaster.ray.origin.y -= 10;
             //var intersections = raycaster.intersectObjects( objects );
+
             var onObject = true;//intersections.length > 0;
             var time = performance.now();
            // var delta = delta; //( time - prevTime ) / 1000;
-            velocity.x -= velocity.x * 10.0 * delta;
-            velocity.z -= velocity.z * 10.0 * delta;
-            velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-            direction.z = Number( moveForward ) - Number( moveBackward );
-            direction.x = Number( moveRight ) - Number( moveLeft );
-            direction.normalize(); // this ensures consistent movements in all directions
-            if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
-            if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
+            if(!player_box.colliding) {
+                velocity.x -= velocity.x * 10.0 * delta;
+                velocity.z -= velocity.z * 10.0 * delta;
+                velocity.y -= 9.2 * 300.0 * delta; // 100.0 = mass
+
+                old_dir = direction.clone();
+
+                direction.z = Number( moveForward ) - Number( moveBackward );
+                direction.x = Number( moveRight ) - Number( moveLeft );
+                direction.normalize(); // this ensures consistent movements in all directions
+           
+                var speed = 400.0;
+
+                if(shift){
+                    speed = speed * 3;}
+                else{
+                    speed = 400.0;
+                }
+
+                if ((moveForward || moveBackward)){
+                    velocity.z -= direction.z * speed * delta;
+                } 
+            
+                if ((moveLeft || moveRight)){
+                    velocity.x -= direction.x * speed * delta;
+                }
+            }
+
+            //TODO: Find more Robust collision method
+            if(player_box.colliding) {
+                var captured_dir = old_dir.clone();
+                
+                var x = bounce_distance * captured_dir.x;
+                var z = bounce_distance * captured_dir.z;
+
+                //not moving but colliding
+                if(captured_dir.x == 0 && captured_dir.z == 0){
+                    x = bounce_distance;
+                    z = bounce_distance;
+                }
 
 
-            if ( onObject === true ) {
+                velocity.x = x;
+                velocity.z = z;
+
+            }
+
+            if (player.transform.position.y == 0) {
                 velocity.y = Math.max( 0, velocity.y );
                 canJump = true;
             }
+
             controls.moveRight( - velocity.x * delta );
             controls.moveForward( - velocity.z * delta );
             controls.getObject().position.y += ( velocity.y * delta ); // new behavior
             
+            //player_box.direct_update(velocity);
+
             if ( controls.getObject().position.y < 0 ) {
                 velocity.y = 0;
                 controls.getObject().position.y = 0;

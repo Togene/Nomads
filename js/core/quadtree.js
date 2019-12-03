@@ -4,8 +4,6 @@
 
 
 //Quad Tree Responsible for Checking for nearby objects
-//
-
 function rectangle(x, y, w, h){
     this.x = x; // CENTER X
     this.y = y; // CENTER Y

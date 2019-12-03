@@ -1,6 +1,5 @@
 var scene, renderer, camera, clock;
 
-
 function init(){
     scene = new THREE.Scene();
     clock = new THREE.Clock();

@@ -20,9 +20,8 @@ function decomposer(ss, frames, colors, offset, trans, type, attributes, index){
 
 decomposer.prototype.update = function(){
     if(this.transform.hasChanged()){
-       //this.attribute_debug();
+       this.attribute_debug();
        this.matrix = this.transform.get_transformation().toMatrix4();
-       
        //have to tell the buffer/instance_geometry to update aswell
        this.update_attributes();
     }
@@ -32,6 +31,15 @@ decomposer.prototype.attribute_debug = function(){
     var color_attribute = this.attributes_refrence[4];
 
     color_attribute.setXYZ(this.buffer_idx, 0,randomRange(0, 1),0);
+    color_attribute.needsUpdate = true;
+}
+
+decomposer.prototype.set_color = function(hex){
+    var color_attribute = this.attributes_refrence[4];
+    var col = new THREE.Color(hex);
+    var col_vector = new THREE.Vector3(col.r, col.g, col.b);
+
+    color_attribute.setXYZ(this.buffer_idx, col_vector.x, col_vector.y, col_vector.z);
     color_attribute.needsUpdate = true;
 }
 

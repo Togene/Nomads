@@ -52,7 +52,7 @@ function update_sky(delta){
         sky_lerp_index);
     renderer.setClearColor(current_color.getHex(), 1 );
 
-    sky.transform.rotation.x += cycle_length;
+    sky.transform.rotation.x += cycle_length/360;
 }
 
 //TODO: Create Star Map :|
