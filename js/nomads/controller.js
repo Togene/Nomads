@@ -143,8 +143,6 @@ function movement(delta){
                     x = bounce_distance;
                     z = bounce_distance;
                 }
-
-
                 velocity.x = x;
                 velocity.z = z;
 
@@ -168,6 +166,8 @@ function movement(delta){
             }
 
             prevTime = time;
+
+            player.get_component("rigidbody").set_velocity(velocity);
         }
     }
     

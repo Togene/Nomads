@@ -29,7 +29,6 @@ decomposer.prototype.update = function(){
 
 decomposer.prototype.attribute_debug = function(){
     var color_attribute = this.attributes_refrence[4];
-
     color_attribute.setXYZ(this.buffer_idx, 0,randomRange(0, 1),0);
     color_attribute.needsUpdate = true;
 }

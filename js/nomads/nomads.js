@@ -76,19 +76,18 @@ function game_bootstrap(data){
 function game_update(delta){
     game_time += delta * game_speed;
 
-
     collision_update(delta);
     physics_update(delta);
     shader_update(delta);
     update(delta);
     movement(delta);
-    update_sky(delta);
+    
     player_update(delta);
 
     for(var i = 0; i < Scene.length; i++){
         Scene[i].update(delta);
     }
-
+    update_sky(delta);
 }
 
 function update(delta){

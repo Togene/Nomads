@@ -18,6 +18,25 @@ rigidbody.prototype.update = function(delta){
     this.update_transform(delta);
 }
 
+rigidbody.prototype.get_magnitude = function(){
+    return velocity.length();
+}
+
+rigidbody.prototype.set_velocity = function(v){
+    this.velocity = v.clone();
+}
+
+// f : force
+// d : direction
+rigidbody.prototype.add_force = function(f, d){
+    d.normalize();
+    this.velocity.x += f * d.x;
+    this.velocity.y += f * d.y;
+    this.velocity.z += f * d.z;
+
+    console.log(this.velocity);
+}
+
 rigidbody.prototype.update_transform = function(delta){
     var collider = this.parent.get_component("aabb");
 

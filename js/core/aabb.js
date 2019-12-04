@@ -101,15 +101,14 @@ aabb.prototype.update = function(delta){
         var yvel = 0;
         
         if(rbody === null){
-            yvel = 0;
+           // yvel = 0;
         } else{
-            yvel = rbody.velocity.y;
+            //yvel = rbody.velocity.y;
         }
 
-
-        if((this.y + yvel) <= 0){
-            this.y = 0;
-            this.colliding = true;
+        if((this.y) <= 0){
+           // this.y = 0;
+           // this.colliding = true;
         }
     }
 

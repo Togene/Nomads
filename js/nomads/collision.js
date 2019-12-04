@@ -1,4 +1,3 @@
-
 var collision_tree;
 var player_range;
 var nearest = [];
@@ -41,13 +40,15 @@ function broad_collision_check(delta){
 function narrow_collision_check(delta){
     if(nearest.length > 0) {
         var l = player.get_component("aabb");
+        var l_body = player.get_component("rigidbody");
 
         l.set_colliding(false);
 
         for(var i = 0; i < nearest.length; i++){
             
             var r = nearest[i].get_component("aabb");
-            
+            var r_body = nearest[i].get_component("rigidbody");
+
             if(l === r || r === l){
                 continue;
             }
@@ -55,6 +56,10 @@ function narrow_collision_check(delta){
             if(l.intersects(r)){
                 l.set_colliding(true);
                 r.set_colliding(true);
+
+                //player/camera direction
+
+                if(r_body != null) r_body.add_force(l_body.get_magnitude() * 0.65, get_player_direction());
                 return;
             }
             
