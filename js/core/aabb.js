@@ -97,18 +97,8 @@ aabb.prototype.update = function(delta){
         this.z = p.z;
     
         //TODO: Proper Collision Check with Ground
-        var rbody = this.parent.get_component("rigidbody");
-        var yvel = 0;
-        
-        if(rbody === null){
-           // yvel = 0;
-        } else{
-            //yvel = rbody.velocity.y;
-        }
-
         if((this.y) <= 0){
-           // this.y = 0;
-           // this.colliding = true;
+            //this.colliding = true;
         }
     }
 

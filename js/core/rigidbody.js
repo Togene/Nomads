@@ -14,8 +14,23 @@ rigidbody.prototype.set_parent = function(p){
 };
 
 rigidbody.prototype.update = function(delta){
+
+    //drag --------------------
+        this.velocity.x *= 0.96;
+        this.velocity.y *= 0.96;
+        this.velocity.z *= 0.96;
+    //drag -------------------
+
     //directly update transform position here <--
     this.update_transform(delta);
+}
+
+rigidbody.prototype.get_direction = function(){
+    return this.velocity.normalize();
+}
+
+rigidbody.prototype.get_flip_direction = function(){
+    return this.velocity.setScalar(-1).normalize();
 }
 
 rigidbody.prototype.get_magnitude = function(){
@@ -29,12 +44,13 @@ rigidbody.prototype.set_velocity = function(v){
 // f : force
 // d : direction
 rigidbody.prototype.add_force = function(f, d){
+    //console.log("Force");
     d.normalize();
     this.velocity.x += f * d.x;
     this.velocity.y += f * d.y;
     this.velocity.z += f * d.z;
 
-    console.log(this.velocity);
+    //console.log(this.velocity);
 }
 
 rigidbody.prototype.update_transform = function(delta){

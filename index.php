@@ -27,7 +27,6 @@
 			<script src = "js/core/aabb.js"></script>
 			<script src = "js/core/rigidbody.js"></script>
 
-			
 			<script src = "js/nomads/fauna.js"></script>
 			<script src = "js/nomads/flora.js"></script>
 			<script src = "js/nomads/player.js"></script>

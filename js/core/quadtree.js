@@ -97,7 +97,7 @@ circle.prototype.intersects = function(range){
     return edges <= this.rsqrd;
 }
 
-circle.prototype.name = function(){ return "circle";}
+circle.prototype.name = "circle";
 
 function quad_tree(boundary, capacity){
     
@@ -290,6 +290,8 @@ quad_tree.prototype.length = function(){
         count += this.southwest.length;
         count += this.southeast.length;
     }
+
+    return count;
 }
 
 quad_tree.prototype.name = "quad_tree";

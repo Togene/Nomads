@@ -93,6 +93,13 @@ function controller_key_init(){
 }
 
 function movement(delta){
+
+    if(player != null){
+        var player_box = player.get_component("aabb");
+        var player_body = player.get_component("rigidbody");
+    }
+      
+    
     delta = delta/2
     if(controls !== undefined){
         if ( controls.isLocked === true ) {
@@ -104,9 +111,9 @@ function movement(delta){
             var time = performance.now();
            // var delta = delta; //( time - prevTime ) / 1000;
             if(!player_box.colliding) {
-                velocity.x -= velocity.x * 10.0 * delta;
-                velocity.z -= velocity.z * 10.0 * delta;
-                velocity.y -= 9.2 * 300.0 * delta; // 100.0 = mass
+                player_body.velocity.x -= player_body.velocity.x * 10.0 * delta;
+                player_body.velocity.z -= player_body.velocity.z * 10.0 * delta;
+                player_body.velocity.y -= 9.2 * 300.0 * delta; // 100.0 = mass
 
                 old_dir = direction.clone();
 
@@ -123,18 +130,17 @@ function movement(delta){
                 }
 
                 if ((moveForward || moveBackward)){
-                    velocity.z -= direction.z * speed * delta;
+                    player_body.velocity.z -= direction.z * speed * delta;
                 } 
             
                 if ((moveLeft || moveRight)){
-                    velocity.x -= direction.x * speed * delta;
+                    player_body.velocity.x -= direction.x * speed * delta;
                 }
             }
 
             //TODO: Find more Robust collision method
             if(player_box.colliding) {
                 var captured_dir = old_dir.clone();
-                
                 var x = bounce_distance * captured_dir.x;
                 var z = bounce_distance * captured_dir.z;
 
@@ -143,31 +149,35 @@ function movement(delta){
                     x = bounce_distance;
                     z = bounce_distance;
                 }
-                velocity.x = x;
-                velocity.z = z;
+                player_body.velocity.x = x;
+                player_body.velocity.z = z;
 
             }
 
-            if (player.transform.position.y == 0) {
-                velocity.y = Math.max( 0, velocity.y );
+            if (player.transform.position.y <= 0) {
+                player_body.velocity.y = Math.max( 0, velocity.y );
                 canJump = true;
             }
 
-            controls.moveRight( - velocity.x * delta );
-            controls.moveForward( - velocity.z * delta );
-            controls.getObject().position.y += ( velocity.y * delta ); // new behavior
+            //hidden magic here thats using quaternion rotation to add direction
+            controls.moveRight( - player_body.velocity.x * delta );
+            controls.moveForward( - player_body.velocity.z * delta );
+            controls.getObject().position.y += ( player_body.velocity.y * delta ); // new behavior
             
             //player_box.direct_update(velocity);
 
-            if ( controls.getObject().position.y < 0 ) {
-                velocity.y = 0;
+            if ( controls.getObject().position.y <= 0.2 ) {
+                player_body.velocity.y = 0;
                 controls.getObject().position.y = 0;
                 canJump = true;
             }
 
             prevTime = time;
-
-            player.get_component("rigidbody").set_velocity(velocity);
+            
+            var dir = new THREE.Vector3( 0, 0, - 1 );
+            var v = new THREE.Vector3();
+            v.copy( dir ).applyQuaternion( camera.quaternion );
+            v.y = 0;
         }
     }
     

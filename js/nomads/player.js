@@ -24,15 +24,7 @@ function player_update(delta){
         var collider = player.get_component("aabb");
         
         if(collider.colliding){
-            console.log("Colliding");
+            //console.log("Colliding");
         }
     }
-}
-
-function get_player_direction(){
-    var direction = new THREE.Vector3( 0, 0, - 1 );
-    var v = new THREE.Vector3();
-    v.copy( direction ).applyQuaternion( camera.quaternion );
-    v.y = 0;
-    return v;
 }
