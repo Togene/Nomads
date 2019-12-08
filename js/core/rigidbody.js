@@ -1,4 +1,6 @@
 
+var cutoff = 0.0001;
+
 function rigidbody(mass, isKin){
     this.mass = mass;
     this.isKinematic = isKin;
@@ -9,7 +11,7 @@ function rigidbody(mass, isKin){
     //where he looks and where he goes are diffrent
     //you can look one way and pushed another way
     this.direction = new THREE.Vector3(0,0,0);
-
+    this.vec = new THREE.Vector3();
     this.parent = null;
 }
 
@@ -20,17 +22,29 @@ rigidbody.prototype.set_parent = function(p){
 rigidbody.prototype.update = function(delta){
 
     //drag --------------------
-        this.velocity.x *= 0.96;
-        this.velocity.y *= 0.96;
-        this.velocity.z *= 0.96;
+    this.velocity.x -= this.velocity.x  * 10.0 * delta;
+    this.velocity.z -= this.velocity.z  * 10.0 * delta;
+
+    //air drag
+    this.velocity.y -= this.velocity.y  * 10.0 * delta;
     //drag -------------------
 
-    //directly update transform position here <--
-    this.update_transform(delta);
+    this.forward(this.velocity.z * delta);
+    this.right(this.velocity.x * delta);
 }
 
 rigidbody.prototype.get_direction = function(){
     return this.direction;
+}
+
+rigidbody.prototype.forward = function(distance){
+    var z = this.parent.transform.rotation.get_forward();
+    this.parent.transform.position.addScaledVector(z, distance);
+}
+
+rigidbody.prototype.right = function(distance){
+    var x = this.parent.transform.rotation.get_left();
+    this.parent.transform.position.addScaledVector(x, distance);
 }
 
 rigidbody.prototype.get_flip_direction = function(){
@@ -54,13 +68,11 @@ rigidbody.prototype.set_velocity = function(v){
 // f : force
 // d : direction
 rigidbody.prototype.add_force = function(f, d){
-    //console.log("Force");
+   
     d.normalize();
     this.velocity.x += f * d.x;
     this.velocity.y += f * d.y;
     this.velocity.z += f * d.z;
-
-    //console.log(this.velocity);
 }
 
 rigidbody.prototype.update_transform = function(delta){

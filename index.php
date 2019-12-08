@@ -31,8 +31,8 @@
 			<script src = "js/nomads/flora.js"></script>
 			<script src = "js/nomads/player.js"></script>
 			<script src = "js/nomads/collision.js"></script>
-			<script src = "js/nomads/controller.js"></script>
 			<script src = "js/nomads/physics.js"></script>
+			<script src = "js/nomads/controller.js"></script>
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/nomads/sky.js"></script>

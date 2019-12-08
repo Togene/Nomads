@@ -69,6 +69,7 @@ function game_bootstrap(data){
         }
     }
 }
+
 /*
     all background updates done here, 
     normal update is where inner game stuff will take place

@@ -95,24 +95,26 @@ aabb.prototype.update = function(delta){
         this.x = p.x;
         this.y = p.y;
         this.z = p.z;
-    
+
         //TODO: Proper Collision Check with Ground
         if((this.y) <= 0){
             //this.colliding = true;
         }
+
+        if(this.visule != null){
+            this.visule.position.set(this.x, 0, this.z);
+
+            if(this.colliding){
+                this.set_visule_color(this.active_color);
+            }
+            
+            if(!this.colliding){
+                this.set_visule_color(this.non_active_color);
+            }
+        }
     }
 
-    if(this.visule != null){
-        this.visule.position.set(this.x, this.y, this.z);
-
-        if(this.colliding){
-            this.set_visule_color(this.active_color);
-        }
-        
-        if(!this.colliding){
-            this.set_visule_color(this.non_active_color);
-        }
-    }
+ 
 }
 
 aabb.prototype.direct_update = function(p){

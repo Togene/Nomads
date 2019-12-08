@@ -34,6 +34,8 @@ transform.prototype.get_transformation = function(){
 transform.prototype.get_parent_matrix = function(){
     if(this.parent != null && this.parent.hasChanged()){
         this.parent_matrix = (this.parent.get_transformation());
+    } else {
+        this.parent_matrix =  new matrix().init_identity();
     }
     return this.parent_matrix;
 }

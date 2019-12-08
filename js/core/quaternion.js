@@ -76,7 +76,7 @@ quaternion.prototype.normalized = function() {
 }
 
 quaternion.prototype.conjugate = function(){
-    return new quaternion(-this.x, -this.y, -this.z, -this.w);
+    return new quaternion(-this.x, -this.y, -this.z, this.w);
 }
 
 quaternion.prototype.scale = function(r){
@@ -195,11 +195,9 @@ quaternion.prototype.slerp = function(dest, lerp, shortest){
 }
 
 THREE.Vector3.prototype.rotate = function(rot){
-    var conj = rot.conjugate();
-    rot.mul(this);
-    rot.mul(conjugate);
-    var w = rot;
+    var conj = rot.conjugate(); //
 
+    var w = rot.v_mul(this).q_mul(conj);
     return new THREE.Vector3(w.x, w.y, w.z);
 }
 
@@ -245,5 +243,8 @@ quaternion.prototype.equals = function(q){
     return this.x == q.x && this.y == q.y && this.z == q.z && this.w == q.w;
 }
 
+quaternion.prototype.to_three_q = function(){
+    return new THREE.Quaternion(this.x, this.y, this.z, this.w);
+}
 
 quaternion.prototype.name = "quaternion";
