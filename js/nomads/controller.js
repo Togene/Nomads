@@ -160,12 +160,11 @@ function movement(delta){
             }
 
             //hidden magic here thats using quaternion rotation to add direction
-            controls.moveRight( - player_body.velocity.x * delta );
-            controls.moveForward( - player_body.velocity.z * delta );
+            //doesnt apply the velocity to the camera however which is kinda annoying
+            controls.moveRight(-player_body.velocity.x * delta );
+            controls.moveForward(-player_body.velocity.z * delta );
             controls.getObject().position.y += ( player_body.velocity.y * delta ); // new behavior
             
-            //player_box.direct_update(velocity);
-
             if ( controls.getObject().position.y <= 0.2 ) {
                 player_body.velocity.y = 0;
                 controls.getObject().position.y = 0;
@@ -175,9 +174,10 @@ function movement(delta){
             prevTime = time;
             
             var dir = new THREE.Vector3( 0, 0, - 1 );
-            var v = new THREE.Vector3();
-            v.copy( dir ).applyQuaternion( camera.quaternion );
-            v.y = 0;
+
+            dir.applyQuaternion( camera.quaternion );
+            player_body.direction = dir;
+            
         }
     }
     

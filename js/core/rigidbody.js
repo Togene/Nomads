@@ -5,6 +5,10 @@ function rigidbody(mass, isKin){
     
     this.acceleration = new THREE.Vector3(0,0,0);
     this.velocity = new THREE.Vector3(0,0,0);
+    
+    //where he looks and where he goes are diffrent
+    //you can look one way and pushed another way
+    this.direction = new THREE.Vector3(0,0,0);
 
     this.parent = null;
 }
@@ -26,11 +30,17 @@ rigidbody.prototype.update = function(delta){
 }
 
 rigidbody.prototype.get_direction = function(){
-    return this.velocity.normalize();
+    return this.direction;
 }
 
 rigidbody.prototype.get_flip_direction = function(){
-    return this.velocity.setScalar(-1).normalize();
+    
+    var flipped_dir = this.velocity.clone();
+
+    flipped_dir.z *= -1;
+    flipped_dir.x *= -1;
+
+    return flipped_dir;
 }
 
 rigidbody.prototype.get_magnitude = function(){

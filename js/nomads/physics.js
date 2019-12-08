@@ -16,7 +16,6 @@ function physics_update(delta){
         if(!rigidbodies[i].isKin){
             //add_gravity(rigidbodies[i], delta);
         }
-            
     }
 }
 

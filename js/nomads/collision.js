@@ -19,7 +19,8 @@ function collision_update(delta){
 
 function broad_collision_check(delta){
     
-    if(collision_tree != undefined){
+    if(collision_tree != undefined) {
+        
         collision_tree.forEach(function(element){
             
             near = [];
@@ -34,7 +35,6 @@ function broad_collision_check(delta){
         });
     }
 }
-
 
 //l = left
 //r = right

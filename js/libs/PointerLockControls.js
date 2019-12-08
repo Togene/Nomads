@@ -119,33 +119,22 @@ THREE.PointerLockControls = function ( camera, domElement ) {
 
 		// move forward parallel to the xz-plane
 		// assumes camera.up is y-up
-
 		vec.setFromMatrixColumn( camera.matrix, 0 );
-
 		vec.crossVectors( camera.up, vec );
-
 		camera.position.addScaledVector( vec, distance );
-
 	};
 
 	this.moveRight = function ( distance ) {
-
 		vec.setFromMatrixColumn( camera.matrix, 0 );
-
 		camera.position.addScaledVector( vec, distance );
-
 	};
 
 	this.lock = function () {
-
 		this.domElement.requestPointerLock();
-
 	};
 
 	this.unlock = function () {
-
 		document.exitPointerLock();
-
 	};
 
 	this.connect();
