@@ -5,7 +5,9 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    for(var i = 0; i < 100; i++){
+    var num_trees = 2;
+
+    for(var i = 0; i < num_trees; i++){
         
         var tree = new gameobject("tree");
         tree.add_component(new aabb(tree.transform, 1, 2, 1, false, 0xFFFFFF));

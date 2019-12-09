@@ -32,10 +32,10 @@ function TestCreatures(){
            attributes,
            buffer.index,
         );
-        
-        crab.add_component(crab_decomposer);
         crab.add_component(new aabb(crab.transform, .5, .5, .5, false));
-        crab.add_component(new rigidbody(5, false));
+        crab.add_component(new rigidbody(2, false));
+        crab.add_component(crab_decomposer);
+   
             
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),
@@ -43,8 +43,6 @@ function TestCreatures(){
             crab.transform.scale,
             buffer, 
             crab_decomposer);
-        
-
         }
     }
 
@@ -69,7 +67,7 @@ function fauna_update(delta){
             var decomp = test_crabs[i].get_component("decomposer");
 
             if(collider.colliding){
-                //decomp.set_color(0xFF0000);
+                decomp.set_color(0xFF0000);
             }
             //test_crabs[i].transform.position.y = Math.sin(game_time) * 2;
             //test_trees[i].transform.rotation.y += 1;

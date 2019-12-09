@@ -102,7 +102,7 @@ aabb.prototype.update = function(delta){
         }
 
         if(this.visule != null){
-            this.visule.position.set(this.x, 0, this.z);
+            this.visule.position.set(this.x, this.y, this.z);
 
             if(this.colliding){
                 this.set_visule_color(this.active_color);
@@ -127,7 +127,7 @@ aabb.prototype.set_colliding = function(bool){
     this.colliding = bool;
 }
 
-aabb.prototype.intersects = function(right){
+aabb.prototype.intersect = function(right){
     return !(
         right.x - right.w > this.x + this.w ||
         right.x + right.w < this.x - this.w ||

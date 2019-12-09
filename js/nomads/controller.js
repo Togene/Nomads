@@ -1,10 +1,13 @@
 var controls;
 var moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 var shift = false;
+var space = false;
 var canJump = false;
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
 var bounce_distance = 8;
+
+
 
 function controller_init(){
     controls = new THREE.PointerLockControls( camera, document.body );
@@ -52,7 +55,7 @@ function controller_key_init(){
                 moveRight = true;
                 break;
             case 32: // space
-                if ( canJump === true ) player.get_component("rigidbody").velocity.y += 350;
+                space = true;
                 canJump = false;
                 break;
             case 16: // SHIFT
@@ -62,6 +65,9 @@ function controller_key_init(){
     };
     var onKeyUp = function ( event ) {
         switch ( event.keyCode ) {
+            case 32: //space
+                space = false;
+                break;
             case 38: // up
             case 87: // w
                 moveForward = false;
@@ -103,7 +109,7 @@ function movement(delta){
         
             var speed = 5;
 
-            if(shift) { speed = speed * 3;} else { speed = speed;}
+            if(shift) { speed = speed * 2.1;} else { speed = speed;}
 
             if ((moveForward || moveBackward)){
                 player_body.velocity.z -= direction.z * speed ;
@@ -113,21 +119,26 @@ function movement(delta){
                 player_body.velocity.x -= direction.x * speed ;
             }
 
+            if(space){
 
-
+                if (canJump === true ){
+                        player.get_component("rigidbody").add_force(
+                            40, new THREE.Vector3(0, 1, 0));
+                            canJump = false;
+                    }
+            }
+            //camera rotation to player rotation
             player.transform.rotation.qset(controls.getObject().quaternion.clone());
 
-            controls.getObject().position.y += ( player_body.velocity.y * delta ); // new behavior
             controls.getObject().position.x = player.transform.position.x;
             controls.getObject().position.z = player.transform.position.z;
+            controls.getObject().position.y = player.transform.position.y;
 
-            if ( controls.getObject().position.y <= 0.0 ) {
-                player_body.velocity.y = 0;
-                controls.getObject().position.y = 0;
+            if ( controls.getObject().position.y == 0.0 ) {
                 canJump = true;
             }
 
-    
+            
         }
     }
     
