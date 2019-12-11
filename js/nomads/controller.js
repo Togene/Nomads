@@ -103,6 +103,8 @@ function movement(delta){
     if(controls !== undefined){
         if ( controls.isLocked === true ) {
 
+            var p_col = player.get_component("aabb");
+
             direction.z = Number( moveForward ) - Number( moveBackward );
             direction.x = Number( moveRight ) - Number( moveLeft );
             direction.normalize(); 
@@ -112,15 +114,14 @@ function movement(delta){
             if(shift) { speed = speed * 2.1;} else { speed = speed;}
 
             if ((moveForward || moveBackward)){
-                player_body.velocity.z -= direction.z * speed ;
+                if(!p_col.colliding) player_body.velocity.z -= direction.z * speed ;
             } 
         
             if ((moveLeft || moveRight)){
-                player_body.velocity.x -= direction.x * speed ;
+                if(!p_col.colliding) player_body.velocity.x -= direction.x * speed ;
             }
 
             if(space){
-
                 if (canJump === true ){
                         player.get_component("rigidbody").add_force(
                             40, new THREE.Vector3(0, 1, 0));
@@ -130,6 +131,7 @@ function movement(delta){
             //camera rotation to player rotation
             player.transform.rotation.qset(controls.getObject().quaternion.clone());
 
+            //camera pos = player pos
             controls.getObject().position.x = player.transform.position.x;
             controls.getObject().position.z = player.transform.position.z;
             controls.getObject().position.y = player.transform.position.y;

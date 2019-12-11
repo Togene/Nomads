@@ -18,7 +18,7 @@ function TestCreatures(){
         var x = (i * spacing) - (num_crabs/2) * spacing;
         var z = (j * spacing) - (num_crabs/2) * spacing;
             
-        crab.transform.position = new THREE.Vector3(x, 0, z);
+        crab.transform.position = new THREE.Vector3(x + 20, 0, z + 20);
         crab.transform.rotation = new quaternion( 0, 0, 0, 1 );
         crab.transform.scale = new THREE.Vector3(1,1,1);
 
@@ -32,7 +32,7 @@ function TestCreatures(){
            attributes,
            buffer.index,
         );
-        crab.add_component(new aabb(crab.transform, .5, .5, .5, false));
+        crab.add_component(new aabb(crab.transform, .5, .5, .5, true));
         crab.add_component(new rigidbody(2, false));
         crab.add_component(crab_decomposer);
    
@@ -68,6 +68,8 @@ function fauna_update(delta){
 
             if(collider.colliding){
                 decomp.set_color(0xFF0000);
+            } else {
+                decomp.set_color(decomp.colors[0]);
             }
             //test_crabs[i].transform.position.y = Math.sin(game_time) * 2;
             //test_trees[i].transform.rotation.y += 1;

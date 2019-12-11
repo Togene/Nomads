@@ -19,7 +19,7 @@ function broad_collision_check(delta){
     
     if(collision_tree != undefined && player != undefined) {
         player_collision_check(delta);
-        //object_collision_check(delta);
+        object_collision_check(delta);
     }
 }
 
@@ -62,42 +62,36 @@ function player_collision_check(delta){
 function narrow_collision_check(near, e, delta){
     if(e != undefined){
         var l = e.get_component("aabb");
-        var l_body = e.get_component("rigidbody");
-        l.set_colliding(false);
+        var l_b = e.get_component("rigidbody");
 
         for(var i = 0; i < near.length; i++){
             if(near[i] === e || e === near[i]){ continue; }
         
             var r = near[i].get_component("aabb");
-            var r_body = near[i].get_component("rigidbody");
-            r.set_colliding(false);
+            var r_b = near[i].get_component("rigidbody");
 
             if(l.intersect(r)){
                 l.set_colliding(true);
                 r.set_colliding(true);
-
-                var l_body_dir = new THREE.Vector3();
-                var l_body_mag = 5;
-
-                var r_body_dir = new THREE.Vector3();
-                var r_body_mag = 5;
-
-                if(l_body != null){
-                    l_body_dir = l_body.get_direction().clone();
-                    l_body_mag = l_body.get_magnitude();
-                }
-
-                if(r_body != null){
-                   
+                
+                //transfering player velocity to the rigidbody
+                if(r_b != null){
+                    
+                    if(l_b != null){
+                        r_b.transfer_force(l_b);
+                    } else {
+                        //r_b.add_force(r_b.get_magnitude(), r_b.get_direction(delta));
+                    }
+                    
                 } else {
-                    r_body_dir = l_body.get_flip_direction().clone();
-                    r_body_mag = l_body.get_magnitude()*1.2;
+                    
                 }
 
-                if(r_body != null) r_body.add_force(l_body_mag, l_body_dir);
-                if(l_body != null) { l_body.add_force(r_body_mag, r_body_dir);
-                }
+                return;
             }
+
+            r.set_colliding(false);
+            l.set_colliding(false);
         }
     }
 }

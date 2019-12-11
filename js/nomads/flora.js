@@ -10,7 +10,7 @@ function TestTree(){
     for(var i = 0; i < num_trees; i++){
         
         var tree = new gameobject("tree");
-        tree.add_component(new aabb(tree.transform, 1, 2, 1, false, 0xFFFFFF));
+       
         
         test_trees.push(tree);
         tree.transform.position = new THREE.Vector3(randomRange(-100, 100), 0, randomRange(-100, 100));
@@ -39,7 +39,8 @@ function TestTree(){
         );
         
         leaves.add_component(leaves_decomposer);
-
+        tree.add_component(new aabb(tree.transform, 1, 2, 1, true, 0xFFFFFF, true));
+        
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),
             new THREE.Vector3(0, 0, 0),

@@ -1,9 +1,7 @@
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     var p = transform.position;
 
-    this.x = p.x;
-    this.y = p.y;
-    this.z = p.z;
+    this.position = p.clone();
 
     this.w = w;
     this.h = h;
@@ -88,39 +86,35 @@ aabb.prototype.set_visule_color = function(hex){
 }
 
 aabb.prototype.update = function(delta){
-    
-    if(this.parent != null){
+    if(this.visule != null){
+        this.visule.position.set(this.position.x, this.position.y, this.position.z);
 
-        var p = this.parent.transform.position;
-        this.x = p.x;
-        this.y = p.y;
-        this.z = p.z;
-
-        //TODO: Proper Collision Check with Ground
-        if((this.y) <= 0){
-            //this.colliding = true;
+        if(this.colliding){
+            this.set_visule_color(this.active_color);
         }
-
-        if(this.visule != null){
-            this.visule.position.set(this.x, this.y, this.z);
-
-            if(this.colliding){
-                this.set_visule_color(this.active_color);
-            }
-            
-            if(!this.colliding){
-                this.set_visule_color(this.non_active_color);
-            }
+        
+        if(!this.colliding){
+            this.set_visule_color(this.non_active_color);
         }
     }
-
- 
 }
 
-aabb.prototype.direct_update = function(p){
-    this.x += p.x;
-    this.y += p.y;
-    this.z += p.z;
+aabb.prototype.direct_position_set = function(p){
+
+    if(p === undefined){
+        console.error("No Paramatre Given");
+    } else {
+        this.position = p.clone();
+    }
+
+}
+
+aabb.prototype.direct_position_add = function(p){
+    if(p === undefined){
+        console.error("No Paramatre Given");
+    } else {
+        this.position.add(p); 
+    }
 }
 
 aabb.prototype.set_colliding = function(bool){
@@ -129,12 +123,12 @@ aabb.prototype.set_colliding = function(bool){
 
 aabb.prototype.intersect = function(right){
     return !(
-        right.x - right.w > this.x + this.w ||
-        right.x + right.w < this.x - this.w ||
-        right.y - right.h > this.y + this.h ||
-        right.y + right.h < this.y - this.h ||
-        right.z - right.d > this.z + this.d ||
-        right.z + right.d < this.z - this.d);
+        right.position.x - right.w > this.position.x + this.w ||
+        right.position.x + right.w < this.position.x - this.w ||
+        right.position.y - right.h > this.position.y + this.h ||
+        right.position.y + right.h < this.position.y - this.h ||
+        right.position.z - right.d > this.position.z + this.d ||
+        right.position.z + right.d < this.position.z - this.d);
 }
 
 aabb.prototype.name = "aabb";
