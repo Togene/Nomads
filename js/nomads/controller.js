@@ -104,7 +104,7 @@ function movement(delta){
         if ( controls.isLocked === true ) {
 
             var p_col = player.get_component("aabb");
-
+            
             direction.z = Number( moveForward ) - Number( moveBackward );
             direction.x = Number( moveRight ) - Number( moveLeft );
             direction.normalize(); 

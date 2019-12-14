@@ -1,0 +1,62 @@
+function structures_init(){
+
+}
+
+function TestStructures(){
+    var floor_shader = get_data("instance_shader");
+    var buffer = create_buffer();
+    var attributes = [];
+
+    var floor_grid_size = 100;
+    var spacing = 2;
+
+    for(var i = 0; i < floor_grid_size; i++){
+        for(var j = 0; j < floor_grid_size; j++){
+
+            var floor_square = new gameobject("floor_square");
+
+            var x = (i * spacing) - (floor_grid_size/2) * spacing;
+            var z = (j * spacing) - (floor_grid_size/2) * spacing;
+
+            floor_square.transform.position = new THREE.Vector3(x + 20, -2, z + 20);
+            floor_square.transform.rotation = new quaternion( 90, 0, 0, 1 );
+            floor_square.transform.scale = new THREE.Vector3(2,2,2);
+
+            var floor_square_decomposer = new decomposer(
+                [ MapToSS(0, 3),],
+                new THREE.Vector2(3, 1),
+                [ new THREE.Color(0x855E42) ],
+                new THREE.Vector3(0, 0, 0),
+                floor_square.transform,
+               1,
+               attributes,
+               buffer.index,
+            );
+
+            floor_square.add_component(floor_square_decomposer);
+
+            PopulateBuffer(
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 0, 0), 
+                floor_square.transform.scale,
+                buffer, 
+                floor_square_decomposer);
+            }
+        }
+
+        CreateInstance(
+            "Test", 
+            animated_sprites, 
+            buffer, 
+            attributes, 
+            SpriteSheetSize, 
+            floor_shader, 
+            3, 
+            false, 
+            false);
+
+}
+
+function structures_update(){
+
+}

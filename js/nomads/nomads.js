@@ -56,7 +56,8 @@ function game_bootstrap(data){
     
     TestCreatures();
     TestTree();
-
+    TestStructures();
+    
     for(var i = 0; i < Scene.length; i++){
         //Scene[i].information();
         

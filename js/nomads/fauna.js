@@ -32,7 +32,7 @@ function TestCreatures(){
            attributes,
            buffer.index,
         );
-        crab.add_component(new aabb(crab.transform, .5, .5, .5, true));
+        crab.add_component(new aabb(crab.transform, .5, .5, .5, false));
         crab.add_component(new rigidbody(2, false));
         crab.add_component(crab_decomposer);
    

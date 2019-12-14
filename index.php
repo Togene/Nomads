@@ -29,6 +29,8 @@
 
 			<script src = "js/nomads/fauna.js"></script>
 			<script src = "js/nomads/flora.js"></script>
+			<script src = "js/nomads/structures.js"></script>
+			
 			<script src = "js/nomads/player.js"></script>
 			<script src = "js/nomads/collision.js"></script>
 			<script src = "js/nomads/physics.js"></script>
