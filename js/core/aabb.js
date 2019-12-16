@@ -126,7 +126,6 @@ aabb.prototype.set_colliding = function(bool){
 }
 
 aabb.prototype.intersect = function(right){
-    console.log(right.position);
     return !(
         right.position.x - right.w > this.position.x + this.w ||
         right.position.x + right.w < this.position.x - this.w ||

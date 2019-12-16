@@ -13,7 +13,7 @@ function rigidbody(mass, isKin){
 
     //where he looks and where he goes are diffrent
     //you can look one way and pushed another way
-    this.direction = new THREE.Vector3(0,0,0);
+    this.velocity_direction = new THREE.Vector3(0,0,0);
     this.vec = new THREE.Vector3();
     
     this.old_parent_position = new THREE.Vector3();
@@ -29,8 +29,8 @@ rigidbody.prototype.update = function(delta){
         var sign = 1;
             
         if(this.parent.get_component("aabb").colliding){
-            this.velocity.z *= 0.7;
-            this.velocity.x *= 0.7;
+            //this.velocity.z *= 0.7;
+            //this.velocity.x *= 0.7;
             sign = -1.01;
         } else {
             sign = 1;
@@ -61,12 +61,17 @@ rigidbody.prototype.update = function(delta){
         this.new_parent_position = this.parent.transform.position.clone();
         //------------------ Capture New Position ------------------ 
     
-        this.direction = (this.new_parent_position.sub(this.old_parent_position)).clone().normalize();
+        this.velocity_direction = (this.new_parent_position.sub(this.old_parent_position)).clone().normalize();
         
-        //-------------------- Cap Direction -----------------------
-        if(Math.abs(this.direction.x) < 0.01){this.direction.x = 0;}
-        if(Math.abs(this.direction.z) < 0.01){this.direction.z = 0;}
-    
+        //*-------------------- Cap Direction -----------------------
+        if(Math.abs(this.velocity_direction.x) < 0.01){this.velocity_direction.x = 0;}
+        if(Math.abs(this.velocity_direction.z) < 0.01){this.velocity_direction.z = 0;}
+
+        if(Math.abs(this.velocity.x) < 0.01){this.x = 0;}
+        if(Math.abs(this.velocity.z) < 0.01){this.z = 0;}
+
+        //*-------------------- Cap Direction -----------------------
+
         //should be connected with collider here
         //means rigid bodies and colliders are interlinked
         if (this.parent.transform.position.y <= 0) {
@@ -110,40 +115,18 @@ rigidbody.prototype.update_aabb_position = function(delta){
     pos_clone.addScaledVector(z, (this.velocity.z * projection_mag) * delta);
     pos_clone.addScaledVector(x, (this.velocity.x * projection_mag) * delta);
     //pos_clone.addScaledVector(y, (this.velocity.y * projection_mag) * delta);
-//
+ 
     col.direct_position_set(pos_clone);
 }
 
 // Get current direction of velocity with added direction from rotation
 rigidbody.prototype.get_direction = function(delta){
-    var vel_clone = this.velocity.clone();
-    
-    var z = this.parent.transform.rotation.get_forward();
-    var x = this.parent.transform.rotation.get_left();
-
-    vel_clone.addScaledVector(z, this.velocity.z * delta);
-    vel_clone.addScaledVector(x, this.velocity.x * delta);
-
-    vel_clone.normalize();
-
-    return vel_clone;
+    return this.direction.clone();
 }
 
 // Get current direction of velocity with added direction from rotation
 rigidbody.prototype.get_flip_direction = function(delta){
-    var vel_clone = this.velocity.clone().negate();
-
-    var z = this.parent.transform.rotation.get_back();
-    var x = this.parent.transform.rotation.get_right();
-    //var y = this.parent.transform.rotation.get_down();
-
-    vel_clone.addScaledVector(z, this.velocity.z * delta);
-    vel_clone.addScaledVector(x, this.velocity.x * delta);
-    //vel_clone.addScaledVector(y, this.velocity.y * delta);
-    vel_clone.y *= -1;
-
-    vel_clone.normalize();
-    return vel_clone;
+    return this.direction.clone().negate();
 }
 
 rigidbody.prototype.get_negated_velocity = function(){
