@@ -1,4 +1,5 @@
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
+    
     var p = transform.position;
 
     this.position = p.clone();
@@ -86,6 +87,9 @@ aabb.prototype.set_visule_color = function(hex){
 }
 
 aabb.prototype.update = function(delta){
+    
+    this.position = this.parent.transform.position.clone();
+
     if(this.visule != null){
         this.visule.position.set(this.position.x, this.position.y, this.position.z);
 
@@ -122,6 +126,7 @@ aabb.prototype.set_colliding = function(bool){
 }
 
 aabb.prototype.intersect = function(right){
+    console.log(right.position);
     return !(
         right.position.x - right.w > this.position.x + this.w ||
         right.position.x + right.w < this.position.x - this.w ||

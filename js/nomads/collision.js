@@ -2,9 +2,12 @@ var collision_tree;
 var nearest = [];
 var nearest_debug = [];
 var mag_mult = 2.2;
+var rangecheck;
+
 function collision_init(){
     collision_tree = 
     new quad_tree(new rectangle(0, 0, 50000, 50000), 1000);
+    rangecheck = new circle(0, 0, 100);
 }   
 
 function broad_quad_tree_insert(o){
@@ -12,7 +15,8 @@ function broad_quad_tree_insert(o){
 }
 
 function collision_update(delta){
-    broad_collision_check(delta);
+   broad_collision_check(delta);
+   
 }
 
 function broad_collision_check(delta){
@@ -21,9 +25,8 @@ function broad_collision_check(delta){
             near = [];
             near_debug = [];
     
-            var rangecheck = new circle(
-                e.transform.position.x, e.transform.position.z, 100);
- 
+            rangecheck.x = e.transform.position.x
+            rangecheck.y = e.transform.position.z;
             collision_tree.query(rangecheck, near, near_debug);
             narrow_collision_check(near, e, delta);
         });
@@ -35,6 +38,10 @@ function narrow_collision_check(near, e, delta){
         var l = e.get_component("aabb");
         for(var i = 0; i < near.length; i++){
             var r = near[i].get_component("aabb");
+
+            if(near[i] == e || e == near[i]){
+                continue;
+            }
 
             if(l.intersect(r)){
                 l.set_colliding(true);
