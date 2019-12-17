@@ -5,7 +5,7 @@ function TestCreatures(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_crabs = 1;
+    var num_crabs = 4;
     var spacing = 3;
 
     for(var i = 0; i < num_crabs; i++){
@@ -33,7 +33,7 @@ function TestCreatures(){
            buffer.index,
         );
         crab.add_component(new aabb(crab.transform, .5, .5, .5, true, 0x00FF00, true));
-        crab.add_component(new rigidbody(2, false));
+        crab.add_component(new rigidbody(0.25, false));
         crab.add_component(crab_decomposer);
    
             

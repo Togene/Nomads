@@ -44,15 +44,34 @@ function narrow_collision_check(near, e, delta){
     if(e != undefined){
         var l = e.get_component("aabb");
         l.set_colliding(false);
+
         var lb = e.get_component("rigidbody");
 
         for(var i = 0; i < near.length; i++){
             var r = near[i].get_component("aabb");
+            var rb = near[i].get_component("rigidbody");
 
             if(l.intersect(r)){
+                
+                //Handle Left
                 l.set_colliding(true);
-                lb.flip_velocity()
+                //Handle Right
                 r.set_colliding(true);
+
+                //no rigidbodies, no collision
+                if(lb == null && rb == null){return;}
+
+                //Handle Nulls and Kenetics
+                if(rb == null && lb != null){
+                    lb.flip_velocity();
+                }
+                else if(lb == null && rb != null){
+                    rb.flip_velocity();
+                } else {
+                    rb.add_force(lb.get_magnitude()/rb.mass, lb.get_flip_direction());
+                    lb.add_force(rb.get_magnitude()/lb.mass, rb.get_flip_direction());
+                }
+
                 return;
             }
 

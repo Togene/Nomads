@@ -24,12 +24,35 @@ function circlePointCollision(x, y, vec, rad) {
     return distanceXY(x, y, vec.x, vec.y) < rad;
 }
 
-function randomRange(min, max) {
+
+//prng
+//credit : https://gist.github.com/blixt/f17b47c62508be59987b
+
+function p_random(seed){
+    this._seed = seed % 2147483647;
+    if (this._seed <= 0) this._seed += 2147483646;
+};
+
+//returns prng between 1 and 2^32 - 2
+p_random.prototype.next = function(){
+    return this._seed = (this._seed * 16807 % 2147483647);
+};
+
+p_random.prototype.next_range = function(min, max){
+    return this._seed = (this._seed * 16807 % 2147483647) * (max - min) + min;
+};
+
+
+p_random.prototype.nextFloat = function(){
+    return (this.next() - 1) / 2147483646;
+};
+
+function random_range(min, max) {
     return min + Math.random() * (max - min);
 };
 
 function randomRangeRound(min, max) {
-    return Math.round(randomRange(min, max));
+    return Math.round(random_range(min, max));
 };
 
 function frac(f) {

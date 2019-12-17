@@ -50,7 +50,6 @@ rigidbody.prototype.update = function(delta){
             //drag -------------------
         }
 
-    
 
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
@@ -160,25 +159,16 @@ rigidbody.prototype.add_force = function(f, d, delta){
 }
 
 rigidbody.prototype.flip_velocity = function(){
-
-    console.log(this.velocity.z);
     if(Math.abs(this.velocity.z) < 1){
-        var sign = Math.sign(this.velocity.z);
         this.velocity.z -= get_step_z();
     }
 
     if(Math.abs(this.velocity.x) < 1){
-        var sign = Math.sign(this.velocity.x);
         this.velocity.x -= get_step_x();
     }
     
     this.velocity.z *= -(1);
     this.velocity.x *= -(1);
-
-    var dir = this.velocity.clone().normalize();
-
-   // this.velocity.x += 7 * dir.x;
-    //this.velocity.z += 7 * dir.z;
 }
 
 //push transform without velocity

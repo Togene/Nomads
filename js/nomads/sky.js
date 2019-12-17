@@ -70,9 +70,9 @@ function prime_star_init(buffer, attributes){
         stars.add_child(star);
 
         var direction = new THREE.Vector3(
-            randomRange(-1, 1), 
-            randomRange(-1, 1), 
-            randomRange(-1, 1)
+            random_range(-1, 1), 
+            random_range(-1, 1), 
+            random_range(-1, 1)
         );
         
         direction.normalize();
@@ -98,9 +98,9 @@ function prime_star_init(buffer, attributes){
 
         PopulateBuffer(
             new THREE.Vector3(
-            direction.x * randomRange(min_distance, max_distance), 
-            direction.y * randomRange(min_distance, max_distance), 
-            direction.z * randomRange(min_distance, max_distance)
+            direction.x * random_range(min_distance, max_distance), 
+            direction.y * random_range(min_distance, max_distance), 
+            direction.z * random_range(min_distance, max_distance)
             ), //dont need this anymore
             new THREE.Vector3(0, 0, 0), //dont need this anymore
             new THREE.Vector3(15, 15, 15), //dont need this anymore

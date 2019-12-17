@@ -5,15 +5,19 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_trees = 0;
+    var num_trees = 10;
 
     for(var i = 0; i < num_trees; i++){
         
         var tree = new gameobject("tree");
-       
         
+        var rand = new p_random(i);
+        var x = rand.next_range(-.0001, .0001);
+        var z = rand.next_range(-.0001, .0001);
+        console.log(z);
+
         test_trees.push(tree);
-        tree.transform.position = new THREE.Vector3(randomRange(-100, 100), 0, randomRange(-100, 100));
+        tree.transform.position = new THREE.Vector3(x, 0, z);
         tree.transform.scale = new THREE.Vector3(5,5,5);
 
         create_face(0, tree, buffer, attributes);
