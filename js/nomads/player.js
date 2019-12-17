@@ -17,7 +17,7 @@ function player_update(delta){
     if(player != undefined) {
         var collider = player.get_component("aabb");
         if(collider.colliding){
-            //console.log("Colliding");
+            console.log("Colliding");
         }
     }
 }

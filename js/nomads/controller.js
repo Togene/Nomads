@@ -96,29 +96,26 @@ function controller_key_init(){
 function movement(delta){
           
     delta /= 2;
-    if(player != null){
-        var player_body = player.get_component("rigidbody");
-    }
 
-    if(controls !== undefined){
+    if(controls !== undefined && player != null){
         if ( controls.isLocked === true ) {
+            var player_body = player.get_component("rigidbody");
+            var col = player.get_component("aabb");
 
-            var p_col = player.get_component("aabb");
-            
             direction.z = Number( moveForward ) - Number( moveBackward );
             direction.x = Number( moveRight ) - Number( moveLeft );
             direction.normalize(); 
-        
+            
             var speed = 5;
 
             if(shift) { speed = speed * 2.1;} else { speed = speed;}
 
             if ((moveForward || moveBackward)){
-                if(!p_col.colliding) player_body.velocity.z -= direction.z * speed ;
+                if(!col.colliding) player_body.velocity.z -= direction.z * speed ;
             } 
         
             if ((moveLeft || moveRight)){
-                if(!p_col.colliding) player_body.velocity.x -= direction.x * speed ;
+                if(!col.colliding) player_body.velocity.x -= direction.x * speed ;
             }
 
             if(space){
@@ -132,9 +129,7 @@ function movement(delta){
             player.transform.rotation.qset(controls.getObject().quaternion.clone());
 
             //camera pos = player pos
-            controls.getObject().position.x = player.transform.position.x;
-            controls.getObject().position.z = player.transform.position.z;
-            controls.getObject().position.y = player.transform.position.y;
+            controls.getObject().position.copy(player.transform.position);
 
             if ( controls.getObject().position.y == 0.0 ) {
                 canJump = true;

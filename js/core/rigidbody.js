@@ -4,6 +4,7 @@ var godmode = false;
 var bugs = [] //* anything currently stuck to this body
 var min_vel = 0.5;
 
+
 function rigidbody(mass, isKin){
     this.mass = mass;
     this.isKinematic = isKin;
@@ -19,6 +20,7 @@ function rigidbody(mass, isKin){
     this.old_parent_position = new THREE.Vector3();
     this.new_parent_position = new THREE.Vector3();
     this.parent = null;
+    this.colliding = false;
 }
 
 rigidbody.prototype.set_parent = function(p){
@@ -26,16 +28,15 @@ rigidbody.prototype.set_parent = function(p){
 };
 
 rigidbody.prototype.update = function(delta){
-        var sign = 1;
-            
-        if(this.parent.get_component("aabb").colliding){
-            //this.velocity.z *= 0.7;
-            //this.velocity.x *= 0.7;
-            sign = -1.01;
-        } else {
-            sign = 1;
+        //*-------------------- Caps -----------------------
+        if(Math.abs(this.velocity_direction.x) < 0.1){this.velocity_direction.x = 0;}
+        if(Math.abs(this.velocity_direction.z) < 0.1){this.velocity_direction.z = 0;}
 
-        }
+        if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
+        if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
+        //*-------------------- Caps -----------------------
+
+        this.old_parent_position = this.parent.transform.position.clone();
 
         //drag --------------------
         this.velocity.x -= this.velocity.x * (10.0) * delta;
@@ -43,17 +44,21 @@ rigidbody.prototype.update = function(delta){
         this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
         //drag -------------------
 
-        //TODO: Tweak threshhold value
-        var z = (this.velocity.z * sign);
-        var x = (this.velocity.x * sign); 
-
-        this.old_parent_position = this.parent.transform.position.clone();
-
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
         this.update_aabb_position(delta);
-        this.forward(z * delta);
-        this.right(x* delta);
+        var col = player.get_component("aabb");
+
+
+        if(!col.colliding){
+         
+        } else {
+            //this.update_transform(delta);
+        }
+
+        this.forward(this.velocity.z * delta);
+        this.right(this.velocity.x * delta);
+   
 
         this.parent.transform.position.y += ( this.velocity.y * delta ); 
         
@@ -61,16 +66,7 @@ rigidbody.prototype.update = function(delta){
         this.new_parent_position = this.parent.transform.position.clone();
         //------------------ Capture New Position ------------------ 
     
-        this.velocity_direction = (this.new_parent_position.sub(this.old_parent_position)).clone().normalize();
-        
-        //*-------------------- Cap Direction -----------------------
-        if(Math.abs(this.velocity_direction.x) < 0.01){this.velocity_direction.x = 0;}
-        if(Math.abs(this.velocity_direction.z) < 0.01){this.velocity_direction.z = 0;}
-
-        if(Math.abs(this.velocity.x) < 0.01){this.x = 0;}
-        if(Math.abs(this.velocity.z) < 0.01){this.z = 0;}
-
-        //*-------------------- Cap Direction -----------------------
+        this.velocity_direction = this.old_parent_position.sub(this.new_parent_position).clone().normalize();
 
         //should be connected with collider here
         //means rigid bodies and colliders are interlinked
@@ -79,7 +75,13 @@ rigidbody.prototype.update = function(delta){
             this.parent.transform.position.y = 0;
         }
 
+        //*-------------------- Caps -----------------------
+        if(Math.abs(this.velocity_direction.x) < 0.1){this.velocity_direction.x = 0;}
+        if(Math.abs(this.velocity_direction.z) < 0.1){this.velocity_direction.z = 0;}
 
+        if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
+        if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
+        //*-------------------- Caps -----------------------
 }
 
 rigidbody.prototype.forward = function(distance){
@@ -120,13 +122,16 @@ rigidbody.prototype.update_aabb_position = function(delta){
 }
 
 // Get current direction of velocity with added direction from rotation
-rigidbody.prototype.get_direction = function(delta){
-    return this.direction.clone();
-}
 
+rigidbody.prototype.get_direction = function(){
+    var dir = this.velocity_direction.clone();
+    dir.x *= -1;
+
+    return dir;
+}
 // Get current direction of velocity with added direction from rotation
-rigidbody.prototype.get_flip_direction = function(delta){
-    return this.direction.clone().negate();
+rigidbody.prototype.get_flip_direction = function(){
+    return this.get_direction().negate().normalize();
 }
 
 rigidbody.prototype.get_negated_velocity = function(){
@@ -143,11 +148,24 @@ rigidbody.prototype.set_velocity = function(v){
 
 // f : force
 // d : direction
-rigidbody.prototype.add_force = function(f, d){
+rigidbody.prototype.add_force = function(f, d, delta){
     d.normalize();
-    this.velocity.x += f * d.x;
-    this.velocity.y += f * d.y;
-    this.velocity.z += f * d.z;
+
+    if(Math.abs(d.z) < 0.05){d.z = 0;}
+    if(Math.abs(d.x) < 0.05){d.x = 0;}
+
+    this.velocity.x += (f) * d.x;
+    //this.velocity.y += f * d.y;
+    this.velocity.z += (f) * d.z;
+}
+
+rigidbody.prototype.flip_velocity = function(){
+    this.velocity.z *= -1;
+    this.velocity.x *= -1;
+    var dir = this.velocity.clone().normalize();
+
+   // this.velocity.x += 7 * dir.x;
+    //this.velocity.z += 7 * dir.z;
 }
 
 //push transform without velocity
