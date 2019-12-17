@@ -28,33 +28,33 @@ rigidbody.prototype.set_parent = function(p){
 };
 
 rigidbody.prototype.update = function(delta){
+    var col = player.get_component("aabb");
+
         //*-------------------- Caps -----------------------
         if(Math.abs(this.velocity_direction.x) < 0.1){this.velocity_direction.x = 0;}
         if(Math.abs(this.velocity_direction.z) < 0.1){this.velocity_direction.z = 0;}
 
-        if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
-        if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
+        //if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
+        //if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
         //*-------------------- Caps -----------------------
 
         this.old_parent_position = this.parent.transform.position.clone();
 
-        //drag --------------------
-        this.velocity.x -= this.velocity.x * (10.0) * delta;
-        this.velocity.z -= this.velocity.z * (10.0) * delta;
-        this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
-        //drag -------------------
+        if(col.colliding){
+
+        } else {
+            //drag --------------------
+            this.velocity.x -= this.velocity.x * (10.0) * delta;
+            this.velocity.z -= this.velocity.z * (10.0) * delta;
+            this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
+            //drag -------------------
+        }
+
+    
 
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
         this.update_aabb_position(delta);
-        var col = player.get_component("aabb");
-
-
-        if(!col.colliding){
-         
-        } else {
-            //this.update_transform(delta);
-        }
 
         this.forward(this.velocity.z * delta);
         this.right(this.velocity.x * delta);
@@ -79,8 +79,8 @@ rigidbody.prototype.update = function(delta){
         if(Math.abs(this.velocity_direction.x) < 0.1){this.velocity_direction.x = 0;}
         if(Math.abs(this.velocity_direction.z) < 0.1){this.velocity_direction.z = 0;}
 
-        if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
-        if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
+        //if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
+        //if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
         //*-------------------- Caps -----------------------
 }
 
@@ -160,8 +160,21 @@ rigidbody.prototype.add_force = function(f, d, delta){
 }
 
 rigidbody.prototype.flip_velocity = function(){
-    this.velocity.z *= -1;
-    this.velocity.x *= -1;
+
+    console.log(this.velocity.z);
+    if(Math.abs(this.velocity.z) < 1){
+        var sign = Math.sign(this.velocity.z);
+        this.velocity.z -= get_step_z();
+    }
+
+    if(Math.abs(this.velocity.x) < 1){
+        var sign = Math.sign(this.velocity.x);
+        this.velocity.x -= get_step_x();
+    }
+    
+    this.velocity.z *= -(1);
+    this.velocity.x *= -(1);
+
     var dir = this.velocity.clone().normalize();
 
    // this.velocity.x += 7 * dir.x;

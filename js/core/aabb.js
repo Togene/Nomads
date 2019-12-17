@@ -1,13 +1,14 @@
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     
-    var p = transform.position;
-
-    this.position = p.clone();
-
+    this.position = transform.position.clone();
+    
     this.w = w;
     this.h = h;
     this.d = d;
     
+    this.min = new THREE.Vector3();
+    this.max = new THREE.Vector3();
+
     this.parent = null;
     this.colliding = false;
 

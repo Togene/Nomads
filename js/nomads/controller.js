@@ -7,7 +7,8 @@ var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
 var bounce_distance = 8;
 
-
+var step = 5;
+var speed_mult = 1;
 
 function controller_init(){
     controls = new THREE.PointerLockControls( camera, document.body );
@@ -93,8 +94,17 @@ function controller_key_init(){
     document.addEventListener( 'keyup', onKeyUp, false );
 }
 
+function get_step_x(){
+    return direction.x * step * speed_mult;
+}
+
+function get_step_z(){
+    return direction.z * step * speed_mult;
+}
+
 function movement(delta){
-          
+    //var step = step_size;
+
     delta /= 2;
 
     if(controls !== undefined && player != null){
@@ -105,17 +115,16 @@ function movement(delta){
             direction.z = Number( moveForward ) - Number( moveBackward );
             direction.x = Number( moveRight ) - Number( moveLeft );
             direction.normalize(); 
-            
-            var speed = 5;
 
-            if(shift) { speed = speed * 2.1;} else { speed = speed;}
+
+            if(shift) { speed_mult = 2.1;} else { speed_mult = 1;}
 
             if ((moveForward || moveBackward)){
-                if(!col.colliding) player_body.velocity.z -= direction.z * speed ;
+                if(!col.colliding) player_body.velocity.z -= direction.z * step * speed_mult;
             } 
         
             if ((moveLeft || moveRight)){
-                if(!col.colliding) player_body.velocity.x -= direction.x * speed ;
+                if(!col.colliding) player_body.velocity.x -= direction.x * step * speed_mult;
             }
 
             if(space){
