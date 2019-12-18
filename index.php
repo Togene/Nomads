@@ -24,6 +24,7 @@
 			<script src = "js/core/decomposer.js"></script>
 			<script src = "js/core/gameobject.js"></script>
 			<script src = "js/core/quadtree.js"></script>
+			<script src = "js/core/ray.js"></script>
 			<script src = "js/core/aabb.js"></script>
 			<script src = "js/core/rigidbody.js"></script>
 

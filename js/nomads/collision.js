@@ -15,11 +15,15 @@ function broad_quad_tree_insert(o){
 }
 
 function collision_update(delta){
-  // broad_collision_check(delta);
+    //broad_collision_check(delta);
+    player_collision_check(delta);
+}
+
+function player_collision_check(delta){
     if(player != undefined){
         near = [];
         near_debug = [];
-        
+
         rangecheck.x = player.transform.position.x
         rangecheck.y = player.transform.position.z;
         collision_tree.query(rangecheck, near, near_debug);
@@ -28,15 +32,22 @@ function collision_update(delta){
         //console.log(near);
         narrow_collision_check(near, player, delta);
     }
-
 }
 
 function broad_collision_check(delta){
-   // if(collision_tree != undefined && player != undefined) {
-   //     collision_tree.forEach(function(e){
-//
-   //     });
-   // }
+    if(collision_tree != undefined && player != undefined) {
+        collision_tree.forEach(function(e){
+            near = [];
+            near_debug = [];
+            
+            rangecheck.x = e.transform.position.x
+            rangecheck.y = e.transform.position.z;
+            collision_tree.query(rangecheck, near, near_debug);
+
+            near.splice( near.indexOf(e), 1 );
+            narrow_collision_check(near, e, delta);
+        });
+    }
 }
 
 //! Fix Intersection bug before trying to work with RigidBody

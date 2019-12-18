@@ -1,13 +1,23 @@
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     
-    this.position = transform.position.clone();
+    this.centre = transform.position.clone();
     
     this.w = w;
     this.h = h;
     this.d = d;
     
-    this.min = new THREE.Vector3();
-    this.max = new THREE.Vector3();
+    //used for ray intersection, and probs should be used in general with things
+    this.min = new THREE.Vector3(
+        this.centre.x - this.w,
+        this.centre.y - this.h,
+        this.centre.z - this.d
+    );
+
+    this.max = new THREE.Vector3(
+        this.centre.x + this.w,
+        this.centre.y + this.h,
+        this.centre.z + this.d
+    );
 
     this.parent = null;
     this.colliding = false;
@@ -18,6 +28,22 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     this.visule = this.visule(hex, fill);
     this.visule.visible = debug;
 };
+
+aabb.prototype.min_set = function(){
+    this.min = new THREE.Vector3(
+        this.centre.x - this.w,
+        this.centre.y - this.h,
+        this.centre.z - this.d
+    );
+}
+
+aabb.prototype.max_set = function(){
+    this.max = new THREE.Vector3(
+        this.centre.x + this.w,
+        this.centre.y + this.h,
+        this.centre.z + this.d
+    );
+}
 
 aabb.prototype.set_parent = function(p){
     this.parent = p;
@@ -89,10 +115,14 @@ aabb.prototype.set_visule_color = function(hex){
 
 aabb.prototype.update = function(delta){
     
-    this.position = this.parent.transform.position.clone();
+    if(!this.parent.transform.position.equals(this.centre)){
+        this.centre.copy(this.parent.transform.position);
+        this.min_set();
+        this.max_set();
+    }
 
     if(this.visule != null){
-        this.visule.position.set(this.position.x, this.position.y, this.position.z);
+        this.visule.position.copy(this.centre);
 
         if(this.colliding){
             this.set_visule_color(this.active_color);
@@ -109,7 +139,7 @@ aabb.prototype.direct_position_set = function(p){
     if(p === undefined){
         console.error("No Paramatre Given");
     } else {
-        this.position = p.clone();
+        this.centre = p.clone();
     }
 
 }
@@ -118,7 +148,7 @@ aabb.prototype.direct_position_add = function(p){
     if(p === undefined){
         console.error("No Paramatre Given");
     } else {
-        this.position.add(p); 
+        this.centre.add(p); 
     }
 }
 
@@ -128,12 +158,71 @@ aabb.prototype.set_colliding = function(bool){
 
 aabb.prototype.intersect = function(right){
     return !(
-        right.position.x - right.w > this.position.x + this.w ||
-        right.position.x + right.w < this.position.x - this.w ||
-        right.position.y - right.h > this.position.y + this.h ||
-        right.position.y + right.h < this.position.y - this.h ||
-        right.position.z - right.d > this.position.z + this.d ||
-        right.position.z + right.d < this.position.z - this.d);
+        right.centre.x - right.w > this.centre.x + this.w ||
+        right.centre.x + right.w < this.centre.x - this.w ||
+        right.centre.y - right.h > this.centre.y + this.h ||
+        right.centre.y + right.h < this.centre.y - this.h ||
+        right.centre.z - right.d > this.centre.z + this.d ||
+        right.centre.z + right.d < this.centre.z - this.d);
+}
+
+aabb.prototype.ray_intersect = function(r){
+    if(!(r instanceof ray)){return false;}
+
+    //---------------------- X ---------------------------------
+    var txmin = (this.min.x - r.origin.x) / r.direction.x;
+    var txmax = (this.max.x - r.origin.x) / r.direction.x;
+
+    if(txmin > txmax) {
+        //* ------------ SWAP -----------
+        console.log("min x", txmin, "max x", txmax);
+        var tmp = txmin;
+        txmin = txmax;
+        txmax = tmp;
+        console.log("min x", txmin, "max x", txmax);
+        //* ------------ SWAP -----------
+    }
+    //---------------------- X ---------------------------------
+
+    //---------------------- Y ---------------------------------
+    var tymin = (this.min.y - r.origin.y) / r.direction.y;
+    var tymax = (this.max.y - r.origin.y) / r.direction.y;
+
+    if(tymin > tymax) {
+        //* ------------ SWAP -----------
+        console.log("min y", tymin, "max y", tymax);
+        var tmp = tymin;
+        tymin = tymax;
+        tymax = tmp;
+        console.log("min y", tymin, "max y", tymax);
+        //* ------------ SWAP -----------
+    }
+
+    if((txmin > tymax) || (tymin > txmax)){return false;}
+    if(tymin > txmin){txmin = tymin;}
+    if(tymax < txmax){txmax = tymax;}
+    //---------------------- Y ---------------------------------
+
+    //---------------------- Z ---------------------------------
+    var tzmin = (this.min.z - r.origin.z) / r.direction.z;
+    var tzmax = (this.max.z - r.origin.z) / r.direction.z;
+
+    if(tzmin > tzmax) {
+        //* ------------ SWAP -----------
+        console.log("min z", tzmin, "max z", tzmax);
+        var tmp = tzmin;
+        tzmin = tzmax;
+        tzmax = tmp;
+        console.log("min z", tzmin, "max z", tzmax);
+        //* ------------ SWAP -----------
+    }
+
+    if((txmin > tzmax) || (tzmin > txmax)){return false;}
+    if(tzmin > txmin){txmin = tzmin;}
+    if(tzmax < txmax){txmax = tzmax;}
+    //---------------------- Z ---------------------------------
+
+    return true;
 }
 
 aabb.prototype.name = "aabb";

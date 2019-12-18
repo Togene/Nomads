@@ -31,11 +31,7 @@ rigidbody.prototype.update = function(delta){
     var col = player.get_component("aabb");
 
         //*-------------------- Caps -----------------------
-        if(Math.abs(this.velocity_direction.x) < 0.1){this.velocity_direction.x = 0;}
-        if(Math.abs(this.velocity_direction.z) < 0.1){this.velocity_direction.z = 0;}
-
-        //if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
-        //if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
+        this.cap(delta);
         //*-------------------- Caps -----------------------
 
         this.old_parent_position = this.parent.transform.position.clone();
@@ -46,10 +42,8 @@ rigidbody.prototype.update = function(delta){
             //drag --------------------
             this.velocity.x -= this.velocity.x * (10.0) * delta;
             this.velocity.z -= this.velocity.z * (10.0) * delta;
-            this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
             //drag -------------------
         }
-
 
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
@@ -57,10 +51,7 @@ rigidbody.prototype.update = function(delta){
 
         this.forward(this.velocity.z * delta);
         this.right(this.velocity.x * delta);
-   
-
-        this.parent.transform.position.y += ( this.velocity.y * delta ); 
-        
+        this.parent.transform.position.y += (this.velocity.y * delta); 
 
         this.new_parent_position = this.parent.transform.position.clone();
         //------------------ Capture New Position ------------------ 
@@ -72,15 +63,21 @@ rigidbody.prototype.update = function(delta){
         if (this.parent.transform.position.y <= 0) {
             this.velocity.y = 0;
             this.parent.transform.position.y = 0;
+        } else {
+            this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
         }
 
         //*-------------------- Caps -----------------------
-        if(Math.abs(this.velocity_direction.x) < 0.1){this.velocity_direction.x = 0;}
-        if(Math.abs(this.velocity_direction.z) < 0.1){this.velocity_direction.z = 0;}
-
-        //if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
-        //if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
+        this.cap(delta);
         //*-------------------- Caps -----------------------
+}
+
+rigidbody.prototype.cap = function(delta){
+    if(Math.abs(this.velocity_direction.x) < 0.2){this.velocity_direction.x = 0;}
+    if(Math.abs(this.velocity_direction.z) < 0.2){this.velocity_direction.z = 0;}
+    if(Math.abs(this.velocity_direction.y) < 0.2){this.velocity_direction.y = 0;}
+    if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
+    if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
 }
 
 rigidbody.prototype.forward = function(distance){
@@ -154,7 +151,7 @@ rigidbody.prototype.add_force = function(f, d, delta){
     if(Math.abs(d.x) < 0.05){d.x = 0;}
 
     this.velocity.x += (f) * d.x;
-    //this.velocity.y += f * d.y;
+    this.velocity.y += (f) * d.y;
     this.velocity.z += (f) * d.z;
 }
 
@@ -167,8 +164,23 @@ rigidbody.prototype.flip_velocity = function(){
         this.velocity.x -= get_step_x();
     }
     
-    this.velocity.z *= -(1);
-    this.velocity.x *= -(1);
+    this.velocity.z *= -(1 * get_step_z()/5);
+    this.velocity.x *= -(1 * get_step_x()/5);
+}
+
+
+//good for water/climbing
+rigidbody.prototype.null_velocity = function(){
+    this.velocity.z -= this.velocity.z;
+    this.velocity.x -= this.velocity.x;
+
+    if(Math.abs(this.velocity.z) < 1){
+        this.velocity.z -= get_step_z();
+    }
+
+    if(Math.abs(this.velocity.x) < 1){
+        this.velocity.x -= get_step_x();
+    }
 }
 
 //push transform without velocity

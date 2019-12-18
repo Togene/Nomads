@@ -24,7 +24,11 @@ function circlePointCollision(x, y, vec, rad) {
     return distanceXY(x, y, vec.x, vec.y) < rad;
 }
 
-
+function swap(l, r){
+    var tmp = l;
+    l = r;
+    r = tmp;
+}
 //prng
 //credit : https://gist.github.com/blixt/f17b47c62508be59987b
 

@@ -29,6 +29,7 @@ function game_bootstrap(data){
     controller_init();
     player_init();
     sky_init();
+    physics_init();
     collision_init();
     shader_init();
 
@@ -37,8 +38,8 @@ function game_bootstrap(data){
     scene.add(solid_sprites);
     scene.add(animated_sprites);
 
-    console.log("Game Initialized");
-
+    console.log("%cGame Initialized", 'color: #DAA45C');
+    
     newobject1.transform.position = new THREE.Vector3(0,0,0);
     newobject1.transform.scale = new THREE.Vector3(1,0.5,1);
 
@@ -54,6 +55,13 @@ function game_bootstrap(data){
     cube1.matrixAutoUpdate = false;
     cube2.matrixAutoUpdate = false;
     
+    var r = new ray(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1));
+    var ab = new aabb(newobject1.transform, 10.5, 1, 20.5, false, 0xFF0000, true);
+    
+    newobject1.add_component(r);
+    newobject1.add_component(ab);
+    console.log(ab.ray_intersect(r));
+
     TestCreatures();
     TestTree();
     TestStructures();
@@ -63,7 +71,6 @@ function game_bootstrap(data){
         
         if(Scene[i].has_component("aabb"))
             broad_quad_tree_insert(Scene[i]);
-
 
         if(Scene[i].has_component("rigidbody")){
             rigidbodies_insert(Scene[i].get_component("rigidbody"));

@@ -11,6 +11,10 @@ function rigidbodies_insert(o){
     rigidbodies.push(o);
 }
 
+function physics_init(){
+    
+}
+
 function physics_update(delta){
     for(var i in rigidbodies){
         if(!rigidbodies[i].isKin){

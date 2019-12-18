@@ -14,7 +14,7 @@ function TestTree(){
         var rand = new p_random(i);
         var x = rand.next_range(-.0001, .0001);
         var z = rand.next_range(-.0001, .0001);
-        console.log(z);
+        //console.log(z);
 
         test_trees.push(tree);
         tree.transform.position = new THREE.Vector3(x, 0, z);
