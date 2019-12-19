@@ -17,6 +17,36 @@ function broad_quad_tree_insert(o){
 function collision_update(delta){
     //broad_collision_check(delta);
     player_collision_check(delta);
+    floor_collision_check(delta)
+}
+
+function floor_collision_check(delta){
+    if(collision_tree != undefined && player != undefined) {
+        collision_tree.forEach(function(e){
+            floor_narrow_check(e, delta);
+        });
+    }
+}
+
+function floor_narrow_check(e, delta){
+    if(e != undefined){
+        var l = e.get_component("aabb");
+        var lb = e.get_component("rigidbody");
+        var lr = e.get_component("ray");
+
+        var r = floor.get_component("aabb");
+        var intersection = r.ray_intersect(lr);
+
+        if(intersection.val){
+            lr.set_intersecting(true);
+
+            if(e.name == "player"){
+                lb.ground(intersection.y, true);
+            } else {
+                lb.ground(intersection.y, false);
+            }
+        } 
+    }
 }
 
 function player_collision_check(delta){
@@ -29,7 +59,7 @@ function player_collision_check(delta){
         collision_tree.query(rangecheck, near, near_debug);
 
         near.splice( near.indexOf(player), 1 );
-        //console.log(near);
+        
         narrow_collision_check(near, player, delta);
     }
 }
@@ -54,42 +84,43 @@ function broad_collision_check(delta){
 function narrow_collision_check(near, e, delta){
     if(e != undefined){
         var l = e.get_component("aabb");
-        l.set_colliding(false);
-
         var lb = e.get_component("rigidbody");
+        var lr = e.get_component("ray");
 
+        l.set_colliding(false);
+    
         for(var i = 0; i < near.length; i++){
             var r = near[i].get_component("aabb");
             var rb = near[i].get_component("rigidbody");
 
             if(l.intersect(r)){
-                
                 //Handle Left
                 l.set_colliding(true);
                 //Handle Right
                 r.set_colliding(true);
 
-                //no rigidbodies, no collision
-                if(lb == null && rb == null){return;}
-
-                //Handle Nulls and Kenetics
-                if(rb == null && lb != null){
-                    lb.flip_velocity();
-                }
-                else if(lb == null && rb != null){
-                    rb.flip_velocity();
-                } else {
-                    rb.add_force(lb.get_magnitude()/rb.mass, lb.get_flip_direction());
-                    lb.add_force(rb.get_magnitude()/lb.mass, rb.get_flip_direction());
-                }
+                collision_response(lb, rb);
 
                 return;
             }
 
             r.set_colliding(false);
         }
+    }
+}
 
-       // lb.set_colliding(false);
-   
+function collision_response(lb, rb){
+    //no rigidbodies, no collision
+    if(lb == null && rb == null){return;}
+
+    //Handle Nulls and Kenetics
+    if(rb == null && lb != null){
+        lb.flip_velocity();
+    }
+    else if(lb == null && rb != null){
+        rb.flip_velocity();
+    } else {
+        rb.add_force(lb.get_magnitude()/rb.mass, lb.get_flip_direction());
+        lb.add_force(rb.get_magnitude()/lb.mass, rb.get_flip_direction());
     }
 }

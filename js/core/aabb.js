@@ -175,11 +175,11 @@ aabb.prototype.ray_intersect = function(r){
 
     if(txmin > txmax) {
         //* ------------ SWAP -----------
-        console.log("min x", txmin, "max x", txmax);
+        //console.log("min x", txmin, "max x", txmax);
         var tmp = txmin;
         txmin = txmax;
         txmax = tmp;
-        console.log("min x", txmin, "max x", txmax);
+        //console.log("min x", txmin, "max x", txmax);
         //* ------------ SWAP -----------
     }
     //---------------------- X ---------------------------------
@@ -190,11 +190,11 @@ aabb.prototype.ray_intersect = function(r){
 
     if(tymin > tymax) {
         //* ------------ SWAP -----------
-        console.log("min y", tymin, "max y", tymax);
+        //console.log("min y", tymin, "max y", tymax);
         var tmp = tymin;
         tymin = tymax;
         tymax = tmp;
-        console.log("min y", tymin, "max y", tymax);
+        //console.log("min y", tymin, "max y", tymax);
         //* ------------ SWAP -----------
     }
 
@@ -209,11 +209,11 @@ aabb.prototype.ray_intersect = function(r){
 
     if(tzmin > tzmax) {
         //* ------------ SWAP -----------
-        console.log("min z", tzmin, "max z", tzmax);
+        //console.log("min z", tzmin, "max z", tzmax);
         var tmp = tzmin;
         tzmin = tzmax;
         tzmax = tmp;
-        console.log("min z", tzmin, "max z", tzmax);
+        //console.log("min z", tzmin, "max z", tzmax);
         //* ------------ SWAP -----------
     }
 
@@ -221,8 +221,8 @@ aabb.prototype.ray_intersect = function(r){
     if(tzmin > txmin){txmin = tzmin;}
     if(tzmax < txmax){txmax = tzmax;}
     //---------------------- Z ---------------------------------
-
-    return true;
+    
+    return {val : true, x: txmin, y: this.max.y, z: tzmin};
 }
 
 aabb.prototype.name = "aabb";

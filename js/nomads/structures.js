@@ -2,6 +2,8 @@ function structures_init(){
 
 }
 
+var floor;
+
 function TestStructures(){
     var floor_shader = get_data("instance_shader");
     var buffer = create_buffer();
@@ -9,6 +11,8 @@ function TestStructures(){
 
     var floor_grid_size = 100;
     var spacing = 2;
+
+    floor = new gameobject("floor");
 
     for(var i = 0; i < floor_grid_size; i++){
         for(var j = 0; j < floor_grid_size; j++){
@@ -34,7 +38,8 @@ function TestStructures(){
             );
 
             floor_square.add_component(floor_square_decomposer);
-
+            floor.add_child(floor_square);
+            
             PopulateBuffer(
                 new THREE.Vector3(0, 0, 0),
                 new THREE.Vector3(0, 0, 0), 
@@ -44,16 +49,21 @@ function TestStructures(){
             }
         }
 
-        CreateInstance(
-            "Test", 
-            animated_sprites, 
-            buffer, 
-            attributes, 
-            SpriteSheetSize, 
-            floor_shader, 
-            3, 
-            false, 
-            false);
+        floor.add_component(new aabb(floor.transform,
+            100,
+            0.15,
+            100, true, 0xFFFFFF, true))
+
+    CreateInstance(
+        "Test", 
+        animated_sprites, 
+        buffer, 
+        attributes, 
+        SpriteSheetSize, 
+        floor_shader, 
+        3, 
+        false, 
+        false);
 
 }
 

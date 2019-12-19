@@ -54,13 +54,6 @@ function game_bootstrap(data){
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
     cube1.matrixAutoUpdate = false;
     cube2.matrixAutoUpdate = false;
-    
-    var r = new ray(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1));
-    var ab = new aabb(newobject1.transform, 10.5, 1, 20.5, false, 0xFF0000, true);
-    
-    newobject1.add_component(r);
-    newobject1.add_component(ab);
-    console.log(ab.ray_intersect(r));
 
     TestCreatures();
     TestTree();
@@ -68,7 +61,6 @@ function game_bootstrap(data){
     
     for(var i = 0; i < Scene.length; i++){
         //Scene[i].information();
-        
         if(Scene[i].has_component("aabb"))
             broad_quad_tree_insert(Scene[i]);
 

@@ -47,6 +47,7 @@ gameobject.prototype.information = function(){
 }
 
 gameobject.prototype.get_component = function(n){
+    var components = [];
 
     if(typeof n !== "string"){
         console.error("Must Be of Type String.");
@@ -55,11 +56,17 @@ gameobject.prototype.get_component = function(n){
 
     for(var i = 0; i < this.components.length; i++){
         if(this.components[i].name == n){
-            return this.components[i];
+            components.push(this.components[i]);
         }
     }
 
-    return null;
+    if(components.length == 0){
+        return null;
+    } else if (components.length == 1){
+        return components[0];
+    } else {
+        return components;
+    }
 }
 
 gameobject.prototype.has_component = function(n){

@@ -1,6 +1,11 @@
 function ray(origin, direction){
     this.origin = origin;
     this.direction = direction;
+    this.intersecting = false;
+}
+
+ray.prototype.set_intersecting = function(b){
+    this.intersecting = b;
 }
 
 ray.prototype.set_parent = function(p){
@@ -11,8 +16,7 @@ ray.prototype.update = function(delta){
     if(this.parent != null){
         var p = this.parent.transform.position;
         if(!p.equals(this.origin)){
-            var new_pos = p.clone().add(this.origin);
-            this.origin.copy(new_pos);
+            this.origin.copy(p);
         }
     }
 }

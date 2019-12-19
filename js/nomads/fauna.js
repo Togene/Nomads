@@ -33,9 +33,9 @@ function TestCreatures(){
            buffer.index,
         );
         crab.add_component(new aabb(crab.transform, .5, .5, .5, true, 0x00FF00, true));
-        crab.add_component(new rigidbody(0.25, false));
+        crab.add_component(new rigidbody(1, false));
         crab.add_component(crab_decomposer);
-   
+        crab.add_component(new ray(crab.transform.position, new THREE.Vector3(0, -1, 0)));
             
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),

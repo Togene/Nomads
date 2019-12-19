@@ -60,9 +60,9 @@ rigidbody.prototype.update = function(delta){
 
         //should be connected with collider here
         //means rigid bodies and colliders are interlinked
-        if (this.parent.transform.position.y <= 0) {
+        if (this.parent.transform.position.y <= -50) {
             this.velocity.y = 0;
-            this.parent.transform.position.y = 0;
+            this.parent.transform.position.y = 5;
         } else {
             this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
         }
@@ -72,12 +72,17 @@ rigidbody.prototype.update = function(delta){
         //*-------------------- Caps -----------------------
 }
 
+rigidbody.prototype.get_step_y = function(){
+    return 9.8 * (20.0);
+}
+
 rigidbody.prototype.cap = function(delta){
     if(Math.abs(this.velocity_direction.x) < 0.2){this.velocity_direction.x = 0;}
     if(Math.abs(this.velocity_direction.z) < 0.2){this.velocity_direction.z = 0;}
     if(Math.abs(this.velocity_direction.y) < 0.2){this.velocity_direction.y = 0;}
     if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
     if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
+    if(Math.abs(this.velocity.y) < 0.1){this.y = 0;}
 }
 
 rigidbody.prototype.forward = function(distance){
@@ -155,6 +160,23 @@ rigidbody.prototype.add_force = function(f, d, delta){
     this.velocity.z += (f) * d.z;
 }
 
+rigidbody.prototype.ground = function(y, isplayer){
+
+    var diffrence = this.parent.transform.position.y - y;
+    var col = this.parent.get_component("aabb");
+
+    //! .1 + collider size (which is 1)
+    if(diffrence < (col.h + .1)){
+        this.parent.transform.position.y = y + (col.h + .15);
+        this.velocity.y = 0;
+        if(isplayer) {
+            console.log("is player");
+            canJump = true;
+        }
+   
+    }
+}
+
 rigidbody.prototype.flip_velocity = function(){
     if(Math.abs(this.velocity.z) < 1){
         this.velocity.z -= get_step_z();
@@ -163,9 +185,10 @@ rigidbody.prototype.flip_velocity = function(){
     if(Math.abs(this.velocity.x) < 1){
         this.velocity.x -= get_step_x();
     }
-    
-    this.velocity.z *= -(1 * get_step_z()/5);
-    this.velocity.x *= -(1 * get_step_x()/5);
+
+    this.velocity.z *= -(1);
+    this.velocity.x *= -(1);
+    //this.velocity.y *= -(1);
 }
 
 
