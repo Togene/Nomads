@@ -59,7 +59,7 @@ function player_collision_check(delta){
         collision_tree.query(rangecheck, near, near_debug);
 
         near.splice( near.indexOf(player), 1 );
-        
+        near.splice( near.indexOf(floor), 1 );
         narrow_collision_check(near, player, delta);
     }
 }
@@ -104,6 +104,18 @@ function narrow_collision_check(near, e, delta){
                 return;
             }
 
+            var intersection = r.ray_intersect(lr);
+
+            if(intersection.val){
+                lr.set_intersecting(true);
+    
+                if(e.name == "player"){
+                    lb.ground(intersection.y, true);
+                } else {
+                    lb.ground(intersection.y, false);
+                }
+            } 
+
             r.set_colliding(false);
         }
     }
@@ -120,7 +132,10 @@ function collision_response(lb, rb){
     else if(lb == null && rb != null){
         rb.flip_velocity();
     } else {
-        rb.add_force(lb.get_magnitude()/rb.mass, lb.get_flip_direction());
-        lb.add_force(rb.get_magnitude()/lb.mass, rb.get_flip_direction());
+        var lb_dir = lb.get_direction();
+        var rb_dir = rb.get_direction();
+
+        rb.add_force(lb.get_magnitude()/rb.mass, lb_dir);
+        lb.add_force(rb.get_magnitude()/lb.mass, rb_dir);
     }
 }

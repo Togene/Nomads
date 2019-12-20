@@ -130,7 +130,7 @@ function movement(delta){
             if(space){
                 if (canJump === true ){
                         player.get_component("rigidbody").add_force(
-                            40, new THREE.Vector3(0, 1, 0));
+                            70, new THREE.Vector3(0, 1, 0));
                             canJump = false;
                     }
             }

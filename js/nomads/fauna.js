@@ -5,7 +5,7 @@ function TestCreatures(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_crabs = 4;
+    var num_crabs = 10;
     var spacing = 3;
 
     for(var i = 0; i < num_crabs; i++){

@@ -157,6 +157,21 @@ aabb.prototype.set_colliding = function(bool){
 }
 
 aabb.prototype.intersect = function(right){
+    var l_x;
+    var r_x;
+    var t_y;
+    var b_y;
+    var b_z;
+    var f_z;
+
+    if(right.parent.name != "floor"){
+        if( right.centre.x - right.w > this.centre.x + this.w){
+            r_x = this.centre.x + this.w;
+            console.log(r_x);
+        }
+    
+    }
+
     return !(
         right.centre.x - right.w > this.centre.x + this.w ||
         right.centre.x + right.w < this.centre.x - this.w ||

@@ -49,14 +49,14 @@ rigidbody.prototype.update = function(delta){
         //that way it can check collision in advance
         this.update_aabb_position(delta);
 
-        this.forward(this.velocity.z * delta);
-        this.right(this.velocity.x * delta);
+        this.forward(-(this.velocity.z * delta));
+        this.right(-(this.velocity.x * delta));
         this.parent.transform.position.y += (this.velocity.y * delta); 
 
         this.new_parent_position = this.parent.transform.position.clone();
         //------------------ Capture New Position ------------------ 
     
-        this.velocity_direction = this.old_parent_position.sub(this.new_parent_position).clone().normalize();
+        this.velocity_direction = this.new_parent_position.sub(this.old_parent_position).clone().normalize();
 
         //should be connected with collider here
         //means rigid bodies and colliders are interlinked
@@ -86,13 +86,16 @@ rigidbody.prototype.cap = function(delta){
 }
 
 rigidbody.prototype.forward = function(distance){
-    var z = this.parent.transform.rotation.get_forward();
-    this.parent.transform.position.addScaledVector(z, distance);
+    var vec = new THREE.Vector3();
+    vec.setFromMatrixColumn( camera.matrix, 0 );
+    vec.crossVectors( camera.up, vec );
+    this.parent.transform.position.addScaledVector(vec, distance);
 }
 
 rigidbody.prototype.right = function(distance){
-    var x = this.parent.transform.rotation.get_left();
-    this.parent.transform.position.addScaledVector(x, distance);
+    var vec = new THREE.Vector3();
+    vec.setFromMatrixColumn( camera.matrix, 0 );
+    this.parent.transform.position.addScaledVector(vec, distance);
 }
 
 rigidbody.prototype.backward = function(distance){
@@ -106,17 +109,21 @@ rigidbody.prototype.left = function(distance){
 }
 
 rigidbody.prototype.update_aabb_position = function(delta){
+
+    var forward = new THREE.Vector3();
+    forward.setFromMatrixColumn( camera.matrix, 0 );
+    forward.crossVectors( camera.up, forward );
+
+    var right = new THREE.Vector3();
+    right.setFromMatrixColumn( camera.matrix, 0 );
+
     var pos_clone = this.parent.transform.position.clone();
     var col = this.parent.get_component("aabb");
 
-    var z = this.parent.transform.rotation.get_forward();
-    var x = this.parent.transform.rotation.get_left();
-    //var y = this.parent.transform.rotation.get_down();
+    var projection_mag = 1.1; //! 1 second in the future? or .1 steps in the future?
 
-    var projection_mag = 1.25; //! 1 second in the future? or .1 steps in the future?
-
-    pos_clone.addScaledVector(z, (this.velocity.z * projection_mag) * delta);
-    pos_clone.addScaledVector(x, (this.velocity.x * projection_mag) * delta);
+    pos_clone.addScaledVector(forward, -((this.velocity.z * projection_mag) * delta));
+    pos_clone.addScaledVector(right, -((this.velocity.x * projection_mag) * delta));
     //pos_clone.addScaledVector(y, (this.velocity.y * projection_mag) * delta);
  
     col.direct_position_set(pos_clone);
@@ -125,9 +132,7 @@ rigidbody.prototype.update_aabb_position = function(delta){
 // Get current direction of velocity with added direction from rotation
 
 rigidbody.prototype.get_direction = function(){
-    var dir = this.velocity_direction.clone();
-    dir.x *= -1;
-
+    var dir = this.velocity.clone().normalize();
     return dir;
 }
 // Get current direction of velocity with added direction from rotation
@@ -167,17 +172,24 @@ rigidbody.prototype.ground = function(y, isplayer){
 
     //! .1 + collider size (which is 1)
     if(diffrence < (col.h + .1)){
-        this.parent.transform.position.y = y + (col.h + .15);
+        this.parent.transform.position.y = y + (col.h + .01);
         this.velocity.y = 0;
         if(isplayer) {
-            console.log("is player");
+            //console.log("is player");
             canJump = true;
         }
    
     }
 }
 
+//TODO: UPDATE COLLISION RESPONSE FOR KINETICS
+//*gadda be looking at swept/sweeping AABB :(
 rigidbody.prototype.flip_velocity = function(){
+    //need to figure out players next stop pos and calc from there
+    //z + vel.z + rot
+    var next_z = get_step_z() + this.velocity.z;
+
+
     if(Math.abs(this.velocity.z) < 1){
         this.velocity.z -= get_step_z();
     }
@@ -186,8 +198,8 @@ rigidbody.prototype.flip_velocity = function(){
         this.velocity.x -= get_step_x();
     }
 
-    this.velocity.z *= -(1);
-    this.velocity.x *= -(1);
+    this.velocity.z *= -(1.1);
+    this.velocity.x *= -(1.1);
     //this.velocity.y *= -(1);
 }
 
