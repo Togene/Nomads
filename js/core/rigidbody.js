@@ -183,23 +183,22 @@ rigidbody.prototype.ground = function(y, isplayer){
 }
 
 //TODO: UPDATE COLLISION RESPONSE FOR KINETICS
-//*gadda be looking at swept/sweeping AABB :(
-rigidbody.prototype.flip_velocity = function(){
-    //need to figure out players next stop pos and calc from there
-    //z + vel.z + rot
-    var next_z = get_step_z() + this.velocity.z;
+// *gadda be looking at swept/sweeping AABB :(
+// *
+rigidbody.prototype.flip_velocity = function(normal, delta){
 
+   // console.log("poop", normal, vec_test);
 
     if(Math.abs(this.velocity.z) < 1){
-        this.velocity.z -= get_step_z();
+       // this.velocity.z -= get_step_z();
     }
 
     if(Math.abs(this.velocity.x) < 1){
-        this.velocity.x -= get_step_x();
+       // this.velocity.x -= get_step_x();
     }
 
-    this.velocity.z *= -(1.1);
-    this.velocity.x *= -(1.1);
+    this.velocity.z *= -1.1;
+    this.velocity.x *= -1.1;
     //this.velocity.y *= -(1);
 }
 

@@ -5,13 +5,13 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_trees = 10;
+    var num_trees = 1;
 
     for(var i = 0; i < num_trees; i++){
         
         var tree = new gameobject("tree");
         
-        var rand = new p_random(i);
+        var rand = new p_random(1);
         var x = rand.next_range(-.0001, .0001);
         var z = rand.next_range(-.0001, .0001);
         //console.log(z);

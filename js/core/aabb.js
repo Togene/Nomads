@@ -156,29 +156,167 @@ aabb.prototype.set_colliding = function(bool){
     this.colliding = bool;
 }
 
-aabb.prototype.intersect = function(right){
-    var l_x;
-    var r_x;
-    var t_y;
-    var b_y;
-    var b_z;
-    var f_z;
-
-    if(right.parent.name != "floor"){
-        if( right.centre.x - right.w > this.centre.x + this.w){
-            r_x = this.centre.x + this.w;
-            console.log(r_x);
-        }
+//credit : https://www.gamedev.net/articles/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
+aabb.prototype.swept_intersect = function(left_body, right){
     
+    var normalx = 0.0;
+    var normaly = 0.0;
+    var normalz = 0.0;
+
+    var xInvEntry, yInvEntry, zInvEntry;
+    var xInvExit, yInvExit, zInvExit;
+
+    //b1 = left
+    //b2 = right
+
+    // find the distance between the objects on the near and far sides for both x and y
+    if(left_body.velocity.x > 0.0){
+        xInvEntry = right.centre.x - (this.centre.x + this.w);
+        xInvExit = (right.centre.x + right.w) - this.centre.x;
+    } else {
+        xInvEntry = (right.centre.x + right.w) - this.centre.x;
+        xInvExit = right.centre.x - (this.centre.x + this.w);
     }
 
-    return !(
-        right.centre.x - right.w > this.centre.x + this.w ||
-        right.centre.x + right.w < this.centre.x - this.w ||
-        right.centre.y - right.h > this.centre.y + this.h ||
-        right.centre.y + right.h < this.centre.y - this.h ||
-        right.centre.z - right.d > this.centre.z + this.d ||
-        right.centre.z + right.d < this.centre.z - this.d);
+    //if(left_body.velocity.y > 0.0){
+    //    yInvEntry = right.centre.y - (this.centre.y + this.h);
+    //    yInvExit = (right.centre.y + right.h) - this.centre.y;
+    //} else {
+    //    yInvEntry = (right.centre.y + right.h) - this.centre.y;
+    //    yInvExit = right.centre.y - (this.centre.y + this.h);
+    //}
+
+    if(left_body.velocity.z > 0.0){
+        zInvEntry = right.centre.z - (this.centre.z + this.d);
+        zInvExit = (right.centre.z + right.d) - this.centre.z;
+    } else {
+        zInvEntry = (right.centre.z + right.d) - this.centre.z;
+        zInvExit = right.centre.z - (this.centre.z + this.d);
+    }
+
+    //find the time of collision and time of leaving for each axis (if statement is to repvent devide my zero)
+    var xEntry, yEntry, zEntry;
+    var xExit, yExit, zExit;
+
+    if(left_body.velocity.x == 0){
+        xEntry = -Infinity;
+        xExit = Infinity;
+    } else {
+        xEntry = xInvEntry / left_body.velocity.x;
+        xExit = xInvExit / left_body.velocity.x;
+    }
+
+    //if(left_body.velocity.y == 0){
+    //    yEntry = -Infinity;
+    //    yExit = Infinity;
+    //} else {
+    //    yEntry = yInvEntry / left_body.velocity.y;
+    //    yExit = yInvExit / left_body.velocity.y;
+    //}
+
+    if(left_body.velocity.z == 0){
+        zEntry = -Infinity;
+        zExit = Infinity;
+    } else {
+        zEntry = zInvEntry / left_body.velocity.z;
+        zExit = zInvExit / left_body.velocity.z;
+    }
+
+    //find the earliest/latest times of collisionfloat
+    var entryTime = Math.max(xEntry, zEntry);
+    //entryTime = Math.max(entryTime, zEntry);
+
+    var exitTime = Math.min(xExit, zExit);
+    //exitTime = Math.min(exitTime, zExit);
+
+    //if there was no collision
+    if(entryTime > exitTime || xEntry < 0.0  && zEntry < 0.0 || xEntry > 1.0 || zEntry > 1.0){
+        return {val: 1.0, nx: 0, ny:0, nz:0};
+    } else { //! totes colliding!
+        if(xEntry > zEntry){
+            if(xInvEntry < 0.0){
+                normalx = +1.0;
+                normaly = +0.0;
+                normalz = 0.0;
+            } else {
+                normalx = -1.0;
+                normaly = +0.0;
+                normalz = 0.0;
+            }
+        } else {
+            if(zInvEntry < 0.0){
+                normalx = +0.0;
+                normaly = +1.0;
+                normalz = 0.0;
+            } else {
+                normalx = +0.0;
+                normaly = -1.0;
+                normalz = 0.0;
+            }
+        }
+        
+        // return the time of collsion
+
+        return {val: entryTime, nx: normalx, ny: normaly, nz: normalz};
+    }
+}
+
+aabb.prototype.intersect = function(right){
+    var lx = false;
+    var rx = false;
+    var ty = false;
+    var by = false;
+    var bz = false;
+    var fz = false;
+
+    var n = new THREE.Vector3();
+
+    if(right.centre.x - right.w > this.centre.x + this.w){
+        lx = true;
+        n = new THREE.Vector3(1, 0, 0);
+    }
+
+    if(right.centre.x + right.w < this.centre.x - this.w){
+        rx = true;
+        n.add(new THREE.Vector3(-1, 0, 0));
+    }
+
+    if(right.centre.y - right.h > this.centre.y + this.h){
+        by = true;
+        n.add(new THREE.Vector3(0, -1, 0));
+    }
+
+    if(right.centre.y + right.h < this.centre.y - this.h){
+        ty = true;
+        n.add(new THREE.Vector3(0, 1, 0));
+    }
+
+    if(right.centre.z - right.d > this.centre.z + this.d){
+        bz = true;
+        n.add(new THREE.Vector3(0, 0, -1));
+    }
+
+    if(right.centre.z + right.d < this.centre.z - this.d){
+        fz = true;
+        n.add(new THREE.Vector3(0, 0, 1));
+    }
+
+    n.normalize();
+
+    //console.log(
+    //    "\n", "lx", lx, "rx", rx,"\n",
+    //    "by", by, "ty", ty,"\n",
+    //    "fz", fz, "bz", bz,"\n")
+/*
+          6----7
+         /|   /|
+        2----3 |
+        | |  | |
+        | 4--|-5
+        |/   |/
+        0----1
+*/
+    return {result: !(lx || rx || by || ty || fz || bz), normal: n};
 }
 
 aabb.prototype.ray_intersect = function(r){
