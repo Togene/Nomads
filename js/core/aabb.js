@@ -1,3 +1,6 @@
+//credit : https://github.com/noona <--- give this person some love
+//suace : https://github.com/noonat/intersect/blob/master/src/intersect.ts
+
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     
     this.centre = transform.position.clone();
@@ -156,112 +159,120 @@ aabb.prototype.set_colliding = function(bool){
     this.colliding = bool;
 }
 
-//credit : https://www.gamedev.net/articles/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
-aabb.prototype.swept_intersect = function(left_body, right){
-    
-    var normalx = 0.0;
-    var normaly = 0.0;
-    var normalz = 0.0;
+aabb.prototype.intersect_segement = function(position, delta, pad_x, pad_z){
+    const scale_x = 1.0 / delta.x;
+    const scale_z = 1.0 / delta.z;
 
-    var xInvEntry, yInvEntry, zInvEntry;
-    var xInvExit, yInvExit, zInvExit;
+    const sign_x = Math.sign(scale_x);
+    const sign_z = Math.sign(scale_z);
 
-    //b1 = left
-    //b2 = right
+    const near_time_x = (this.centre.x - sign_x * (this.w + pad_x) - position.x) * scale_x;
+    const near_time_z = (this.centre.z - sign_z * (this.d + pad_z) - position.z) * scale_z;
 
-    // find the distance between the objects on the near and far sides for both x and y
-    if(left_body.velocity.x > 0.0){
-        xInvEntry = right.centre.x - (this.centre.x + this.w);
-        xInvExit = (right.centre.x + right.w) - this.centre.x;
+    const far_time_x = (this.centre.x + sign_x * (this.w + pad_x) - position.x) * scale_x;
+    const far_time_z = (this.centre.z + sign_z * (this.d + pad_z) - position.z) * scale_z;
+
+    if(near_time_x > far_time_z || near_time_z > far_time_x){return null;}
+
+    const near_time = near_time_x > near_time_z ? near_time_x : near_time_z;
+    const far_time = far_time_x < far_time_z ? far_time_x : far_time_z;
+
+    if(near_time >= 1 || far_time <= 0){return null;}
+
+    const h = new hit(this);
+    h.time = clamp(near_time, 0, 1);
+
+    if(near_time_x > near_time_z){
+        h.normal.x = -sign_x;
+        h.normal.z = 0;
     } else {
-        xInvEntry = (right.centre.x + right.w) - this.centre.x;
-        xInvExit = right.centre.x - (this.centre.x + this.w);
+        h.normal.x = 0;
+        h.normal.z = -sign_z;
     }
 
-    //if(left_body.velocity.y > 0.0){
-    //    yInvEntry = right.centre.y - (this.centre.y + this.h);
-    //    yInvExit = (right.centre.y + right.h) - this.centre.y;
-    //} else {
-    //    yInvEntry = (right.centre.y + right.h) - this.centre.y;
-    //    yInvExit = right.centre.y - (this.centre.y + this.h);
-    //}
+    h.delta.x = (1.0 - h.time) * -delta.x;
+    h.delta.z = (1.0 - h.time) * -delta.z;
 
-    if(left_body.velocity.z > 0.0){
-        zInvEntry = right.centre.z - (this.centre.z + this.d);
-        zInvExit = (right.centre.z + right.d) - this.centre.z;
-    } else {
-        zInvEntry = (right.centre.z + right.d) - this.centre.z;
-        zInvExit = right.centre.z - (this.centre.z + this.d);
-    }
+    h.position.x = position.x + delta.x * h.time;
+    h.position.z = position.z + delta.z * h.time;
 
-    //find the time of collision and time of leaving for each axis (if statement is to repvent devide my zero)
-    var xEntry, yEntry, zEntry;
-    var xExit, yExit, zExit;
-
-    if(left_body.velocity.x == 0){
-        xEntry = -Infinity;
-        xExit = Infinity;
-    } else {
-        xEntry = xInvEntry / left_body.velocity.x;
-        xExit = xInvExit / left_body.velocity.x;
-    }
-
-    //if(left_body.velocity.y == 0){
-    //    yEntry = -Infinity;
-    //    yExit = Infinity;
-    //} else {
-    //    yEntry = yInvEntry / left_body.velocity.y;
-    //    yExit = yInvExit / left_body.velocity.y;
-    //}
-
-    if(left_body.velocity.z == 0){
-        zEntry = -Infinity;
-        zExit = Infinity;
-    } else {
-        zEntry = zInvEntry / left_body.velocity.z;
-        zExit = zInvExit / left_body.velocity.z;
-    }
-
-    //find the earliest/latest times of collisionfloat
-    var entryTime = Math.max(xEntry, zEntry);
-    //entryTime = Math.max(entryTime, zEntry);
-
-    var exitTime = Math.min(xExit, zExit);
-    //exitTime = Math.min(exitTime, zExit);
-
-    //if there was no collision
-    if(entryTime > exitTime || xEntry < 0.0  && zEntry < 0.0 || xEntry > 1.0 || zEntry > 1.0){
-        return {val: 1.0, nx: 0, ny:0, nz:0};
-    } else { //! totes colliding!
-        if(xEntry > zEntry){
-            if(xInvEntry < 0.0){
-                normalx = +1.0;
-                normaly = +0.0;
-                normalz = 0.0;
-            } else {
-                normalx = -1.0;
-                normaly = +0.0;
-                normalz = 0.0;
-            }
-        } else {
-            if(zInvEntry < 0.0){
-                normalx = +0.0;
-                normaly = +1.0;
-                normalz = 0.0;
-            } else {
-                normalx = +0.0;
-                normaly = -1.0;
-                normalz = 0.0;
-            }
-        }
-        
-        // return the time of collsion
-
-        return {val: entryTime, nx: normalx, ny: normaly, nz: normalz};
-    }
+    return h;
 }
 
-aabb.prototype.intersect = function(right){
+
+aabb.prototype.intersect_aabb = function(right){
+    const dx = right.centre.x - this.centre.x;
+    //half is just c + w
+    const px = right.w + this.w - Math.abs(dx);
+
+    if(px <= 0){return null;}
+
+    const dz = right.centre.z - this.centre.z;
+    const pz = right.d + this.d - Math.abs(dz);
+
+    if(pz <= 0){return null;}
+
+    const h = new hit(this);
+
+    if(px < pz){
+        const sx = Math.sign(dx);
+        h.delta.x = px * sx;
+        h.normal.x = sx;
+        h.position.x = this.centre.x + this.w * sx;
+        h.position.z = right.centre.z;
+    } else {
+        const sz = Math.sign(dz);
+        h.delta.z = pz * sz;
+        h.normal.z = sz;
+        h.position.x = right.centre.x;
+        h.position.z = this.centre.z + this.d * sz;
+    }
+
+    return h;
+}
+
+aabb.prototype.intersect_sweep_aabb = function(right, delta){
+    const sw = new sweep();
+
+    if(delta.x === 0 && delta.z === 0){
+        sw.position.x = right.centre.x;
+        sw.position.z = right.centre.z;
+        sw.hit = this.intersect_aabb(right);
+        sw.time = sw.hit != null ? (sw.hit.time = 0) : 1;
+        return sw;
+    }
+
+    sw.hit = this.intersect_segement(right.centre, delta, right.w, right.d);
+
+    if(sw.hit != null){
+        sw.time = clamp(sw.hit.time - EPSILON, 0, 1);
+        sw.position.x = right.centre.x + delta.x * sw.time;
+        sw.position.z = right.centre.z + delta.z * sw.time;
+
+        const direction = delta.clone();
+        direction.normalize();
+
+        sw.hit.position.x = clamp(
+            sw.hit.position.x + direction.x * right.w,
+            this.centre.x - this.w ,
+            this.centre.x + this.w 
+        );
+
+        sw.hit.position.z = clamp(
+            sw.hit.position.z + direction.z * right.d,
+            this.centre.z - this.d ,
+            this.centre.z + this.d 
+        );
+    } else {
+        sw.position.x = right.centre.x + delta.x;
+        sw.position.z = right.centre.z + delta.z;
+        sw.time = 1;
+    }
+
+    return sw;
+}
+
+aabb.prototype.intersect_legacy = function(right){
     var lx = false;
     var rx = false;
     var ty = false;

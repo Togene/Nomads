@@ -97,28 +97,79 @@ function narrow_collision_check(near, e, delta){
             var r = near[i].get_component("aabb");
             var rb = near[i].get_component("rigidbody");
 
-            var l_r_collsion = l.intersect(r);
-            var l_r_swpt_collisiion = l.swept_intersect(lb, r);
+            var l_r_collsion = l.intersect_aabb(r);
+            var delt = near[i].transform.position.clone().sub(e.transform.position);
+
+            var sweep = l.intersect_sweep_aabb(r, delt);
+
+            if(sweep.hit != null){
+
+                lb.null_velocity();
+
+                var geometry = new THREE.BoxGeometry( .05, .05, .05 );
+                var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+                var cube = new THREE.Mesh( geometry, material );
+                scene.add( cube );
+                
+                var nx = Math.abs(sweep.hit.normal.x);
+                var sx = Math.sign(sweep.hit.normal.x) ;
+
+                var ny = Math.abs(sweep.hit.normal.y);
+                var sy = Math.sign(sweep.hit.normal.y);
+
+                var nz = Math.abs(sweep.hit.normal.z);
+                var sz = Math.sign(sweep.hit.normal.z);
+
+                var face = 0;
+                var hit_clone = sweep.hit.position.clone();
+
+                if(nx > nz){
+                    if(sx > 0){
+                        face = r.max.x;
+                        console.log("x max");
+                    } else {
+                        face = r.min.x;
+                        console.log("x min");
+                    }
+                    var dif = r.centre.x - r.max.x;
+                    console.log("x dif", dif);
+                    hit_clone.x = face;
+                    e.transform.position.x = hit_clone.x - (.5 * (sx * -1));
+                } else {
+                    if(sz > 0){
+                        face = r.max.z;
+                        console.log("z max");
+                    } else {
+                        face = r.min.z;
+                        console.log("z min");
+                    }
+                    
+                    var dif = r.centre.z - r.max.z;
+                    console.log("z dif", dif);
+                    hit_clone.z = face;
+                    e.transform.position.z = hit_clone.z - (.5 * (sz * -1));
+                }
+
+                //console.log(sweep.hit.normal, "face: ", face);
+
+                cube.position.set(
+                    hit_clone.x , 
+                    hit_clone.y,
+                    hit_clone.z );
+
+        
+               
+                
+
+                l.set_colliding(true);
+                return;
+            }
+            //if(l_r_collsion != null){
+            //    console.log(l_r_collsion.normal);
+
+            //}
             
-            e.transform.position.x += lb.velocity.x * l_r_swpt_collisiion.val * delta;
-            e.transform.position.z += lb.velocity.z * l_r_swpt_collisiion.val * delta;
-
-            var r_time = 1.0 - l_r_swpt_collisiion.val;
-
-           // //deflection.vx *= r_time;
-           // lb.velocity.y *= r_time;
-//
-           // if(Math.abs(l_r_swpt_collisiion.nx) > 0.0001){lb.velocity.x = -lb.velocity.x};
-           // if(Math.abs(l_r_swpt_collisiion.nz) > 0.0001){lb.velocity.z = -lb.velocity.z};
-//
-           // var mag = Math.sqrt(
-           //     lb.velocity.x * lb.velocity.x + 
-           //     lb.velocity.y * lb.velocity.y + 
-           //     lb.velocity.z * lb.velocity.z) * r_time;
-//
-           // var dot_p = lb.velocity.x * l_r_swpt_collisiion.ny + 
-           //             lb.velocity.y * l_r_swpt_collisiion.nx + 
-           //             lb.velocity.z * lb.velocity.y;
+            
            // //normal = l_r_collsion.normal;
            // //console.log(normal);
            // if(l_r_collsion.result){
@@ -136,19 +187,19 @@ function narrow_collision_check(near, e, delta){
            //     normal = l_r_collsion.normal;
            // }
 
-            var intersection = r.ray_intersect(lr);
+           //var intersection = r.ray_intersect(lr);
 
-            if(intersection.val){
-                lr.set_intersecting(true);
+           //if(intersection.val){
+           //    lr.set_intersecting(true);
     
-                if(e.name == "player"){
-                    lb.ground(intersection.y, true);
-                } else {
-                    lb.ground(intersection.y, false);
-                }
-            } 
+           //    if(e.name == "player"){
+           //        lb.ground(intersection.y, true);
+           //    } else {
+           //        lb.ground(intersection.y, false);
+           //    }
+           //} 
 
-            r.set_colliding(false);
+           //r.set_colliding(false);
         }
     }
 }

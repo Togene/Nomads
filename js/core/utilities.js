@@ -1,5 +1,6 @@
 const pixel = 0.03125;
 const sprite_size = pixel * 32; // would be just 1 :| 
+const EPSILON = 1e-8;
 
 function dag_to_rad(d){return d * (Math.PI/180);}
 
@@ -67,7 +68,7 @@ function Normalize(min, max, value) {
     return (value - min) / (max - min);
 };
 
-function Clamp(value, min, max) {
+function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
 };
 

@@ -25,6 +25,8 @@
 			<script src = "js/core/gameobject.js"></script>
 			<script src = "js/core/quadtree.js"></script>
 			<script src = "js/core/ray.js"></script>
+			<script src = "js/core/sweep.js"></script>
+			<script src = "js/core/hit.js"></script>
 			<script src = "js/core/aabb.js"></script>
 			<script src = "js/core/rigidbody.js"></script>
 
