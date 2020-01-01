@@ -82,7 +82,6 @@ function pointInRect(x, y, p1, p2) {
 };
 
 function inRange(value, min, max) {
-
     //checks the ranges from x1 to x2 , returning true if the point is within range
     //Mathf.min and mathf.Max are used in the case of negetive values
 

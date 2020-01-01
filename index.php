@@ -17,7 +17,8 @@
 			<script src = "js/core/workers.js"></script>
 
 			<script src = "js/core/instance_geometry.js"></script>
-	
+			
+			<script src = "js/core/decube.js"></script>
 			<script src = "js/core/matrix.js"></script>
 			<script src = "js/core/quaternion.js"></script>
 			<script src = "js/core/transform.js"></script>

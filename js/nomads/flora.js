@@ -19,7 +19,8 @@ function TestTree(){
         test_trees.push(tree);
         tree.transform.position = new THREE.Vector3(x, 0, z);
         tree.transform.scale = new THREE.Vector3(5,5,5);
-
+        tree.transform.rotation = new quaternion(0, 0, 0, 1);
+        
         create_face(0, tree, buffer, attributes);
         create_face(45, tree, buffer, attributes);
         create_face(135, tree, buffer, attributes);

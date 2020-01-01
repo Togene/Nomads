@@ -3,7 +3,7 @@
 
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     
-    this.centre = transform.position.clone();
+    this.centre = transform.get_transformed_position().clone();
 
     this.w = w;
     this.h = h;
@@ -30,6 +30,20 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
 
     this.visule = this.visule(hex, fill);
     this.visule.visible = debug;
+
+    this.decube = new decube(
+        this.min, 
+        new THREE.Vector3(
+            this.min.x,
+            this.min.y,
+            this.centre.z - this.d
+        ), 
+        new THREE.Vector3(
+            this.max.x,
+            this.max.y,
+            this.centre.z - this.d
+        ),  
+        this.max)
 };
 
 aabb.prototype.min_set = function(){
@@ -107,7 +121,6 @@ aabb.prototype.visule = function(hex, fill){
 
     var cube = new THREE.Mesh(geo, mat);
     cube.position.set(this.x, this.y, this.z);
-
     scene.add(cube);
     return cube;
 }
@@ -118,14 +131,20 @@ aabb.prototype.set_visule_color = function(hex){
 
 aabb.prototype.update = function(delta){
 
-        this.centre.copy(this.parent.transform.position);
+    if(!(this.centre.equals(this.parent.transform.get_transformed_position()))){
+        this.centre.copy(this.parent.transform.get_transformed_position());
         this.min_set();
         this.max_set();
-
+    }
 
     if(this.visule != null){
         this.visule.position.copy(this.centre);
+        var rot = this.parent.transform.get_transformed_rotation();
 
+        this.visule.rotation.setFromRotationMatrix(
+            this.parent.transform.get_transformation().toMatrix4()
+        );
+     
         if(this.colliding){
             this.set_visule_color(this.active_color);
         }

@@ -244,7 +244,11 @@ quaternion.prototype.equals = function(q){
 }
 
 quaternion.prototype.to_three_q = function(){
-    return new THREE.Quaternion(this.x, this.y, this.z, this.w);
+    return new THREE.Quaternion(
+        dag_to_rad(this.x), 
+        dag_to_rad(this.y), 
+        dag_to_rad(this.z), 
+        dag_to_rad(this.w));
 }
 
 quaternion.prototype.name = "quaternion";

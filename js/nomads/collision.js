@@ -30,7 +30,6 @@ function floor_collision_check(delta){
 function floor_narrow_check(e, delta){
     
     if(e != undefined){
-        var l = e.get_component("aabb");
         var lb = e.get_component("rigidbody");
         var lr = e.get_component("ray");
 
@@ -54,18 +53,11 @@ function player_collision_check(delta){
         near = [];
         near_debug = [];
 
-        //var check = new circle( 
-        //    player.transform.position.x, 
-        //    player.transform.position.z, 20);
-        //console.log(check);
-
         rangecheck.x = player.transform.position.x;
         rangecheck.y = player.transform.position.z;
         
         collision_tree.query(rangecheck, near, near_debug);
 
-        //near.splice( near.indexOf(player), 1 );
-        //near.splice( near.indexOf(floor), 1 );
         narrow_collision_check(near, player, delta);
     }
 }
@@ -85,7 +77,6 @@ function broad_collision_check(delta){
         });
     }
 }
-
 
 //! Fix Intersection bug before trying to work with RigidBody
 function narrow_collision_check(near, e, delta){
@@ -127,21 +118,25 @@ function narrow_collision_check(near, e, delta){
                 return;
             }
 
-            var intersection = r.ray_intersect(lr);
-
-            if(intersection.val && (near[i].name != "player" && near[i].name != "floor")){
-                lr.set_intersecting(true);
-    
-                if(e.name == "player"){
-                    lb.ground(intersection.y, true);
-                } else {
-                    lb.ground(intersection.y, false);
-                }
-            } 
+            collision_ray_response(l, r, lr, lb, near[i]);
 
             r.set_colliding(false);
         }
     }
+}
+
+function collision_ray_response(l, r, lr, lb, r_o){
+    var intersection = r.ray_intersect(lr);
+
+    if(intersection.val && (r_o.name != "player" && r_o.name != "floor")){
+        lr.set_intersecting(true);
+
+        if(r_o.name == "player"){
+            lb.ground(intersection.y, true);
+        } else {
+            lb.ground(intersection.y, false);
+        }
+    } 
 }
 
 function collision_sweep_response(sweep, e, r){
