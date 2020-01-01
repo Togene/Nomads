@@ -5,15 +5,15 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_trees = 1;
+    var num_trees = 25;
 
     for(var i = 0; i < num_trees; i++){
         
         var tree = new gameobject("tree");
         
         var rand = new p_random(1);
-        var x = rand.next_range(-.0001, .0001);
-        var z = rand.next_range(-.0001, .0001);
+        var x = random_range(-100, 100);
+        var z = random_range(-100, 100);
         //console.log(z);
 
         test_trees.push(tree);

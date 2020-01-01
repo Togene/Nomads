@@ -6,7 +6,7 @@ this.addEventListener("message", function(evt) {
     var token = evt.data[0];
     
     if(token == "init"){
-        console.log("Map Generation Initialized");
+        console.log("%cMap Generation Initialized", 'color: #FFC9DE');
         setTimeout(map_update, 0); // <-- start the physics update
     }
 });

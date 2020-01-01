@@ -25,7 +25,10 @@ function get_player_direction(){
 }
 
 function player_update(delta){
+    
+
     if(player != undefined) {
+        //console.log(player.transform.position);
 
         var collider = player.get_component("aabb");
 

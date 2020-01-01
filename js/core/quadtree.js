@@ -67,6 +67,7 @@ circle.prototype.contains = function(o){
     } else {
        var p = o.transform.get_transformed_position();
        var d = Math.pow((p.x - this.x), 2) + Math.pow((p.z - this.y), 2);
+
        return d <= this.rsqrd;
     }
 }
@@ -111,8 +112,13 @@ function quad_tree(boundary, capacity){
     this.capacity = capacity;
     this.objects = [];
     this.divided = false;
+
+    this.visule = this.visulize();
 }
 
+quad_tree.prototype.visulize = function(){
+
+}
 
 quad_tree.prototype.subdivide = function(){
 
@@ -172,18 +178,18 @@ quad_tree.prototype.query = function(range, found, debug){
         return found;
     }
 
-    for(var o of this.objects){
-        if(range.contains(o)){
-            found.push(o);
-            debug.push(o.name);
+    for(var i = 0; i < this.objects.length; i++){
+        if(range.contains(this.objects[i])){
+            found.push(this.objects[i]);
+            debug.push(this.objects[i].name);
         }
     }
 
     if(this.divided){
-        this.northwest.query(range, found);
-        this.northeast.query(range, found);
-        this.southwest.query(range, found);
-        this.southwest.query(range, found);
+        this.northeast.query(range, found, debug);
+        this.northwest.query(range, found, debug);
+        this.southeast.query(range, found, debug);
+        this.southwest.query(range, found, debug);
     }
 
     return found;

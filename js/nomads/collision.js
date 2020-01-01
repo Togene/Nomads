@@ -5,9 +5,8 @@ var mag_mult = 2.2;
 var rangecheck;
 
 function collision_init(){
-    collision_tree = 
-    new quad_tree(new rectangle(0, 0, 50000, 50000), 1000);
-    rangecheck = new circle(0, 0, 20);
+    collision_tree = new quad_tree(new rectangle(0, 0, 10000, 10000), 10);
+    rangecheck = new rectangle(0, 0, 30, 30);
 }   
 
 function broad_quad_tree_insert(o){
@@ -29,6 +28,7 @@ function floor_collision_check(delta){
 }
 
 function floor_narrow_check(e, delta){
+    
     if(e != undefined){
         var l = e.get_component("aabb");
         var lb = e.get_component("rigidbody");
@@ -54,13 +54,18 @@ function player_collision_check(delta){
         near = [];
         near_debug = [];
 
-        rangecheck.x = player.transform.position.x
+        //var check = new circle( 
+        //    player.transform.position.x, 
+        //    player.transform.position.z, 20);
+        //console.log(check);
+
+        rangecheck.x = player.transform.position.x;
         rangecheck.y = player.transform.position.z;
+        
         collision_tree.query(rangecheck, near, near_debug);
 
-        near.splice( near.indexOf(player), 1 );
-        near.splice( near.indexOf(floor), 1 );
-
+        //near.splice( near.indexOf(player), 1 );
+        //near.splice( near.indexOf(floor), 1 );
         narrow_collision_check(near, player, delta);
     }
 }
@@ -81,7 +86,6 @@ function broad_collision_check(delta){
     }
 }
 
-var normal;
 
 //! Fix Intersection bug before trying to work with RigidBody
 function narrow_collision_check(near, e, delta){
@@ -91,31 +95,28 @@ function narrow_collision_check(near, e, delta){
         var lr = e.get_component("ray");
 
         l.set_colliding(false);
-    
+        //console.log(near.length);
         for(var i = 0; i < near.length; i++) {
-
+           
             var r = near[i].get_component("aabb");
             var rb = near[i].get_component("rigidbody");
+            r.set_colliding(false);
+            
+            var l_r_collsion = l.intersect_legacy(r);
 
-            var l_r_collsion = l.intersect_aabb(r);
             var delt = near[i].transform.position.clone().sub(e.transform.position);
-
             var sweep = l.intersect_sweep_aabb(r, delt);
 
-            if(sweep.hit != null){
-
+            if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){
                 lb.null_velocity();
 
-                var geometry = new THREE.BoxGeometry( .05, .05, .05 );
-                var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-                var cube = new THREE.Mesh( geometry, material );
-                scene.add( cube );
+                //var geometry = new THREE.BoxGeometry( .05, .05, .05 );
+                //var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+                //var cube = new THREE.Mesh( geometry, material );
+                //scene.add( cube );
                 
                 var nx = Math.abs(sweep.hit.normal.x);
-                var sx = Math.sign(sweep.hit.normal.x) ;
-
-                var ny = Math.abs(sweep.hit.normal.y);
-                var sy = Math.sign(sweep.hit.normal.y);
+                var sx = Math.sign(sweep.hit.normal.x);
 
                 var nz = Math.abs(sweep.hit.normal.z);
                 var sz = Math.sign(sweep.hit.normal.z);
@@ -126,50 +127,31 @@ function narrow_collision_check(near, e, delta){
                 if(nx > nz){
                     if(sx > 0){
                         face = r.max.x;
-                        console.log("x max");
                     } else {
                         face = r.min.x;
-                        console.log("x min");
                     }
-                    var dif = r.centre.x - r.max.x;
-                    console.log("x dif", dif);
                     hit_clone.x = face;
                     e.transform.position.x = hit_clone.x - (.5 * (sx * -1));
                 } else {
                     if(sz > 0){
                         face = r.max.z;
-                        console.log("z max");
                     } else {
                         face = r.min.z;
-                        console.log("z min");
                     }
-                    
-                    var dif = r.centre.z - r.max.z;
-                    console.log("z dif", dif);
                     hit_clone.z = face;
                     e.transform.position.z = hit_clone.z - (.5 * (sz * -1));
                 }
 
-                //console.log(sweep.hit.normal, "face: ", face);
-
-                cube.position.set(
-                    hit_clone.x , 
-                    hit_clone.y,
-                    hit_clone.z );
-
-        
-               
-                
+                //cube.position.set(
+                //    hit_clone.x , 
+                //    hit_clone.y,
+                //    hit_clone.z );
 
                 l.set_colliding(true);
+                r.set_colliding(true);
                 return;
             }
-            //if(l_r_collsion != null){
-            //    console.log(l_r_collsion.normal);
 
-            //}
-            
-            
            // //normal = l_r_collsion.normal;
            // //console.log(normal);
            // if(l_r_collsion.result){

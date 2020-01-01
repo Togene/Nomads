@@ -4,7 +4,7 @@
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     
     this.centre = transform.position.clone();
-    
+
     this.w = w;
     this.h = h;
     this.d = d;
@@ -117,12 +117,11 @@ aabb.prototype.set_visule_color = function(hex){
 }
 
 aabb.prototype.update = function(delta){
-    
-    if(!this.parent.transform.position.equals(this.centre)){
+
         this.centre.copy(this.parent.transform.position);
         this.min_set();
         this.max_set();
-    }
+
 
     if(this.visule != null){
         this.visule.position.copy(this.centre);
