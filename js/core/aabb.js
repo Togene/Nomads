@@ -158,23 +158,47 @@ aabb.prototype.set_colliding = function(bool){
     this.colliding = bool;
 }
 
-aabb.prototype.intersect_segement = function(position, delta, pad_x, pad_z){
+aabb.prototype.intersect_segement = function(position, delta, pad_x, pad_z, pad_y){
     const scale_x = 1.0 / delta.x;
     const scale_z = 1.0 / delta.z;
 
+    //y-component add
+    const scale_y = 1.0 / delta.y;
+
     const sign_x = Math.sign(scale_x);
     const sign_z = Math.sign(scale_z);
+    
+    //y-component add
+    const sign_y = Math.sign(scale_y);
 
     const near_time_x = (this.centre.x - sign_x * (this.w + pad_x) - position.x) * scale_x;
     const near_time_z = (this.centre.z - sign_z * (this.d + pad_z) - position.z) * scale_z;
 
+    //y-component add
+    const near_time_y = (this.centre.y - sign_y * (this.h + pad_y) - position.y) * scale_y;
+
     const far_time_x = (this.centre.x + sign_x * (this.w + pad_x) - position.x) * scale_x;
     const far_time_z = (this.centre.z + sign_z * (this.d + pad_z) - position.z) * scale_z;
 
-    if(near_time_x > far_time_z || near_time_z > far_time_x){return null;}
+    //y-component add
+    const far_time_y = (this.centre.y + sign_y * (this.h + pad_y) - position.y) * scale_y;
 
-    const near_time = near_time_x > near_time_z ? near_time_x : near_time_z;
-    const far_time = far_time_x < far_time_z ? far_time_x : far_time_z;
+    if(
+    near_time_x > far_time_z || 
+    near_time_x > far_time_y || 
+    near_time_z > far_time_x ||
+    near_time_z > far_time_y ||
+    near_time_y > far_time_x ||
+    near_time_y > far_time_z){
+        return null;}
+    
+    //|| near_time_y > far_time_y
+
+    var near_time_zx = near_time_x > near_time_z ? near_time_x : near_time_z;
+    const near_time = near_time_zx > near_time_y ? near_time_zx : near_time_y;
+
+    var far_time_zx = far_time_x < far_time_z ? far_time_x : far_time_z;
+    const far_time = far_time_zx < far_time_y ? far_time_zx : far_time_y
 
     if(near_time >= 1 || far_time <= 0){return null;}
 
@@ -241,7 +265,7 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
         return sw;
     }
 
-    sw.hit = this.intersect_segement(right.centre, delta, right.w, right.d);
+    sw.hit = this.intersect_segement(right.centre, delta, right.w, right.d, right.h);
 
     if(sw.hit != null){
         sw.time = clamp(sw.hit.time - EPSILON, 0, 1);

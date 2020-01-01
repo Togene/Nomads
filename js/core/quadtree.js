@@ -183,6 +183,7 @@ quad_tree.prototype.query = function(range, found, debug){
             found.push(this.objects[i]);
             debug.push(this.objects[i].name);
         }
+        
     }
 
     if(this.divided){
