@@ -5,7 +5,11 @@ var player_down_ray;
 
 function player_init(){
     player = new gameobject("player");
-    //player.position = camera.position.clone();
+
+    player.transform.position = new THREE.Vector3(0, 0, 0);
+    player.transform.scale = new THREE.Vector3(1, 1, 1);
+    player.transform.rotation = new quaternion(0, 0, 0, 1);
+
     player_box = new aabb(player.transform, 0.5, 1, 0.5, true, 0xFF0000, true);
 
     player.add_component(player_box);
@@ -26,7 +30,6 @@ function get_player_direction(){
 
 function player_update(delta){
     
-
     if(player != undefined) {
         //console.log(player.transform.position);
 

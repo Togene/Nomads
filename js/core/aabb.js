@@ -11,16 +11,24 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     
     //used for ray intersection, and probs should be used in general with things
     this.min = new THREE.Vector3(
-        this.centre.x - this.w,
-        this.centre.y - this.h,
-        this.centre.z - this.d
+        -this.w,
+        -this.h,
+        -this.d
     );
 
     this.max = new THREE.Vector3(
-        this.centre.x + this.w,
-        this.centre.y + this.h,
-        this.centre.z + this.d
+        this.w,
+        this.h,
+        this.d
     );
+
+
+    var transform_clone = transform.clone();
+        
+    transform_clone.scale = new THREE.Vector3(1,1,1);
+
+    this.max.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    this.min.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
     this.parent = null;
     this.colliding = false;
@@ -29,26 +37,35 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     this.active_color = 0x0000FF;
 
     this.visule = this.visule(hex, fill);
-    this.visule.visible = true;
+    this.visule.visible = false;
 
     this.decube = new decube(this.centre, this.min, this.max, this.w, this.d, this.h);
 };
 
-aabb.prototype.min_set = function(){
+aabb.prototype.min_max_set = function(){
     this.min = new THREE.Vector3(
-        this.centre.x - this.w,
-        this.centre.y - this.h,
-        this.centre.z - this.d
+        -this.w,
+        -this.h,
+        -this.d
     );
+    
+    this.max = new THREE.Vector3(
+        this.w,
+        this.h,
+        this.d
+    );
+
+    if(this.parent != null){
+        
+        var transform_clone = this.parent.transform.clone();
+        
+        transform_clone.scale = new THREE.Vector3(1,1,1);
+    
+        this.max.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+        this.min.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    }
 }
 
-aabb.prototype.max_set = function(){
-    this.max = new THREE.Vector3(
-        this.centre.x + this.w,
-        this.centre.y + this.h,
-        this.centre.z + this.d
-    );
-}
 
 aabb.prototype.set_parent = function(p){
     this.parent = p;
@@ -114,20 +131,18 @@ aabb.prototype.visule = function(hex, fill){
 }
 
 aabb.prototype.set_visule_color = function(hex){
-    this.visule.material.color = new THREE.Color(hex);
+    //this.visule.material.color = new THREE.Color(hex);
+    this.decube.set_color(hex);
 }
 
 aabb.prototype.update = function(delta){
-
     if(!(this.centre.equals(this.parent.transform.get_transformed_position()))){
         this.centre.copy(this.parent.transform.get_transformed_position());
-        this.min_set();
-        this.max_set();
+        this.min_max_set();
     }
 
     if(this.visule != null){
         this.visule.position.copy(this.centre);
-        var rot = this.parent.transform.get_transformed_rotation();
 
         this.visule.rotation.setFromRotationMatrix(
             this.parent.transform.get_transformation().toMatrix4()
@@ -142,8 +157,10 @@ aabb.prototype.update = function(delta){
         }
     }
 
-    if(this.decube != null && this.parent != null){
-        this.decube.update(this.parent.transform, delta);
+    if(this.decube != null){
+        if( this.parent != null){
+            this.decube.update(this.min, this.max, this.parent.transform, delta);
+        }
     }
 }
 
