@@ -29,21 +29,9 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     this.active_color = 0x0000FF;
 
     this.visule = this.visule(hex, fill);
-    this.visule.visible = debug;
+    this.visule.visible = true;
 
-    this.decube = new decube(
-        this.min, 
-        new THREE.Vector3(
-            this.min.x,
-            this.min.y,
-            this.centre.z - this.d
-        ), 
-        new THREE.Vector3(
-            this.max.x,
-            this.max.y,
-            this.centre.z - this.d
-        ),  
-        this.max)
+    this.decube = new decube(this.centre, this.min, this.max, this.w, this.d, this.h);
 };
 
 aabb.prototype.min_set = function(){
@@ -153,6 +141,10 @@ aabb.prototype.update = function(delta){
             this.set_visule_color(this.non_active_color);
         }
     }
+
+    if(this.decube != null && this.parent != null){
+        this.decube.update(this.parent.transform, delta);
+    }
 }
 
 aabb.prototype.direct_position_set = function(p){
@@ -240,7 +232,6 @@ aabb.prototype.intersect_segement = function(position, delta, pad_x, pad_z, pad_
 
     return h;
 }
-
 
 aabb.prototype.intersect_aabb = function(right){
     const dx = right.centre.x - this.centre.x;

@@ -100,4 +100,12 @@ transform.prototype.set_position = function(p){
     this.position = p;
 }
 
+transform.prototype.clone = function() {
+    return new transform(
+        this.position,
+        this.scale,
+        this.rotation
+    )
+}
+
 transform.prototype.name = "transform";

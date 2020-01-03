@@ -18,11 +18,12 @@
 
 			<script src = "js/core/instance_geometry.js"></script>
 			
-			<script src = "js/core/decube.js"></script>
+			
 			<script src = "js/core/matrix.js"></script>
 			<script src = "js/core/quaternion.js"></script>
 			<script src = "js/core/transform.js"></script>
 			<script src = "js/core/decomposer.js"></script>
+			<script src = "js/core/decube.js"></script>
 			<script src = "js/core/gameobject.js"></script>
 			<script src = "js/core/quadtree.js"></script>
 			<script src = "js/core/ray.js"></script>
