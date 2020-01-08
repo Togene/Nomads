@@ -96,29 +96,43 @@ function narrow_collision_check(near, e, delta){
             var l_r_collsion = l.intersect_legacy(r);
 
             var delt = near[i].transform.position.clone().sub(e.transform.position);
-            var sweep = l.intersect_sweep_aabb(r, delt);
-
-            if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){
-                
-                lb.null_velocity();
-
-                //var geometry = new THREE.BoxGeometry( .05, .05, .05 );
-                //var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-                //var cube = new THREE.Mesh( geometry, material );
-                //scene.add( cube );
-                collision_sweep_response(sweep, e, r);
-
-                //cube.position.set(
-                //    hit_clone.x , 
-                //    hit_clone.y,
-                //    hit_clone.z );
-
-                l.set_colliding(true);
-                r.set_colliding(true);
-                return;
+            //var sweep = l.intersect_sweep_aabb(r, delt);
+            
+            if((near[i].name != "player" && near[i].name != "floor")){
+                var sat = l.intersect_sat_aabb(r);
             }
 
-            collision_ray_response(l, r, lr, lb, near[i]);
+
+            console.log(sat);
+            
+            if(sat && (near[i].name != "player" && near[i].name != "floor")){
+                l.set_colliding(true);
+                r.set_colliding(true);
+            }
+            //if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){
+            //                
+            //       lb.null_velocity();
+            //                
+            //       var geometry = new THREE.BoxGeometry( .05, .05, .05 );
+            //       var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+            //       var cube = new THREE.Mesh( geometry, material );
+            //       scene.add( cube );
+            //                
+            //       //collision_sweep_response(sweep, e, r);
+            //                
+            //       //console.log(sweep.hit.normal);
+            //                
+            //       cube.position.set(
+            //           sweep.hit.position.x , 
+            //           sweep.hit.position.y,
+            //           sweep.hit.position.z );
+            //    
+            //       l.set_colliding(true);
+            //       r.set_colliding(true);
+            //       return;
+            //}
+
+            //collision_ray_response(l, r, lr, lb, near[i]);
 
             r.set_colliding(false);
         }

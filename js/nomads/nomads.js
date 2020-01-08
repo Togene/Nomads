@@ -33,27 +33,27 @@ function game_bootstrap(data){
     collision_init();
     shader_init();
 
-    scene.add(cube1);
-    scene.add(cube2);
+    //scene.add(cube1);
+   // scene.add(cube2);
     scene.add(solid_sprites);
     scene.add(animated_sprites);
 
     console.log("%cGame Initialized", 'color: #DAA45C');
     
-    newobject1.transform.position = new THREE.Vector3(0,0,0);
-    newobject1.transform.scale = new THREE.Vector3(1,10.5,1);
+    //newobject1.transform.position = new THREE.Vector3(0,0,0);
+    //newobject1.transform.scale = new THREE.Vector3(1,10.5,1);
 
-    newobject2.transform.position = new THREE.Vector3(0,1,0);
-    newobject1.add_child(newobject2);
+    //newobject2.transform.position = new THREE.Vector3(0,1,0);
+    //newobject1.add_child(newobject2);
     
    //for(var i = 0; i < Scene.length; i++){
    //    Scene[i].information();
    //}
     
-    cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
-    cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
-    cube1.matrixAutoUpdate = false;
-    cube2.matrixAutoUpdate = false;
+    //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
+    //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
+    //cube1.matrixAutoUpdate = false;
+    //cube2.matrixAutoUpdate = false;
 
     TestCreatures();
     TestTree();
@@ -92,9 +92,9 @@ function game_update(delta){
 }
 
 function update(delta){
-    newobject1.transform.rotation.y += .5;
-    cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
-    cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
+   // newobject1.transform.rotation.y += .5;
+    //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
+   // cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
 
     fauna_update(delta);
     flora_update(delta);

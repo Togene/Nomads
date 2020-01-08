@@ -1,9 +1,16 @@
 //credit : https://github.com/noona <--- give this person some love
 //suace : https://github.com/noonat/intersect/blob/master/src/intersect.ts
 
+
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     
+    var transform_clone = transform.clone();
+    transform_clone.scale = new THREE.Vector3(1,1,1);
+
     this.centre = transform.get_transformed_position().clone();
+
+    this.transformed_dimensions = new THREE.Vector3(w, h, d);
+    this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
     this.w = w;
     this.h = h;
@@ -21,11 +28,6 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
         this.h,
         this.d
     );
-
-
-    var transform_clone = transform.clone();
-        
-    transform_clone.scale = new THREE.Vector3(1,1,1);
 
     this.max.applyMatrix4(transform_clone.get_transformation().toMatrix4());
     this.min.applyMatrix4(transform_clone.get_transformation().toMatrix4());
@@ -60,7 +62,7 @@ aabb.prototype.min_max_set = function(){
         var transform_clone = this.parent.transform.clone();
         
         transform_clone.scale = new THREE.Vector3(1,1,1);
-    
+        
         this.max.applyMatrix4(transform_clone.get_transformation().toMatrix4());
         this.min.applyMatrix4(transform_clone.get_transformation().toMatrix4());
     }
@@ -132,14 +134,20 @@ aabb.prototype.visule = function(hex, fill){
 
 aabb.prototype.set_visule_color = function(hex){
     //this.visule.material.color = new THREE.Color(hex);
-    this.decube.set_color(hex);
+    //this.decube.set_color(hex);
 }
 
 aabb.prototype.update = function(delta){
     if(!(this.centre.equals(this.parent.transform.get_transformed_position()))){
+     
         this.centre.copy(this.parent.transform.get_transformed_position());
-        this.min_max_set();
+
     }
+
+    var transform_clone = this.parent.transform.clone();
+    transform_clone.scale = new THREE.Vector3(1,1,1);
+    this.min_max_set();
+    this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
     if(this.visule != null){
         this.visule.position.copy(this.centre);
@@ -171,7 +179,6 @@ aabb.prototype.direct_position_set = function(p){
     } else {
         this.centre = p.clone();
     }
-
 }
 
 aabb.prototype.direct_position_add = function(p){
@@ -293,7 +300,10 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
     }
 
     sw.hit = this.intersect_segement(right.centre, delta, right.w, right.d, right.h);
-
+    
+    //using rotated values, not y and z are swapped (y was implimented last)
+    //sw.hit = this.intersect_segement(right.centre, delta, right_dims.x, right_dims.z, right_dims.y);
+    
     if(sw.hit != null){
         sw.time = clamp(sw.hit.time - EPSILON, 0, 1);
         sw.position.x = right.centre.x + delta.x * sw.time;
@@ -304,7 +314,7 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
         sw.hit.position.x = clamp(
             sw.hit.position.x + direction.x * right.w,
-            this.centre.x - this.w ,
+            this.centre.x - this.w,
             this.centre.x + this.w 
         );
 
@@ -321,6 +331,109 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
     return sw;
 }
+
+//credit : http://www.dyn4j.org/2010/01/sat/
+//helping with SAT collision detection
+aabb.prototype.get_verts = function(){
+    var vertices = [];
+
+    var transform_clone = this.parent.transform.clone();
+    transform_clone.scale = new THREE.Vector3(1,1,1);
+    
+    var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
+    vert_0.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vertices.push(vert_0);
+     
+    var vert_1 = new THREE.Vector3(-this.w, -this.h, this.d);
+    vert_1.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vertices.push(vert_1);
+    
+    var vert_3 = new THREE.Vector3(this.w, -this.h, this.d);
+    vert_3.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vertices.push(vert_3);
+
+    var vert_2 = new THREE.Vector3(this.w, -this.h, -this.d);
+    vert_2.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vertices.push(vert_2);
+
+
+    return vertices;
+}
+
+aabb.prototype.get_norms = function(v){
+    var n = v.length, crt, nxt, l, x1, z1;
+
+    var normals = [];
+
+    for(var i = 0; i < n; i++){
+        crt = v[i];
+        nxt = v[(i + 1) % v.length]; //this is a neat trick
+        x1 = (nxt.z - crt.z);
+        z1 = (nxt.x - crt.x);
+        l = Math.sqrt(x1 * x1 + z1 * z1);
+
+        normals[i] = new THREE.Vector3(x1/l, this.h, z1/l);
+        normals[i + 1] = new THREE.Vector3(-x1/l, this.h, -z1/l);
+       // normals[i] = {x: -x1/l, z: -z1/l};
+    }
+    return normals;
+};
+
+
+//getting projection direction from normals instead?
+//aabb.prototype.project_on_axis = function(axis) {
+//}
+
+//TODO : impliment axis creation
+aabb.prototype.project = function(normal){
+    var verts = this.get_verts();
+
+    var min = normal.dot(verts[0]);
+    var max = min;
+
+
+    for(var i = 1; i < verts.length; i++){
+        var p = normal.dot(verts[i]);
+        if(p < min){
+            min = p;
+        } else if(p > max){
+            max = p;
+        }
+    }
+
+    return new projection(min, max);
+}
+
+
+aabb.prototype.intersect_sat_aabb = function(right){
+
+    var v = this.get_verts()
+    var n = this.get_norms(v);
+
+    var rv = this.get_verts();
+    var rn = this.get_norms(rv);
+    
+    for(var i = 0; i < n.length; i++){
+        var proj_1 = this.project(n[i]);
+        var proj_2 = right.project(n[i]);
+
+        if(!proj_1.overlap(proj_2)){
+            return false;
+        }
+    }
+
+    for(var i = 0; i < rn.length; i++){
+        var proj_1 = this.project(rn[i]);
+        var proj_2 = right.project(rn[i]);
+
+        if(!proj_1.overlap(proj_2)){
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 aabb.prototype.intersect_legacy = function(right){
     var lx = false;
