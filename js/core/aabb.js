@@ -134,7 +134,7 @@ aabb.prototype.visule = function(hex, fill){
 
 aabb.prototype.set_visule_color = function(hex){
     //this.visule.material.color = new THREE.Color(hex);
-    //this.decube.set_color(hex);
+    this.decube.set_color(hex);
 }
 
 aabb.prototype.update = function(delta){
@@ -407,6 +407,9 @@ aabb.prototype.project = function(normal){
 
 aabb.prototype.intersect_sat_aabb = function(right){
 
+    var overlap = Infinity;
+    var smallest = null;
+
     var v = this.get_verts()
     var n = this.get_norms(v);
 
@@ -418,7 +421,15 @@ aabb.prototype.intersect_sat_aabb = function(right){
         var proj_2 = right.project(n[i]);
 
         if(!proj_1.overlap(proj_2)){
-            return false;
+            return {result: false};
+        } else {
+            var o = proj_1.get_overlap(proj_2);
+
+            if(o < overlap){
+                //set to smallest
+                overlap = o;
+                smallest = n[i];
+            }
         }
     }
 
@@ -427,11 +438,19 @@ aabb.prototype.intersect_sat_aabb = function(right){
         var proj_2 = right.project(rn[i]);
 
         if(!proj_1.overlap(proj_2)){
-            return false;
+            return {result: false};
+        } else {
+            var o = proj_1.get_overlap(proj_2);
+
+            if(o < overlap){
+                //set to smallest
+                overlap = o;
+                smallest = n[i];
+            }
         }
     }
 
-    return true;
+    return {result: true, direction: smallest, gap: overlap};
 }
 
 

@@ -15,3 +15,13 @@ projection.prototype.create_line = function (s, f, hex){
 
     return new THREE.Line(geometry, new THREE.MeshBasicMaterial({color: hex} ));
 }
+
+projection.prototype.get_overlap = function(o){
+
+    //make sure it overlaps
+    if(this.overlap(o)){
+        return Math.min(this.max, o.max) - Math.max(this.min, o.min);
+    }
+
+    return 0;
+}
