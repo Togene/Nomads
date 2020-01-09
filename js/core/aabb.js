@@ -413,8 +413,8 @@ aabb.prototype.intersect_sat_aabb = function(right){
     var v = this.get_verts()
     var n = this.get_norms(v);
 
-    var rv = this.get_verts();
-    var rn = this.get_norms(rv);
+    var rv = right.get_verts();
+    var rn = right.get_norms(rv);
     
     for(var i = 0; i < n.length; i++){
         var proj_1 = this.project(n[i]);
@@ -444,8 +444,9 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
             if(o < overlap){
                 //set to smallest
+                console.log("not getting here?")
                 overlap = o;
-                smallest = n[i];
+                smallest = rn[i];
             }
         }
     }

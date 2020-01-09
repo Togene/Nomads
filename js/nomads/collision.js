@@ -100,11 +100,13 @@ function narrow_collision_check(near, e, delta){
             var sat = l.intersect_sat_aabb(r);
           
 
-            
             if(sat.result && (near[i].name != "player" && near[i].name != "floor")){
                 l.set_colliding(true);
                 //console.log(sat.direction);
                 lb.null_velocity();
+                
+                //console.log(sat.direction);
+
                 e.transform.position.x += sat.direction.x * sat.gap;
                 e.transform.position.z += sat.direction.z * sat.gap;
                 r.set_colliding(true);
