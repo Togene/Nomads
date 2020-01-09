@@ -5,7 +5,7 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_trees = 20;
+    var num_trees = 5;
 
     for(var i = 0; i < num_trees; i++){
         
@@ -142,10 +142,10 @@ function create_face(y_rot, tree, buffer, attributes){
 }
 
 function flora_update(delta){
-    test_trees[0].transform.rotation.y += 0;
-   //for(var i = 0; i < test_trees.length; i++){
-   //     test_trees[i].transform.position.y = Math.sin(game_time);
-   //     
-   //}
+  
+   for(var i = 0; i < test_trees.length; i++){
+       // test_trees[i].transform.position.y = Math.sin(game_time);
+        test_trees[i].transform.rotation.y += 1;
+   }
 //  
 }
