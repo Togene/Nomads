@@ -5,21 +5,21 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_trees = 1;
+    var num_trees = 20;
 
     for(var i = 0; i < num_trees; i++){
         
         var tree = new gameobject("tree");
         
         var rand = new p_random(1);
-        var x = random_range(-1, 1);
-        var z = random_range(-1, 1);
+        var x = random_range(-100, 100);
+        var z = random_range(-100, 100);
         //console.log(z);
 
         test_trees.push(tree);
         tree.transform.position = new THREE.Vector3(x, 2, z);
         tree.transform.scale = new THREE.Vector3(5,5,5);
-        tree.transform.rotation = new quaternion(0, 0, 0, 1);
+        tree.transform.rotation = new quaternion(0, random_range(45, 45), 0, 1);
         
         create_face(0, tree, buffer, attributes);
         create_face(45, tree, buffer, attributes);
@@ -142,7 +142,7 @@ function create_face(y_rot, tree, buffer, attributes){
 }
 
 function flora_update(delta){
-    test_trees[0].transform.rotation.y += 1;
+    test_trees[0].transform.rotation.y += 0;
    //for(var i = 0; i < test_trees.length; i++){
    //     test_trees[i].transform.position.y = Math.sin(game_time);
    //     
