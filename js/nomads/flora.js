@@ -19,7 +19,7 @@ function TestTree(){
         test_trees.push(tree);
         tree.transform.position = new THREE.Vector3(x, 2, z);
         tree.transform.scale = new THREE.Vector3(5,5,5);
-        tree.transform.rotation = new quaternion(0, random_range(45, 45), 0, 1);
+        tree.transform.rotation = new quaternion(0, 0, 0, 1);
         
         create_face(0, tree, buffer, attributes);
         create_face(45, tree, buffer, attributes);
@@ -145,7 +145,7 @@ function flora_update(delta){
   
    for(var i = 0; i < test_trees.length; i++){
        // test_trees[i].transform.position.y = Math.sin(game_time);
-        test_trees[i].transform.rotation.y += 1;
+        //test_trees[i].transform.rotation.y += 1;
    }
 //  
 }

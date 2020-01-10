@@ -80,7 +80,7 @@
 			vUv = vec2((uv.x/spriteSheetX) + (uvoffset.x), (uv.y/spriteSheetY) + (uvoffset.y));
 			
 			//viewdirection
-			posWorld = modelMatrix * vec4((translation),1.0);
+			posWorld = transform_matrix * vec4((translation),1.0);
 			viewDirection = normalize((posWorld.xz - cameraPosition.xz));	
 			//---------------------------------------------------------
 

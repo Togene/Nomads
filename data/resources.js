@@ -4,6 +4,7 @@ const MapFileurl =[
     'img/sprite_sheets/trees.png',
     'img/sprite_sheets/sky.png',
     'img/sprite_sheets/structures.png',
+    'img/sprite_sheets/lithies.png',
 ];
 
 function raw_resource(n, t, d){
