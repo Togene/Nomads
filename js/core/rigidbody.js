@@ -62,9 +62,9 @@ rigidbody.prototype.update = function(delta){
         //means rigid bodies and colliders are interlinked
         if (this.parent.transform.position.y <= -50) {
             this.velocity.y = 0;
-            this.parent.transform.position.y = 1.35;
+            this.parent.transform.position.y = 1.25;
         } else {
-            this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
+            //this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
         }
 
         //*-------------------- Caps -----------------------

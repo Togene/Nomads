@@ -22,7 +22,7 @@ function collision_update(delta){
 function floor_collision_check(delta){
     if(collision_tree != undefined && player != undefined) {
         collision_tree.forEach(function(e){
-            floor_narrow_check(e, delta);
+            //floor_narrow_check(e, delta);
         });
     }
 }
@@ -95,7 +95,8 @@ function narrow_collision_check(near, e, delta){
             
             var l_r_collsion = l.intersect_legacy(r);
 
-            var delt = near[i].transform.position.clone().sub(e.transform.position);
+            var delt = e.transform.position.clone().sub(near[i].transform.position.clone()).normalize();
+            delt.y = 0;
             //var sweep = l.intersect_sweep_aabb(r, delt);
             var sat = l.intersect_sat_aabb(r);
           
@@ -105,10 +106,9 @@ function narrow_collision_check(near, e, delta){
                 //console.log(sat.direction);
                 lb.null_velocity();
                 
-                //console.log(sat.direction);
-
                 e.transform.position.x += sat.direction.x * sat.gap;
                 e.transform.position.z += sat.direction.z * sat.gap;
+
                 r.set_colliding(true);
             }
             //if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){

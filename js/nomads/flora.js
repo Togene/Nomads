@@ -12,46 +12,47 @@ function TestTree(){
         var tree = new gameobject("tree");
         
         var rand = new p_random(1);
-        var x = random_range(-100, 100);
-        var z = random_range(-100, 100);
+        var x = random_range(-1, 1);
+        var z = random_range(-1, 1);
         //console.log(z);
 
         test_trees.push(tree);
-        tree.transform.position = new THREE.Vector3(x, 2, z);
+        tree.transform.position = new THREE.Vector3(x, 1.25, z);
         tree.transform.scale = new THREE.Vector3(5,5,5);
-        tree.transform.rotation = new quaternion(0, 0, 0, 1);
+        tree.transform.rotation = new quaternion(0, 45, 0, 1);
         
         create_face(0, tree, buffer, attributes);
         create_face(45, tree, buffer, attributes);
         create_face(135, tree, buffer, attributes);
         
-        leaves = new gameobject("leaves");
+        //leaves = new gameobject("leaves");
         
-        tree.add_child(leaves);
+        //tree.add_child(leaves);
 
-        leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
+        //leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
         tree.get_component("aabb");
 
-        var leaves_decomposer = new decomposer(
-            [ MapToSS(3, 0),],
-            new THREE.Vector2(1, 1),
-            [ new THREE.Color(0x008B00) ],
-            new THREE.Vector3(0, 0, 0),
-            leaves.transform,
-            0,
-            attributes,
-            buffer.index,
-        );
+        //var leaves_decomposer = new decomposer(
+        //    [ MapToSS(3, 0),],
+        //    new THREE.Vector2(1, 1),
+        //    [ new THREE.Color(0x008B00) ],
+        //    new THREE.Vector3(0, 0, 0),
+        //    leaves.transform,
+        //    0,
+        //    attributes,
+        //    buffer.index,
+        //);
         
-        leaves.add_component(leaves_decomposer);
-        tree.add_component(new aabb(tree.transform, 1, 2, 1, true, 0xFFFFFF, true));
+       // leaves.add_component(leaves_decomposer);
+        tree.add_component(new aabb(tree.transform, 1, 1, 1, true, 0xFFFFFF, true));
         
-        PopulateBuffer(
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(10, 10, 10), 
-            buffer, 
-            leaves_decomposer);
+        //PopulateBuffer(
+        //    new THREE.Vector3(0, 0, 0),
+        //    new THREE.Vector3(0, 0, 0),
+        //    new THREE.Vector3(10, 10, 10), 
+        //    buffer, 
+        //    leaves_decomposer
+        //);
     }
 
     

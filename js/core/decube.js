@@ -17,9 +17,9 @@ function decube(c, min, max, w, d, h){
     this.line_mat = new THREE.MeshBasicMaterial( {color: 0xffffff} );
 
     //-------------------- Bottom Face ---------------------
-    this.p0 = new THREE.Mesh( geometry, this.material );
-    this.p1 = new THREE.Mesh( geometry, this.material );
-    this.p2 = new THREE.Mesh( geometry, this.material );
+    this.p0 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( {color: 0x00ff00} ) );
+    this.p1 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( {color: 0x0000ff} ) );
+    this.p2 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( {color: 0xff00ff} )  );
     this.p3 = new THREE.Mesh( geometry, this.material );
     //-------------------- Bottom Face ---------------------
 

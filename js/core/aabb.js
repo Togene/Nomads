@@ -8,7 +8,6 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     transform_clone.scale = new THREE.Vector3(1,1,1);
 
     this.centre = transform.get_transformed_position().clone();
-
     this.transformed_dimensions = new THREE.Vector3(w, h, d);
     this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
@@ -141,11 +140,11 @@ aabb.prototype.update = function(delta){
     if(!(this.centre.equals(this.parent.transform.get_transformed_position()))){
      
         this.centre.copy(this.parent.transform.get_transformed_position());
-
     }
 
     var transform_clone = this.parent.transform.clone();
     transform_clone.scale = new THREE.Vector3(1,1,1);
+
     this.min_max_set();
     this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
@@ -342,25 +341,21 @@ aabb.prototype.get_verts = function(){
     
     var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
     vert_0.applyMatrix4(transform_clone.get_transformation().toMatrix4());
-    vert_0.y = 0;
     vertices.push(vert_0);
      
-    var vert_1 = new THREE.Vector3(-this.w, -this.h, this.d);
+    var vert_1 = new THREE.Vector3(this.w, -this.h, -this.d);
     vert_1.applyMatrix4(transform_clone.get_transformation().toMatrix4());
-    vert_1.y = 0;
     vertices.push(vert_1);
     
     var vert_3 = new THREE.Vector3(this.w, -this.h, this.d);
     vert_3.applyMatrix4(transform_clone.get_transformation().toMatrix4());
-    vert_3.y = 0;
     vertices.push(vert_3);
 
-    var vert_2 = new THREE.Vector3(this.w, -this.h, -this.d);
+    var vert_2 = new THREE.Vector3(-this.w, -this.h, this.d);
     vert_2.applyMatrix4(transform_clone.get_transformation().toMatrix4());
-    vert_2.y = 0;
     vertices.push(vert_2);
 
-    console.log(vertices);
+    //console.log(vertices);
     return vertices;
 }
 
@@ -376,8 +371,8 @@ aabb.prototype.get_norms = function(v){
         z1 = (nxt.x - crt.x);
         l = Math.sqrt(x1 * x1 + z1 * z1);
 
-        normals[i] = new THREE.Vector3(x1/l, this.h, z1/l);
-        normals[i + 1] = new THREE.Vector3(-x1/l, this.h, -z1/l);
+        normals[i] = new THREE.Vector3(x1/l, 0, z1/l);
+        //normals[i + 1] = new THREE.Vector3(-x1/l, 0, -z1/l);
     }
 
 
@@ -390,8 +385,8 @@ aabb.prototype.get_norms = function(v){
 //}
 
 //TODO : impliment axis creation
-aabb.prototype.project = function(normal, verts){
-    //var verts = this.get_verts();
+aabb.prototype.project = function(normal){
+    var verts = this.get_verts();
 
     var min = normal.dot(verts[0]);
     var max = min;
@@ -422,8 +417,8 @@ aabb.prototype.intersect_sat_aabb = function(right){
     var rn = right.get_norms(rv);
     
     for(var i = 0; i < n.length; i++){
-        var proj_1 = this.project(n[i], v);
-        var proj_2 = right.project(n[i], rv);
+        var proj_1 = this.project(n[i]);
+        var proj_2 = right.project(n[i]);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
@@ -439,14 +434,14 @@ aabb.prototype.intersect_sat_aabb = function(right){
     }
 
     for(var i = 0; i < rn.length; i++){
-        var proj_1 = this.project(rn[i], v);
-        var proj_2 = right.project(rn[i], rv);
+        var proj_1 = this.project(rn[i]);
+        var proj_2 = right.project(rn[i]);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
         } else {
             var o = proj_1.get_overlap(proj_2);
-
+           
             if(o < overlap){
                 //set to smallest
                 console.log("not getting here?")
@@ -455,6 +450,8 @@ aabb.prototype.intersect_sat_aabb = function(right){
             }
         }
     }
+
+    if(right.parent.name == "tree") console.log(smallest);
 
     return {result: true, direction: smallest, gap: overlap};
 }
