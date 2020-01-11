@@ -342,21 +342,25 @@ aabb.prototype.get_verts = function(){
     
     var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
     vert_0.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_0.y = 0;
     vertices.push(vert_0);
      
     var vert_1 = new THREE.Vector3(-this.w, -this.h, this.d);
     vert_1.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_1.y = 0;
     vertices.push(vert_1);
     
     var vert_3 = new THREE.Vector3(this.w, -this.h, this.d);
     vert_3.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_3.y = 0;
     vertices.push(vert_3);
 
     var vert_2 = new THREE.Vector3(this.w, -this.h, -this.d);
     vert_2.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_2.y = 0;
     vertices.push(vert_2);
 
-
+    console.log(vertices);
     return vertices;
 }
 
@@ -374,8 +378,9 @@ aabb.prototype.get_norms = function(v){
 
         normals[i] = new THREE.Vector3(x1/l, this.h, z1/l);
         normals[i + 1] = new THREE.Vector3(-x1/l, this.h, -z1/l);
-       // normals[i] = {x: -x1/l, z: -z1/l};
     }
+
+
     return normals;
 };
 
@@ -385,8 +390,8 @@ aabb.prototype.get_norms = function(v){
 //}
 
 //TODO : impliment axis creation
-aabb.prototype.project = function(normal){
-    var verts = this.get_verts();
+aabb.prototype.project = function(normal, verts){
+    //var verts = this.get_verts();
 
     var min = normal.dot(verts[0]);
     var max = min;
@@ -417,8 +422,8 @@ aabb.prototype.intersect_sat_aabb = function(right){
     var rn = right.get_norms(rv);
     
     for(var i = 0; i < n.length; i++){
-        var proj_1 = this.project(n[i]);
-        var proj_2 = right.project(n[i]);
+        var proj_1 = this.project(n[i], v);
+        var proj_2 = right.project(n[i], rv);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
@@ -434,8 +439,8 @@ aabb.prototype.intersect_sat_aabb = function(right){
     }
 
     for(var i = 0; i < rn.length; i++){
-        var proj_1 = this.project(rn[i]);
-        var proj_2 = right.project(rn[i]);
+        var proj_1 = this.project(rn[i], v);
+        var proj_2 = right.project(rn[i], rv);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};

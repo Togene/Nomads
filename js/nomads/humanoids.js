@@ -5,7 +5,7 @@ function TestNPC(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_npcs = 5;
+    var num_npcs = 0;
     var spacing = 3;
 
     for(var i = 0; i < num_npcs; i++){

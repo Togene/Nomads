@@ -5,7 +5,7 @@ function TestTree(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_trees = 5;
+    var num_trees = 1;
 
     for(var i = 0; i < num_trees; i++){
         

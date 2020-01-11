@@ -135,7 +135,7 @@ function movement(delta){
                     }
             }
             //camera rotation to player rotation
-            player.transform.rotation.qset(controls.getObject().quaternion.clone());
+            //player.transform.rotation.qset(controls.getObject().quaternion.clone());
 
             //camera pos = player pos
             controls.getObject().position.copy(player.transform.position);
