@@ -363,6 +363,7 @@ aabb.prototype.get_norms = function(v){
     var n = v.length, crt, nxt, l, x1, z1;
 
     var normals = [];
+    var mids = [];
 
     for(var i = 0; i < n; i++){
         crt = v[i];
@@ -371,12 +372,16 @@ aabb.prototype.get_norms = function(v){
         z1 = (nxt.x - crt.x);
         l = Math.sqrt(x1 * x1 + z1 * z1);
 
+        mids[i] = new THREE.Vector3(
+            (nxt.x + crt.x)/2, 
+            0, 
+            (nxt.z + crt.z)/2
+        );
+
         normals[i] = new THREE.Vector3(x1/l, 0, z1/l);
         //normals[i + 1] = new THREE.Vector3(-x1/l, 0, -z1/l);
     }
-
-
-    return normals;
+    return {n: normals, m: mids};
 };
 
 
@@ -390,7 +395,6 @@ aabb.prototype.project = function(normal){
 
     var min = normal.dot(verts[0]);
     var max = min;
-
 
     for(var i = 1; i < verts.length; i++){
         var p = normal.dot(verts[i]);
@@ -409,51 +413,53 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
     var overlap = Infinity;
     var smallest = null;
+    var mid = null;
 
     var v = this.get_verts()
     var n = this.get_norms(v);
 
     var rv = right.get_verts();
     var rn = right.get_norms(rv);
-    
-    for(var i = 0; i < n.length; i++){
-        var proj_1 = this.project(n[i]);
-        var proj_2 = right.project(n[i]);
+
+    for(var i = 0; i < n.n.length; i++){
+        var proj_1 = this.project(n.n[i]);
+        var proj_2 = right.project(n.n[i]);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
         } else {
+
             var o = proj_1.get_overlap(proj_2);
 
-            if(o < overlap){
+            if(o < overlap && o != overlap){
                 //set to smallest
                 overlap = o;
-                smallest = n[i];
+                smallest = n.n[i];
+                mid = n.m[i];
             }
         }
     }
 
-    for(var i = 0; i < rn.length; i++){
-        var proj_1 = this.project(rn[i]);
-        var proj_2 = right.project(rn[i]);
+    for(var i = 0; i < rn.n.length; i++){
+        var proj_1 = right.project(rn.n[i]);
+        var proj_2 = this.project(rn.n[i]);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
         } else {
+
             var o = proj_1.get_overlap(proj_2);
            
-            if(o < overlap){
+            if(o < overlap && o != overlap){
                 //set to smallest
-                console.log("not getting here?")
                 overlap = o;
-                smallest = rn[i];
+                smallest = rn.n[i];
+                mid = rn.m[i];
             }
         }
     }
-
-    if(right.parent.name == "tree") console.log(smallest);
-
-    return {result: true, direction: smallest, gap: overlap};
+ 
+    return {result: true, direction: smallest, gap: overlap, middle: mid};
 }
 
 

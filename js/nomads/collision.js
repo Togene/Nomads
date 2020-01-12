@@ -103,12 +103,12 @@ function narrow_collision_check(near, e, delta){
 
             if(sat.result && (near[i].name != "player" && near[i].name != "floor")){
                 l.set_colliding(true);
-                //console.log(sat.direction);
+
                 lb.null_velocity();
                 
-                e.transform.position.x += sat.direction.x * sat.gap;
-                e.transform.position.z += sat.direction.z * sat.gap;
-
+                e.transform.position.z += (delt.z * sat.gap);
+                e.transform.position.x += (delt.x * sat.gap);
+                
                 r.set_colliding(true);
             }
             //if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){

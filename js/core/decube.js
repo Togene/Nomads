@@ -29,9 +29,12 @@ function decube(c, min, max, w, d, h){
     this.p6 = new THREE.Mesh( geometry, this.material );
     this.p7 = new THREE.Mesh( geometry, this.material );
 
-    this.line01 = new THREE.Line(this.create_line(this.p0, this.p1), this.line_mat);
+    this.line01 = new THREE.Line(this.create_line(this.p0, this.p1),  
+    new THREE.MeshBasicMaterial( {color: 0x0000ff} ));
+
     this.line12 = new THREE.Line(this.create_line(this.p1, this.p2), this.line_mat);
-    this.line23 = new THREE.Line(this.create_line(this.p2, this.p3), this.line_mat);
+    this.line23 = new THREE.Line(this.create_line(this.p2, this.p3), 
+    new THREE.MeshBasicMaterial( {color: 0x0000ff} ));
     this.line30 = new THREE.Line(this.create_line(this.p3, this.p0), this.line_mat);
     //-------------------- Top Face ---------------------
 
