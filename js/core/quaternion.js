@@ -194,12 +194,6 @@ quaternion.prototype.slerp = function(dest, lerp, shortest){
     return m;
 }
 
-THREE.Vector3.prototype.rotate = function(rot){
-    var conj = rot.conjugate(); //
-
-    var w = rot.v_mul(this).q_mul(conj);
-    return new THREE.Vector3(w.x, w.y, w.z);
-}
 
 quaternion.prototype.get_forward = function(){
     return new THREE.Vector3(0, 0, 1).rotate(this);

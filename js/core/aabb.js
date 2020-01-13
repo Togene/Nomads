@@ -379,24 +379,42 @@ aabb.prototype.get_norms = function(v){
         );
 
         normals[i] = new THREE.Vector3(x1/l, 0, z1/l);
-        //normals[i + 1] = new THREE.Vector3(-x1/l, 0, -z1/l);
+        normals[i + 1] = new THREE.Vector3(-x1/l, 0, -z1/l);
     }
     return {n: normals, m: mids};
 };
-
 
 //getting projection direction from normals instead?
 //aabb.prototype.project_on_axis = function(axis) {
 //}
 
-//TODO : impliment axis creation
+aabb.prototype.get_axes = function(v){
+    axes = [v.length];
+
+    for(var i = 0; i < v.length; i++){
+        var p1 = v[i];
+        var p2 = v[ i + 1 == v.length ? 0 : i + 1];
+        var edge = p1.clone().sub(p2);
+        var normal = edge.perp().normalize();
+
+        if(Math.sign(normal.x) == -1 && normal.x == 0){normal.x = 0;}
+        if(Math.sign(normal.z) == -1 && normal.z == 0){normal.z = 0;}
+        if(Math.sign(normal.y) == -1 && normal.y == 0){normal.y = 0;}
+
+        axes[i] = normal;
+    }
+
+    return axes;
+}
+
 aabb.prototype.project = function(normal){
     var verts = this.get_verts();
 
-    var min = normal.dot(verts[0]);
+    var min = normal.clone().dot(verts[0]);
     var max = min;
 
     for(var i = 1; i < verts.length; i++){
+
         var p = normal.dot(verts[i]);
         if(p < min){
             min = p;
@@ -416,14 +434,38 @@ aabb.prototype.intersect_sat_aabb = function(right){
     var mid = null;
 
     var v = this.get_verts()
-    var n = this.get_norms(v);
+    var a  = this.get_axes(v);
 
     var rv = right.get_verts();
-    var rn = right.get_norms(rv);
+    var ra  = right.get_axes(rv);
 
-    for(var i = 0; i < n.n.length; i++){
-        var proj_1 = this.project(n.n[i]);
-        var proj_2 = right.project(n.n[i]);
+
+    var me = false;
+
+    for(var i = 0; i < a.length; i++){
+        var proj_1 = this.project(a[i]);
+        var proj_2 = right.project(a[i]);
+
+        if(!proj_1.overlap(proj_2)){
+            return {result: false};
+        } else {
+
+            var o = proj_1.get_overlap(proj_2);
+
+            var angle = Math.sign(this.parent.transform.position.clone().dot(a[i]));
+            
+            if(o < overlap && angle != -1){
+                if(right.parent.name == "crab"){console.log("from crab?");}
+                //set to smallest
+                overlap = o;
+                smallest = a[i];
+            }
+        }
+    }
+
+    for(var i = 0; i < ra.length; i++){
+        var proj_1 = this.project(ra[i]);
+        var proj_2 = right.project(ra[i]);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
@@ -431,35 +473,20 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
             var o = proj_1.get_overlap(proj_2);
 
-            if(o < overlap && o != overlap){
+            var angle = Math.sign(this.parent.transform.position.clone().dot(ra[i]));
+            
+            if(o < overlap && angle != -1){
+        
                 //set to smallest
                 overlap = o;
-                smallest = n.n[i];
-                mid = n.m[i];
+                smallest = ra[i];
             }
         }
     }
 
-    for(var i = 0; i < rn.n.length; i++){
-        var proj_1 = right.project(rn.n[i]);
-        var proj_2 = this.project(rn.n[i]);
 
-        if(!proj_1.overlap(proj_2)){
-            return {result: false};
-        } else {
-
-            var o = proj_1.get_overlap(proj_2);
-           
-            if(o < overlap && o != overlap){
-                //set to smallest
-                overlap = o;
-                smallest = rn.n[i];
-                mid = rn.m[i];
-            }
-        }
-    }
  
-    return {result: true, direction: smallest, gap: overlap, middle: mid};
+    return {result: true, direction: smallest, gap: overlap};
 }
 
 

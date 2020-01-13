@@ -98,19 +98,29 @@ function narrow_collision_check(near, e, delta){
             var delt = e.transform.position.clone().sub(near[i].transform.position.clone()).normalize();
             delt.y = 0;
             //var sweep = l.intersect_sweep_aabb(r, delt);
+            
+ 
             var sat = l.intersect_sat_aabb(r);
-          
+        
 
             if(sat.result && (near[i].name != "player" && near[i].name != "floor")){
                 l.set_colliding(true);
 
                 lb.null_velocity();
                 
-                e.transform.position.z += (delt.z * sat.gap);
-                e.transform.position.x += (delt.x * sat.gap);
+                var to_angle = Math.sign(e.transform.position.clone().dot(sat.direction));
+                var from_angle = Math.sign(near[i].transform.position.clone().dot(sat.direction));
+
+                if(to_angle == -1){
+                    console.log("done fucked");
+                }
+
+                e.transform.position.z += sat.direction.z * sat.gap;
+                e.transform.position.x += sat.direction.x * sat.gap;
                 
                 r.set_colliding(true);
             }
+    
             //if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){
             //                
             //       lb.null_velocity();
