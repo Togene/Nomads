@@ -31,9 +31,31 @@ transform.prototype.get_transformation = function(){
     return p.mul(t.mul(r.mul(s)));
 }
 
+transform.prototype.get_inverse_transformation = function(){
+    
+    var t = new matrix().init_translation(-this.position.x, -this.position.y, -this.position.z);
+    
+    var r = new matrix().init_rotation(this.rotation.x, this.rotation.y, this.rotation.z);
+    r = r.transpose();
+
+    var s = new matrix().init_scale(-this.scale.x, -this.scale.y, -this.scale.z);
+    var p = this.get_parent_inverse_matrix();
+   
+    return s.mul(r.mul(t.mul(p)));
+}
+
 transform.prototype.get_parent_matrix = function(){
     if(this.parent != null && this.parent.hasChanged()){
         this.parent_matrix = (this.parent.get_transformation());
+    } else {
+        this.parent_matrix =  new matrix().init_identity();
+    }
+    return this.parent_matrix;
+}
+
+transform.prototype.get_parent_inverse_matrix = function(){
+    if(this.parent != null && this.parent.hasChanged()){
+        this.parent_matrix = (this.parent.get_inverse_transformation());
     } else {
         this.parent_matrix =  new matrix().init_identity();
     }
@@ -96,6 +118,8 @@ transform.prototype.set_parent = function(t){
     }
 }
 
+
+
 transform.prototype.set_position = function(p){
     this.position = p;
 }
@@ -106,6 +130,10 @@ transform.prototype.clone = function() {
         this.scale,
         this.rotation
     )
+}
+
+transform.prototype.has_rotated = function(){
+    return this.rotation.x != 0 || this.rotation.y != 0 || this.rotation.z != 0;
 }
 
 transform.prototype.name = "transform";

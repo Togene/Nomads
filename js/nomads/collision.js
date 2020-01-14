@@ -92,57 +92,46 @@ function narrow_collision_check(near, e, delta){
             var r = near[i].get_component("aabb");
             var rb = near[i].get_component("rigidbody");
             r.set_colliding(false);
-            
-            var l_r_collsion = l.intersect_legacy(r);
-
-            var delt = e.transform.position.clone().sub(near[i].transform.position.clone()).normalize();
+            var delt = near[i].transform.position.clone().sub(e.transform.position.clone());
             delt.y = 0;
-            //var sweep = l.intersect_sweep_aabb(r, delt);
             
- 
-            var sat = l.intersect_sat_aabb(r);
-        
+            
+            //Sat for OOB, Swept for AABB
+           
+           
 
-            if(sat.result && (near[i].name != "player" && near[i].name != "floor")){
-                l.set_colliding(true);
+            if(e.transform.has_rotated() || near[i].transform.has_rotated()){
+                var sat = l.intersect_sat_aabb(r);
 
-                lb.null_velocity();
-                
-                var to_angle = Math.sign(e.transform.position.clone().dot(sat.direction));
-                var from_angle = Math.sign(near[i].transform.position.clone().dot(sat.direction));
-
-                if(to_angle == -1){
-                    console.log("done fucked");
-                }
-
-                e.transform.position.z += sat.direction.z * sat.gap;
-                e.transform.position.x += sat.direction.x * sat.gap;
-                
-                r.set_colliding(true);
-            }
+                if(sat.result && (near[i].name != "player" && near[i].name != "floor")){
+                    l.set_colliding(true);
     
-            //if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){
-            //                
-            //       lb.null_velocity();
-            //                
-            //       var geometry = new THREE.BoxGeometry( .05, .05, .05 );
-            //       var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-            //       var cube = new THREE.Mesh( geometry, material );
-            //       scene.add( cube );
-            //                
-            //       //collision_sweep_response(sweep, e, r);
-            //                
-            //       //console.log(sweep.hit.normal);
-            //                
-            //       cube.position.set(
-            //           sweep.hit.position.x , 
-            //           sweep.hit.position.y,
-            //           sweep.hit.position.z );
-            //    
-            //       l.set_colliding(true);
-            //       r.set_colliding(true);
-            //       return;
-            //}
+                    lb.null_velocity();
+    
+                    e.transform.position.z += sat.direction.z * sat.gap;
+                    e.transform.position.x += sat.direction.x * sat.gap;
+                    
+                    r.set_colliding(true);
+                    return;
+                }
+            } else {
+                    var sweep = l.intersect_sweep_aabb(r, delt);
+
+                    if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){
+                                    
+                           lb.null_velocity();
+                                    
+                           collision_sweep_response(sweep, e, r);
+                                    
+                           l.set_colliding(true);
+                           r.set_colliding(true);
+                           return;
+                    }
+            }
+
+  
+    
+     
 
             //collision_ray_response(l, r, lr, lb, near[i]);
 

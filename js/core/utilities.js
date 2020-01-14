@@ -4,6 +4,16 @@ const EPSILON = 1e-8;
 
 function dag_to_rad(d){return d * (Math.PI/180);}
 
+
+//adds small margin to floating point numbers to account for floating point errors
+function bais_greater_than(a, b){
+    const k_bias_relative = 0.95;
+    const k_bais_absolute = 0.91;
+
+    // >= instad of > for NAN comparison safty
+    return a >= b * k_bias_relative + a * k_bais_absolute;
+}
+
 //map to Sprite Shader
 function MapToSS(x, y) {
     return new THREE.Vector2((1 / 8) * x, (1 / 8) * y);

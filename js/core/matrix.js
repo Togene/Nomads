@@ -75,6 +75,8 @@ matrix.prototype.transform = function(r){
     );
 }
 
+
+
 matrix.prototype.get = function(x, y){return this.m[x][y];};
 matrix.prototype.set = function(x, y, v){this.m[x][y] = v;};
 matrix.prototype.set_matrix = function(m){this.m = m;};
@@ -94,6 +96,27 @@ matrix.prototype.mul = function(r){
     return result;
 }
 
+matrix.prototype.invert = function(r){
+    return new THREE.Vector3(
+        this.m[0][0] * r.x + this.m[0][1] * r.y + this.m[0][2] * r.z + this.m[0][3],
+        this.m[1][0] * r.x + this.m[1][1] * r.y + this.m[1][2] * r.z + this.m[1][3],
+        this.m[2][0] * r.x + this.m[2][1] * r.y + this.m[2][2] * r.z + this.m[2][3],
+    );
+}
+
+matrix.prototype.transpose = function(){
+
+    var result = new matrix();
+
+    for(var i = 0; i < 4; i++){
+        for(var j = 0; j < 4; j++){
+            result.m[i][j] = this.m[j][i]
+        }
+    }
+
+    return result;
+}
+
 matrix.prototype.toMatrix4 = function(){
 
     var m = new THREE.Matrix4().set(
@@ -105,5 +128,6 @@ matrix.prototype.toMatrix4 = function(){
 
     return m; 
 }
+
 
 matrix.prototype.name = "matrix";

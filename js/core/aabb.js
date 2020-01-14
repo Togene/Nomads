@@ -300,9 +300,6 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
     sw.hit = this.intersect_segement(right.centre, delta, right.w, right.d, right.h);
     
-    //using rotated values, not y and z are swapped (y was implimented last)
-    //sw.hit = this.intersect_segement(right.centre, delta, right_dims.x, right_dims.z, right_dims.y);
-    
     if(sw.hit != null){
         sw.time = clamp(sw.hit.time - EPSILON, 0, 1);
         sw.position.x = right.centre.x + delta.x * sw.time;
@@ -333,30 +330,38 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
 //credit : http://www.dyn4j.org/2010/01/sat/
 //helping with SAT collision detection
-aabb.prototype.get_verts = function(){
+aabb.prototype.get_verts = function(mat){
     var vertices = [];
 
-    var transform_clone = this.parent.transform.clone();
-    transform_clone.scale = new THREE.Vector3(1,1,1);
+
     
     var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
-    vert_0.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_0.applyMatrix4(mat);
     vertices.push(vert_0);
      
     var vert_1 = new THREE.Vector3(this.w, -this.h, -this.d);
-    vert_1.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_1.applyMatrix4(mat);
     vertices.push(vert_1);
     
     var vert_3 = new THREE.Vector3(this.w, -this.h, this.d);
-    vert_3.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_3.applyMatrix4(mat);
     vertices.push(vert_3);
 
     var vert_2 = new THREE.Vector3(-this.w, -this.h, this.d);
-    vert_2.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+    vert_2.applyMatrix4(mat);
     vertices.push(vert_2);
 
     //console.log(vertices);
     return vertices;
+}
+
+aabb.prototype.refrence_transform = function(v, m){
+
+    for(var i = 0; i < v.length; i ++){
+        v[i].applyMatrix4(m);
+    }
+
+    return v;
 }
 
 aabb.prototype.get_norms = function(v){
@@ -397,9 +402,9 @@ aabb.prototype.get_axes = function(v){
         var edge = p1.clone().sub(p2);
         var normal = edge.perp().normalize();
 
-        if(Math.sign(normal.x) == -1 && normal.x == 0){normal.x = 0;}
-        if(Math.sign(normal.z) == -1 && normal.z == 0){normal.z = 0;}
-        if(Math.sign(normal.y) == -1 && normal.y == 0){normal.y = 0;}
+        if(normal.x == 0){normal.x = 0;}
+        if(normal.z == 0){normal.z = 0;}
+        if(normal.y == 0){normal.y = 0;}
 
         axes[i] = normal;
     }
@@ -407,15 +412,14 @@ aabb.prototype.get_axes = function(v){
     return axes;
 }
 
-aabb.prototype.project = function(normal){
-    var verts = this.get_verts();
+aabb.prototype.project = function(n, v){
 
-    var min = normal.clone().dot(verts[0]);
+    var min = n.clone().dot(v[0]);
     var max = min;
 
-    for(var i = 1; i < verts.length; i++){
+    for(var i = 1; i < v.length; i++){
 
-        var p = normal.dot(verts[i]);
+        var p = n.dot(v[i]);
         if(p < min){
             min = p;
         } else if(p > max){
@@ -427,24 +431,41 @@ aabb.prototype.project = function(normal){
 }
 
 
+//credit to Randy Gaul manifold generation :
+//https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
+
 aabb.prototype.intersect_sat_aabb = function(right){
 
     var overlap = Infinity;
-    var smallest = null;
+    var axis = null;
     var mid = null;
 
-    var v = this.get_verts()
+    var transform_clone = this.parent.transform.clone();
+    transform_clone.scale = new THREE.Vector3(1,1,1);
+
+    var m = transform_clone.get_transformation().toMatrix4();
+    var m_i = transform_clone.get_inverse_transformation().toMatrix4();
+
+    var v_grab = this.get_verts(m);
+    var v = this.refrence_transform(v_grab, m_i);
+
     var a  = this.get_axes(v);
 
-    var rv = right.get_verts();
+    var r_transform_clone = right.parent.transform.clone();
+    r_transform_clone.scale = new THREE.Vector3(1,1,1);
+
+    var rm = r_transform_clone.get_transformation().toMatrix4();
+
+    var rv_grab = right.get_verts(rm);
+
+    //transform right's verts to be within this refrence frame
+    var rv = this.refrence_transform(rv_grab, m_i);
+
     var ra  = right.get_axes(rv);
 
-
-    var me = false;
-
     for(var i = 0; i < a.length; i++){
-        var proj_1 = this.project(a[i]);
-        var proj_2 = right.project(a[i]);
+        var proj_1 = this.project(a[i], v);
+        var proj_2 = right.project(a[i], rv);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
@@ -453,19 +474,18 @@ aabb.prototype.intersect_sat_aabb = function(right){
             var o = proj_1.get_overlap(proj_2);
 
             var angle = Math.sign(this.parent.transform.position.clone().dot(a[i]));
-            
-            if(o < overlap && angle != -1){
-                if(right.parent.name == "crab"){console.log("from crab?");}
-                //set to smallest
+            // && angle != -1
+            if(o < overlap){
+                //set to axis
                 overlap = o;
-                smallest = a[i];
+                axis = a[i];
             }
         }
     }
 
     for(var i = 0; i < ra.length; i++){
-        var proj_1 = this.project(ra[i]);
-        var proj_2 = right.project(ra[i]);
+        var proj_1 = this.project(ra[i], v);
+        var proj_2 = right.project(ra[i], rv);
 
         if(!proj_1.overlap(proj_2)){
             return {result: false};
@@ -474,19 +494,17 @@ aabb.prototype.intersect_sat_aabb = function(right){
             var o = proj_1.get_overlap(proj_2);
 
             var angle = Math.sign(this.parent.transform.position.clone().dot(ra[i]));
-            
-            if(o < overlap && angle != -1){
+            // && angle != -1
+            if(o < overlap){
         
-                //set to smallest
+                //set to axis
                 overlap = o;
-                smallest = ra[i];
+                axis = ra[i];
             }
         }
     }
-
-
- 
-    return {result: true, direction: smallest, gap: overlap};
+    
+    return {result: true, direction: axis, gap: overlap};
 }
 
 
