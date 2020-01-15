@@ -64,7 +64,7 @@ rigidbody.prototype.update = function(delta){
             this.velocity.y = 0;
             this.parent.transform.position.y = 1.25;
         } else {
-            //this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
+            this.velocity.y -= 9.8 * (20.0) * delta; // 100.0 = mass
         }
 
         //*-------------------- Caps -----------------------
@@ -175,7 +175,6 @@ rigidbody.prototype.ground = function(y, isplayer){
         this.parent.transform.position.y = y + (col.h + .01);
         this.velocity.y = 0;
         if(isplayer) {
-            //console.log("is player");
             canJump = true;
         }
    

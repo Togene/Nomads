@@ -5,7 +5,7 @@ function TestNPC(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_npcs = 0;
+    var num_npcs = 10;
     var spacing = 3;
 
     for(var i = 0; i < num_npcs; i++){
@@ -63,6 +63,7 @@ function humanoid_update(delta){
 
     if(test_npcs.length != 0){
         for(var i = 0; i < test_npcs.length; i++){
+            //test_npcs[i].transform.rotation.y += 1;
         }
     }
 

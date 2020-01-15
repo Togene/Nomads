@@ -5,7 +5,7 @@ function TestCreatures(){
     var buffer = create_buffer();
     var attributes = [];
 
-    var num_crabs = 1;
+    var num_crabs = 0;
     var spacing = 3;
 
     for(var i = 0; i < num_crabs; i++){
@@ -18,8 +18,8 @@ function TestCreatures(){
         var x = (i * spacing) - (num_crabs/2) * spacing;
         var z = (j * spacing) - (num_crabs/2) * spacing;
             
-        crab.transform.position = new THREE.Vector3(x + 20, 1.25, z + 20);
-        crab.transform.rotation = new quaternion(0, 0, 0, 1 );
+        crab.transform.position = new THREE.Vector3(x + 20, 0, z + 20);
+        crab.transform.rotation = new quaternion(0, random_range(-45, 45), 0, 1);
         crab.transform.scale = new THREE.Vector3(1,1,1);
 
         var crab_decomposer = new decomposer(
@@ -33,7 +33,7 @@ function TestCreatures(){
            buffer.index,
         );
 
-        crab.add_component(new aabb(crab.transform, .5, 1, .5, true, 0x00FF00, true));
+        crab.add_component(new aabb(crab.transform, .5, .5, .5, true, 0x00FF00, true));
         crab.add_component(new rigidbody(1, false));
         crab.add_component(crab_decomposer);
         crab.add_component(new ray(crab.transform.position, new THREE.Vector3(0, -1, 0)));
