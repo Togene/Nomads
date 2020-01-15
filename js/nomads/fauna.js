@@ -19,7 +19,7 @@ function TestCreatures(){
         var z = (j * spacing) - (num_crabs/2) * spacing;
             
         crab.transform.position = new THREE.Vector3(x + 20, 1.25, z + 20);
-        crab.transform.rotation = new quaternion(0, 45, 0, 1 );
+        crab.transform.rotation = new quaternion(0, 0, 0, 1 );
         crab.transform.scale = new THREE.Vector3(1,1,1);
 
         var crab_decomposer = new decomposer(

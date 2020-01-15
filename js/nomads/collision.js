@@ -108,8 +108,8 @@ function narrow_collision_check(near, e, delta){
     
                     lb.null_velocity();
     
-                    e.transform.position.z += sat.direction.z * sat.gap;
-                    e.transform.position.x += sat.direction.x * sat.gap;
+                    e.transform.position.z += sat.axis.z * sat.gap;
+                    e.transform.position.x += sat.axis.x * sat.gap;
                     
                     r.set_colliding(true);
                     return;

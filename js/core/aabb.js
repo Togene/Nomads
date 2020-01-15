@@ -473,8 +473,6 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
             var o = proj_1.get_overlap(proj_2);
 
-            var angle = Math.sign(this.parent.transform.position.clone().dot(a[i]));
-            // && angle != -1
             if(o < overlap){
                 //set to axis
                 overlap = o;
@@ -493,18 +491,24 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
             var o = proj_1.get_overlap(proj_2);
 
-            var angle = Math.sign(this.parent.transform.position.clone().dot(ra[i]));
-            // && angle != -1
             if(o < overlap){
-        
                 //set to axis
                 overlap = o;
                 axis = ra[i];
             }
         }
     }
+    var p0 = this.parent.transform.position.clone();
+    var p1 = right.parent.transform.position.clone();
+
+    var direction = p0.sub(p1);
+
+    if(axis.dot(direction) < 0.0){
+        axis.negate();
+    }
+
     
-    return {result: true, direction: axis, gap: overlap};
+    return {result: true, axis: axis, gap: overlap};
 }
 
 
