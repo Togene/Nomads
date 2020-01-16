@@ -32,6 +32,7 @@
 		uniform vec3 cameraPosition;
 		varying vec2 viewDirection;
 		varying vec4 posWorld;
+		varying vec4 rotation;
 
 		attribute vec4 m0;
 		attribute vec4 m1;
@@ -57,6 +58,8 @@
 		}
 
 		void main() {
+			
+			rotation = orientation;
 
 			vec4 finalPosition = vec4(0);
 			mat4 transform_matrix = mat4(m0, m1, m2, m3);
@@ -88,7 +91,7 @@
 			framePass = animationFrame;
 			uvoffsetPass = uvoffset;
 			spritesheetsizePass = vec2(spriteSheetX, spriteSheetY);	
-
+		
 
 			gl_Position = finalPosition;
 		}

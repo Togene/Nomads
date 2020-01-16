@@ -19,6 +19,8 @@
 		varying vec2 viewDirection;
 		varying vec4 posWorld;
 
+		varying vec4 rotation;
+		
 		const float PI = 3.1415926535897932384626433832795;
 
 		float AbsoluteAngle(float angle) {
@@ -39,7 +41,7 @@
 
 			if(animationSwitch == 1.0){
 			
-				float angle = atan(viewDirection.y, viewDirection.x) * (180.0 / PI);
+				float angle = (atan(viewDirection.y, viewDirection.x)) * (180.0 / PI)  - rotation.y;
 				float offset = (PI / 4.0) * (180.0 / PI);
 
 				float dagrees = AbsoluteAngle(angle + offset);
@@ -75,6 +77,6 @@
 			float depth = (gl_FragCoord.z / gl_FragCoord.w);
 
           	float fogFactor = smoothstep( fogNear, fogFar, depth * 3.0);
-          	gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
+          	gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor);
 
 		}

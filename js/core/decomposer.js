@@ -24,12 +24,13 @@ decomposer.prototype.update = function(){
        this.matrix = this.transform.get_transformation().toMatrix4();
        //have to tell the buffer/instance_geometry to update aswell
        this.update_attributes();
+       this.set_orientation(this.parent.transform.rotation);
     }
 }    
 
 decomposer.prototype.attribute_debug = function(){
     var color_attribute = this.attributes_refrence[4];
-    color_attribute.setXYZ(this.buffer_idx, 0,randomRange(0, 1),0);
+    color_attribute.setXYZ(this.buffer_idx, 0,random_range(0, 1),0);
     color_attribute.needsUpdate = true;
 }
 
@@ -42,7 +43,15 @@ decomposer.prototype.set_color = function(hex){
     color_attribute.needsUpdate = true;
 }
 
+decomposer.prototype.set_orientation = function(o){
+    var orientation_attribute = this.attributes_refrence[6];
+    orientation_attribute.setXYZW(this.buffer_idx, o.x, o.y, o.z, o.w);
+    
+    orientation_attribute.needsUpdate = true;
+}
+
 decomposer.prototype.update_attributes = function(){
+
     var m0_attribute = this.attributes_refrence[0];
     var m1_attribute = this.attributes_refrence[1];
     var m2_attribute = this.attributes_refrence[2];

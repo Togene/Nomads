@@ -98,21 +98,18 @@ function narrow_collision_check(near, e, delta){
             
             //Sat for OOB, Swept for AABB
            
-           
-
             if(e.transform.has_rotated() || near[i].transform.has_rotated()){
                 var sat = l.intersect_sat_aabb(r);
 
                 if(sat.result && (near[i].name != "player" && near[i].name != "floor")){
                     l.set_colliding(true);
-    
+                    r.set_colliding(true);
+                    
                     lb.null_velocity();
-    
+                    rb.null_velocity();
                     e.transform.position.z += sat.axis.z * sat.gap;
                     e.transform.position.x += sat.axis.x * sat.gap;
-                    
-                    r.set_colliding(true);
-                    return;
+                    //return;
                 }
             } else {
                     var sweep = l.intersect_sweep_aabb(r, delt);

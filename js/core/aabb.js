@@ -324,10 +324,6 @@ aabb.prototype.get_norms = function(v){
     return {n: normals, m: mids};
 };
 
-//getting projection direction from normals instead?
-//aabb.prototype.project_on_axis = function(axis) {
-//}
-
 aabb.prototype.get_axes = function(v){
     axes = [v.length];
 
@@ -364,7 +360,6 @@ aabb.prototype.project = function(n, v){
 
     return new projection(min, max);
 }
-
 
 //credit to Randy Gaul manifold generation :
 //https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/

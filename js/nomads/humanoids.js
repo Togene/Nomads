@@ -63,7 +63,7 @@ function humanoid_update(delta){
 
     if(test_npcs.length != 0){
         for(var i = 0; i < test_npcs.length; i++){
-            //test_npcs[i].transform.rotation.y += 1;
+            test_npcs[i].transform.rotation.y += random_range(-1, 1);
         }
     }
 
