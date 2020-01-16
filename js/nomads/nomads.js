@@ -32,6 +32,7 @@ function game_bootstrap(data){
     physics_init();
     collision_init();
     shader_init();
+    get_to_work();
 
     //scene.add(cube1);
    // scene.add(cube2);

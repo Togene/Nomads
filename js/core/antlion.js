@@ -56,6 +56,7 @@ function antlion_done(i, data){
 
     //start up init after data loaded
     game_bootstrap(compiled_data);
+  
 }
 
 

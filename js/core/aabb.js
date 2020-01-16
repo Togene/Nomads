@@ -85,14 +85,15 @@ aabb.prototype.update = function(delta){
     
         this.min_max_set();
         this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
-    
-        if(this.decube != null){
-            if( this.parent != null){
-                this.decube.update(this.min, this.max, this.parent.transform, delta);
-            }
+
+    }
+        
+    if(this.decube != null){
+        if( this.parent != null){
+            this.decube.update(this.min, this.max, this.parent.transform, delta);
         }
     }
-                
+
     if(this.colliding && this.decube != null){
         this.decube.set_active(true);
         this.set_visule_color(this.active_color);

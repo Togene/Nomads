@@ -106,10 +106,12 @@ function narrow_collision_check(near, e, delta){
                     r.set_colliding(true);
                     
                     lb.null_velocity();
-                    rb.null_velocity();
+                    
+                    if(rb != null) rb.null_velocity();
+
                     e.transform.position.z += sat.axis.z * sat.gap;
                     e.transform.position.x += sat.axis.x * sat.gap;
-                    //return;
+                    return;
                 }
             } else {
                     var sweep = l.intersect_sweep_aabb(r, delt);
