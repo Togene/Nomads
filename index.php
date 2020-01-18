@@ -33,7 +33,6 @@
 			<script src = "js/core/aabb.js"></script>
 			<script src = "js/core/rigidbody.js"></script>
 
-			<script src = "js/nomads/world.js"></script>
 			<script src = "js/nomads/fauna.js"></script>
 			<script src = "js/nomads/flora.js"></script>
 			<script src = "js/nomads/humanoids.js"></script>
@@ -46,6 +45,10 @@
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/nomads/sky.js"></script>
+
+			<script src = "js/nomads/world/world.js"></script>
+			<script src = "js/nomads/world/tile_generator.js"></script>
+
 
 		<div id="blocker">
 			<div id="instructions">
