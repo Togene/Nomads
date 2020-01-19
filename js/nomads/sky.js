@@ -26,7 +26,7 @@ function sky_init(){
         animated_sprites, 
         buffer, 
         attributes,
-        SpriteSheetSize, 
+        sprite_sheet_size , 
         shader, 
         2, 
         true, 
@@ -39,7 +39,7 @@ function update_sky(delta){
     current_time = (time % cycle_length);
 
     ////get current sky color
-    var raw_sky_index = Normalize(0, cycle_length, current_time) * sky_colors.length;
+    var raw_sky_index = normalize(0, cycle_length, current_time) * sky_colors.length;
 
     sky_index = Math.floor(raw_sky_index);
 

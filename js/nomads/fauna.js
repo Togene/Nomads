@@ -52,7 +52,7 @@ function TestCreatures(){
     animated_sprites, 
     buffer, 
     attributes, 
-    SpriteSheetSize, 
+    sprite_sheet_size , 
     crab_shader, 
     0, 
     true, 

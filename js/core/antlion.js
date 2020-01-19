@@ -16,7 +16,6 @@ function antlion_init(){
 }
 
 function antlion_fall(i, data){
-
     //catch data dropping in from prevois call, except the first init
     if(data.length != 0){ compiled_data.push(data);}
     
@@ -30,6 +29,14 @@ function antlion_fall(i, data){
                 antlion_done, 
                 raw_resources[i].data.extra, 
                 i - 1);
+        } else if(raw_resources[i].type == "t"){
+            texture_loader(
+                raw_resources[i].name, 
+                raw_resources[i].data.color, 
+                raw_resources[i].data.height, 
+                raw_resources[i].data.detail,
+                antlion_fall, 
+                i - 1);
         }
         return;
     }
@@ -42,6 +49,14 @@ function antlion_fall(i, data){
             raw_resources[i].data.frag, 
             antlion_fall, 
             raw_resources[i].extra, 
+            i - 1);
+    } else if(raw_resources[i].type == "t"){
+        texture_loader(
+            raw_resources[i].name, 
+            raw_resources[i].data.color, 
+            raw_resources[i].data.height, 
+            raw_resources[i].data.detail,
+            antlion_fall, 
             i - 1);
     }
 
@@ -83,6 +98,34 @@ function shader_loader(name, vertex_url, fragment_url, onLoad, custom, i, onProg
             });
         })
     }, onProgress, onError);
+}
+
+function texture_loader(name, urlc, urlh, urld, onLoad, i, onProgress, onError){
+    texture_c = new THREE.TextureLoader().load(urlc, function (event) {
+        texture_h = new THREE.TextureLoader().load(urlh, function (event) {
+            texture_d = new THREE.TextureLoader().load(urld, function (event) {
+
+        imagedata = get_image_data(texture_h.image);    
+        detial_data = get_image_data(texture_d.image); 
+
+        texture_c.magFilter = THREE.NearestFilter;
+        texture_c.minFilter = THREE.NearestFilter;
+
+        texture_h.magFilter = THREE.NearestFilter;
+        texture_h.minFilter = THREE.NearestFilter;
+        
+        detial_data.magFilter = THREE.NearestFilter;
+        detial_data.minFilter = THREE.NearestFilter;
+
+        texture_d.magFilter = THREE.NearestFilter;
+        texture_d.minFilter = THREE.NearestFilter;
+        
+       
+        onLoad(i, {name:name, color: texture_c, height:imagedata, detail: detial_data, detail_test: texture_d}, onProgress, onError)
+
+            })
+        })
+    });
 }
 
 //Yummy Yum Yum

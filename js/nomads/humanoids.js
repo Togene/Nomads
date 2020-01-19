@@ -52,7 +52,7 @@ function TestNPC(){
     animated_sprites, 
     buffer, 
     attributes, 
-    SpriteSheetSize, 
+    sprite_sheet_size , 
     npc_shader, 
     4, 
     true, 

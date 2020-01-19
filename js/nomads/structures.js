@@ -59,7 +59,7 @@ function TestStructures(){
         animated_sprites, 
         buffer, 
         attributes, 
-        SpriteSheetSize, 
+        sprite_sheet_size , 
         floor_shader, 
         3, 
         false, 

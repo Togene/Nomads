@@ -56,7 +56,7 @@ function TestTree(){
     }
 
     
-    CreateInstance("Test", solid_sprites, buffer, attributes, SpriteSheetSize, shader, 1, false, false);
+    CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 1, false, false);
 
 }
 

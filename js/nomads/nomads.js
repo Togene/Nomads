@@ -1,6 +1,6 @@
 
 Scene = [];
-const SpriteSheetSize = new THREE.Vector2(8, 8);
+const sprite_sheet_size = new THREE.Vector2(8, 8);
 
 //------------- Sprite THREE.Object3D holders ---------
 var animated_sprites = new THREE.Object3D();
@@ -21,7 +21,6 @@ var game_resources;
 var game_time = 0;
 var game_speed = 2;
 
-
 function game_bootstrap(data){
     
     game_resources = data;
@@ -33,9 +32,10 @@ function game_bootstrap(data){
     collision_init();
     shader_init();
     get_to_work();
+    world_init();
 
     //scene.add(cube1);
-   // scene.add(cube2);
+    //scene.add(cube2);
     scene.add(solid_sprites);
     scene.add(animated_sprites);
 
@@ -47,9 +47,9 @@ function game_bootstrap(data){
     //newobject2.transform.position = new THREE.Vector3(0,1,0);
     //newobject1.add_child(newobject2);
     
-   //for(var i = 0; i < Scene.length; i++){
-   //    Scene[i].information();
-   //}
+    //for(var i = 0; i < Scene.length; i++){
+    //    Scene[i].information();
+    //}
     
     //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
