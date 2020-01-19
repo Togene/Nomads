@@ -2,11 +2,13 @@
 var WORLD = [];
 
 const map_index =
-        [2, 0, 0, 0, 0,
+[
+        0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 1, 0, 0,
         0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0];
+        0, 0, 0, 0, 0
+];
 
 this.addEventListener("message", function(evt) {
     //check which function to call from data[0]
