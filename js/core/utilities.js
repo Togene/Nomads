@@ -74,7 +74,7 @@ function frac(f) {
     return f % 1;
 };
 
-function Normalize(min, max, value) {
+function normalize(min, max, value) {
     return (value - min) / (max - min);
 };
 
