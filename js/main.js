@@ -19,6 +19,10 @@ function init(){
     var divisions = 10;
     var grid_helper = new THREE.GridHelper(size, divisions);
     grid_helper.position.set(0, 0, 0);
+
+    var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    scene.add(directionalLight);
+
     scene.add(grid_helper);
 }
 

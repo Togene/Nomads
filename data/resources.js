@@ -53,14 +53,37 @@ const raw_resources = [
             'js/shaders/instance/instance.vs.glsl',
             'js/shaders/instance/instance.fs.glsl',
             {wf:false, trans:false, anim:false} 
-        )
-    ),
+        )),
+    new raw_resource(
+        "Land_Shader", 
+        "s", 
+        new shader_resource(
+            'js/Shaders/Land/Land.vs.glsl',
+            'js/Shaders/Land/Land.fs.glsl',
+            {wf:false, trans:true, anim:false}  
+        )),
+    new raw_resource(
+        "Water_Shader", 
+        "s", 
+        new shader_resource(
+            'js/Shaders/Water/Water.vs.glsl',
+            'js/Shaders/Water/Water.fs.glsl',
+            {wf:false, trans:true, anim:true}  
+        )),
     new raw_resource(
         "Crab_Isle",
         't', 
         new tile_resource(
             'img/tile/Crab_Island_color.png', 
             'img/tile/Crab_Island.png', 
+            'img/tile/Crab_Island_detail.png',
+        )),
+    new raw_resource(
+        "Water_Tile",
+        't', 
+        new tile_resource(
+            'img/tile/water_tile.png', 
+            'img/tile/water_level_color.png', 
             'img/tile/Crab_Island_detail.png',
         )),
 ];

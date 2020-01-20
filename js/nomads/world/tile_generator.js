@@ -261,9 +261,9 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 					quart = new THREE.Quaternion().setFromRotationMatrix (mat);
 					//cu.rotation.getRotationFromMatrix( mat, cu.scale );
 						
-					FetchTrees(0xff0000, 
-						curface.centre.x, 
-						curface.centre.y, curface.centre.z, TreeBuffer, quart, raySampler, 1);
+					//FetchTrees(0xff0000, 
+					//	curface.centre.x, 
+					//	curface.centre.y, curface.centre.z, TreeBuffer, quart, raySampler, 1);
 					//FetchStructure(0x000000, 
 					//	curface.centre.x, 
 					//	curface.centre.y, curface.centre.z, structBuffer, quart, raySampler);
@@ -298,9 +298,9 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	}
 
 	bufferGeometry.setIndex(indices);
-	bufferGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-	bufferGeometry.addAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
-	bufferGeometry.addAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+	bufferGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+	bufferGeometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+	bufferGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
 
 	var geo = new THREE.Geometry().fromBufferGeometry(bufferGeometry);
 	geo.name = "Island_" + Worldx.toString() + "_" + Worldy.toString();

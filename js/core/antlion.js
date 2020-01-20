@@ -48,7 +48,7 @@ function antlion_fall(i, data){
             raw_resources[i].data.vert, 
             raw_resources[i].data.frag, 
             antlion_fall, 
-            raw_resources[i].extra, 
+            raw_resources[i].data.extra, 
             i - 1);
     } else if(raw_resources[i].type == "t"){
         texture_loader(
@@ -65,8 +65,9 @@ function antlion_fall(i, data){
 
 //push the last data, and flag for done;
 function antlion_done(i, data){
+    //console.log(data);
     compiled_data.push(data);
-
+ 
     elapsed_time = Date.now() - async_time;
 
     //start up init after data loaded
