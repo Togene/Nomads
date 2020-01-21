@@ -74,7 +74,7 @@ face3D.prototype.CalculateNormal = function (debug = false) {
 function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, levelOfDetial, ChunkSize, Worldx, Worldy, mapsize, gridsize, scale, xIndex, yIndex, buffers, yoffset) {
 
 	var bufferGeometry = new THREE.BufferGeometry();
-
+	
 	width = mapsize || 1;
 	height = mapsize || 1;
 
@@ -164,18 +164,17 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			var finalP_xy = EasingFunctions.easeInQuint(height_xy);
 
 			//console.log(finalP);
-
-
 			finalP *= heightMultiplier;
 			finalP_x *= heightMultiplier;
 			finalP_y *= heightMultiplier;
 			finalP_xy *= heightMultiplier;
 
-
-			if (finalP <= 0.01) { finalP = - 100; }
-			if (finalP_x <= 0.01) { finalP_x = - 100; }
-			if (finalP_y <= 0.01) { finalP_y = - 100; }
-			if (finalP_xy <= 0.01) { finalP_xy = - 100; }
+			
+			//------------------------- -ocean floor -------------------------
+			//if (finalP <= 0.01) { finalP = - 100; }
+			//if (finalP_x <= 0.01) { finalP_x = - 100; }
+			//if (finalP_y <= 0.01) { finalP_y = - 100; }
+			//if (finalP_xy <= 0.01) { finalP_xy = - 100; }
 
 
 			//------------------------ Normal Height -------------------------

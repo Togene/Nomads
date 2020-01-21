@@ -74,7 +74,6 @@ uniform float fogFar;
 			
 			vec4 ext = texture2D(extra, vec2(vUv.x, 1.0 - vUv.y)) - maskInvert;
 
-			
 			//wierd fade in effect =o
 			//vec2 anim_uv = vec2(mod((vUv.x) * 25.0, 0.5) * mod(time, 0.5), vUv.y*25.0);
 			vec2 st = vUv.xy;
