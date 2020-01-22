@@ -3,7 +3,7 @@ const sprite_size = pixel * 32; // would be just 1 :|
 const EPSILON = 1e-8;
 
 function dag_to_rad(d){return d * (Math.PI/180);}
-
+function rad_to_dag(d){return d * (180/Math.PI);}
 
 //adds small margin to floating point numbers to account for floating point errors
 function bais_greater_than(a, b){

@@ -6,7 +6,7 @@ var player_down_ray;
 function player_init(){
     player = new gameobject("player");
 
-    player.transform.position = new THREE.Vector3(0, 1.25, 0);
+    player.transform.position = new THREE.Vector3(0, 5.25, 0);
     player.transform.scale = new THREE.Vector3(1, 1, 1);
     player.transform.rotation = new quaternion(0, 0, 0, 1);
 

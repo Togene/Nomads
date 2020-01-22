@@ -80,7 +80,7 @@ uniform float fogFar;
 			float rnd = ceil(random( st ));
 			float offset = ceil(mod(time * 2.0, 4.0)-1.0)/4.0;
 
-			vec2 anim_uv = vec2(mod((vUv.x) * 50.0, 0.25) + offset, vUv.y*100.0);
+			vec2 anim_uv = vec2(mod((vUv.x) * 50.0, 0.25) + offset, vUv.y*200.0);
 			vec4 tex = texture2D(texture, anim_uv);
 
 			vec4 final = max(ext, tex);

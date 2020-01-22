@@ -1,5 +1,7 @@
 var test_crabs = [];
 
+
+
 function TestCreatures(){
     var crab_shader = get_data("instance_shader");
     var buffer = create_buffer();

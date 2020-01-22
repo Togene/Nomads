@@ -12,12 +12,13 @@ const WORLD_TILE_SCALE = 0.25;
 
 var volmetric_cube;
 
-var mapindex =
-        [2, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0];
+var mapindex = [
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0
+];
 
 function world_init() {
 
@@ -44,8 +45,11 @@ function World_Generate() {
 
     //var maps = MapGenerator(5, 1.9, 0.21, SEED, 1, new THREE.Vector2(0, 0), TEXTURE_RESOLUTION);
     
-    var crab_isle_data = get_data("Crab_Isle");
-    var water_tile_data = get_data("Water_Tile");
+    var sea_floor_data = get_data("sea_floor");
+
+    var crab_isle_data = get_data("crab_isle");
+
+    var water_tile_data = get_data("water_tile");
 
     var landShader = get_data("Land_Shader");
     var waterShader = get_data("Water_Shader");
@@ -53,6 +57,10 @@ function World_Generate() {
     var crab_isle = CreateTile(landShader, crab_isle_data.height, 
         crab_isle_data.color, crab_isle_data.detail, crab_isle_data.detail_test,
          TILE_GRID_SIZE, W_TILE_SCALE, {tree: TreeBuffer, envi: EnviBuffer, strct: StructBuffer, crt: CreatureBuffer}, true, 0.0);
+
+    var sea_floor = CreateTile(landShader, sea_floor_data.height, 
+        sea_floor_data.color, sea_floor_data.detail, sea_floor_data.detail_test,
+        TILE_GRID_SIZE, W_TILE_SCALE, {tree: TreeBuffer, envi: EnviBuffer, strct: StructBuffer, crt: CreatureBuffer}, true, 0.0);
 
     var water_tile = CreateTile(waterShader, water_tile_data.height, 
         water_tile_data.color, crab_isle_data.detail, crab_isle_data.detail_test,  1, TILE_GRID_SIZE * W_TILE_SCALE, {}, false, 0.0);
@@ -73,34 +81,25 @@ function World_Generate() {
 
             var index = mapindex[y * W_NUM_TILES + x];
 
-            if (index == 1) {
+            if (index == 0) {
+                var newisle = sea_floor.clone();
+              
+                newisle.position.set(world_pos_x, 0, world_pos_y);
+                WORLD_OBJECT.add(newisle);
+            } else if ( index  == 1){
                 var newisle = crab_isle.clone();
               
                 newisle.position.set(world_pos_x, 0, world_pos_y);
                 WORLD_OBJECT.add(newisle);
-
-                var water = water_tile.clone();
-                water.position.set(world_pos_x, 0, world_pos_y );
-                ANIM_WORLD_OBJECTS.add(water);
-                WORLD_OBJECT.add(water);
-                
-            } else if (index == 0) {
-                var water = water_tile.clone();
-                //console.log("eh?");
-                WORLD_OBJECT.add(water);
-                ANIM_WORLD_OBJECTS.add(water);
-                water.position.set(world_pos_x, 0, world_pos_y );
             }
+
+            var water = water_tile.clone();
+            water.position.set(world_pos_x, 0, world_pos_y );
+            ANIM_WORLD_OBJECTS.add(water);
         }
 
     scene.add(ANIM_WORLD_OBJECTS);
     scene.add(WORLD_OBJECT);
-
-    //CreateCreatures("", "", "");
-    //var crab_shader = get_data("Instance_Shader");
-    //CreateInstance("Trees", WORLD_OBJECT, TreeBuffer, sprite_sheet_size, crab_shader, 0, false, true);
-    //CreateInstance("Structures", WORLD_OBJECT, StructBuffer, sprite_sheet_size, crab_shader, 1, false, true);
-    //CreateInstance("Creatures", WORLD_OBJECT, CreatureBuffer, sprite_sheet_size, crab_shader, 2, true, false);
 }
 
 function CreateTile(shader, height, color, detial_map, detial_test, gridSize, scale, buffers, physical, yoffset) {

@@ -22,7 +22,7 @@ function collision_update(delta){
 function floor_collision_check(delta){
     if(collision_tree != undefined && player != undefined) {
         collision_tree.forEach(function(e){
-            floor_narrow_check(e, delta);
+            //floor_narrow_check(e, delta);
         });
     }
 }

@@ -1,5 +1,57 @@
 var test_trees = [];
 
+function tree_create(p, q){
+
+    var shader = get_data("instance_shader");
+    var buffer = create_buffer();
+    var attributes = [];
+
+    var num_trees = 1;
+
+    var tree = new gameobject("tree");
+    
+    test_trees.push(tree);
+    tree.transform.position = new THREE.Vector3(p.x, p.y, p.z);
+    tree.transform.scale = new THREE.Vector3(5,5,5);
+    tree.transform.rotation = new quaternion(rad_to_dag(q.x), rad_to_dag(q.y), rad_to_dag(q.z), rad_to_dag(q.w));
+    
+    create_face(0, tree, buffer, attributes);
+    create_face(45, tree, buffer, attributes);
+    create_face(135, tree, buffer, attributes);
+    
+    leaves = new gameobject("leaves");
+    
+    tree.add_child(leaves);
+
+    leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
+    tree.get_component("aabb");
+
+    var leaves_decomposer = new decomposer(
+        [ MapToSS(3, 0),],
+        new THREE.Vector2(1, 1),
+        [ new THREE.Color(0x008B00) ],
+        new THREE.Vector3(0, 0, 0),
+        leaves.transform,
+        0,
+        attributes,
+        buffer.index,
+    );
+    
+    leaves.add_component(leaves_decomposer);
+    tree.add_component(new aabb(tree.transform, 1, 2, 1, true, 0xFFFFFF, true));
+    
+    PopulateBuffer(
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(10, 10, 10), 
+        buffer, 
+        leaves_decomposer
+    );
+    
+    CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 1, false, false);
+
+}
+
 function TestTree(){
     var shader = get_data("instance_shader");
     var buffer = create_buffer();
@@ -146,7 +198,7 @@ function flora_update(delta){
   
    for(var i = 0; i < test_trees.length; i++){
        // test_trees[i].transform.position.y = Math.sin(game_time);
-        test_trees[i].transform.rotation.y += 1;
+       // test_trees[i].transform.rotation.y += 1;
    }
 //  
 }

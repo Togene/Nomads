@@ -108,20 +108,19 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 
 	for (iy = 0; iy < gridY1; iy++) {
 
-		var y = Math.ceil(iy * segment_height - height_half);
+		var y = (iy * segment_height - height_half);
 
 		//---------------------- Future verts ------------------------------
-		var y1 = Math.ceil((iy + 1) * segment_height - height_half);
+		var y1 = ((iy + 1) * segment_height - height_half);
 		//---------------------- Future verts ------------------------------
 
 		for (ix = 0; ix < gridX1; ix++) {
 
-			var x = Math.ceil(ix * segment_width - width_half);
+			var x = (ix * segment_width - width_half);
 
 			//---------------------- Future verts ------------------------------
-			var x1 = Math.ceil((ix + 1) * segment_width - width_half);
+			var x1 =((ix + 1) * segment_width - width_half);
 			//---------------------- Future verts ------------------------------
-
 
 			//------------------------ MAP SAMPLING --------------------------- \\
 			var tile_size = (mapsize / scale) / gridsize;
@@ -171,10 +170,10 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 
 			
 			//------------------------- -ocean floor -------------------------
-			//if (finalP <= 0.01) { finalP = - 100; }
-			//if (finalP_x <= 0.01) { finalP_x = - 100; }
-			//if (finalP_y <= 0.01) { finalP_y = - 100; }
-			//if (finalP_xy <= 0.01) { finalP_xy = - 100; }
+			if (finalP <= 0.01) { finalP = - 100; }
+			if (finalP_x <= 0.01) { finalP_x = - 100; }
+			if (finalP_y <= 0.01) { finalP_y = - 100; }
+			if (finalP_xy <= 0.01) { finalP_xy = - 100; }
 
 
 			//------------------------ Normal Height -------------------------
@@ -211,35 +210,8 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 				curface.index = Index_xy/4;
 				
 				if(r_d == 255) {	
-						//var axis = new THREE.Vector3();
-						//var up = new THREE.Vector3(0, 1, 0);
-//
-						//if ( curface.normal.y == 1 || curface.normal.y == -1 ) {
-						//	axis = new THREE.Vector3( 1, 0, 0 );
-						//}
-						//else {
-						//	axis = new THREE.Vector3().crossVectors( up,  curface.normal);
-						//}
-	//
-						//// determine the amount to rotate
-						//var radians = Math.acos( curface.normal.dot( up ) );
-	//
-						//// create a rotation matrix that implements that rotation
-						//var mat = new THREE.Matrix4().makeRotationAxis( axis, radians );
-//
-						//// apply the rotation to the quart
-						//quart = new THREE.Quaternion().setFromRotationMatrix (mat);
-						////cu.rotation.getRotationFromMatrix( mat, cu.scale );
-						//	
-						//FetchTrees(0xff0000, 
-						//	curface.centre.x, 
-						//	curface.centre.y, curface.centre.z, TreeBuffer, quart, raySampler, 1);
-						////FetchStructure(0x000000, 
-						////	curface.centre.x, 
-						////	curface.centre.y, curface.centre.z, structBuffer, quart, raySampler);
-				}
 
-				if(g_d == 255) {	
+				}else if(g_d == 255) {	
 					var axis = new THREE.Vector3();
 					var up = new THREE.Vector3(0, 1, 0);
 
@@ -259,13 +231,14 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 					// apply the rotation to the quart
 					quart = new THREE.Quaternion().setFromRotationMatrix (mat);
 					//cu.rotation.getRotationFromMatrix( mat, cu.scale );
-						
-					//FetchTrees(0xff0000, 
-					//	curface.centre.x, 
-					//	curface.centre.y, curface.centre.z, TreeBuffer, quart, raySampler, 1);
-					//FetchStructure(0x000000, 
-					//	curface.centre.x, 
-					//	curface.centre.y, curface.centre.z, structBuffer, quart, raySampler);
+
+					var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+					var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+					var cube = new THREE.Mesh( geometry, material );
+					cube.position.set(curface.centre.x, curface.centre.y, curface.centre.z);
+					scene.add( cube );
+
+					//tree_create(curface.centre, quart);
 			}
 			}
 			//--------------------------FACE-------------------------------------
@@ -319,3 +292,6 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	return geo;
 }
 
+function place(){
+
+}

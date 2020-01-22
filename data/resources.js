@@ -71,19 +71,27 @@ const raw_resources = [
             {wf:false, trans:true, anim:true}  
         )),
     new raw_resource(
-        "Crab_Isle",
+        "crab_isle",
         't', 
         new tile_resource(
-            'img/tile/Crab_Island_color.png', 
-            'img/tile/Crab_Island.png', 
-            'img/tile/Crab_Island_detail.png',
+            'img/tile/crab_island_color.png', 
+            'img/tile/crab_island.png', 
+            'img/tile/crab_island_detail.png',
         )),
     new raw_resource(
-        "Water_Tile",
+        "water_tile",
         't', 
         new tile_resource(
             'img/tile/water_tile.png', 
             'img/tile/water_level_color.png', 
-            'img/tile/Crab_Island_detail.png',
+            'img/tile/crab_island_detail.png',
+        )),
+    new raw_resource(
+        "sea_floor",
+        't', 
+        new tile_resource(
+            'img/tile/sea_floor_color.png', 
+            'img/tile/sea_floor.png', 
+            'img/tile/sea_floor_detail.png',
         )),
 ];
