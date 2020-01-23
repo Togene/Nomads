@@ -1,4 +1,5 @@
-const W_NUM_TILES = 5;
+const W_NUM_TILES = 1; //width x height of map
+
 const W_TILE_SIZE = 255;
 const TEXTURE_RESOLUTION = 256;
 const TILE_GRID_SIZE = 16; //how many times is the tile chopped up into smaller bits
@@ -13,15 +14,15 @@ const WORLD_TILE_SCALE = 0.25;
 var volmetric_cube;
 
 var mapindex = [
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0
+    1,
 ];
 
 function world_init() {
     World_Generate();
+}
+
+function world_update(delta){
+    world_occlusion();
 }
 
 function World_Generate() {
@@ -68,9 +69,6 @@ function World_Generate() {
     var full_size = (chunkSize) * TILE_GRID_SIZE;
     var full_world_size = ((chunkSize) * TILE_GRID_SIZE * W_NUM_TILES);
 
-    //console.log(water_tile);
-
-    //scene.add(water_tile);
 
     for (var y = 0; y < W_NUM_TILES; y++) 
         for (var x = 0; x < W_NUM_TILES; x++){
@@ -132,10 +130,8 @@ function CreateTile(shader, height, color, detial_map, detial_test, gridSize, sc
     detial_test.wrapS = THREE.RepeatWrapping;
     detial_test.wrapT = THREE.RepeatWrapping;
 
-
     color.wrapS = THREE.RepeatWrapping;
     color.wrapT = THREE.RepeatWrapping;
-
 
     material.uniforms.texture.value = color;
     material.uniforms.extra.value = detial_test;
@@ -152,7 +148,7 @@ function CreateTile(shader, height, color, detial_map, detial_test, gridSize, sc
                 y_loc,
                 chunkSize, gridSize, scale, x, y, buffers, yoffset);
             
-            //console.log(chunkgeo);
+            chunkgeo.computeBoundingSphere();
 
             var chunk = new THREE.Mesh(chunkgeo, material);
 
@@ -160,17 +156,66 @@ function CreateTile(shader, height, color, detial_map, detial_test, gridSize, sc
             chunk.receiveShadow = true; //default
             chunk.scale.set(1, 1, 1);
             landMassChunk.add(chunk);
-            //h/elper = new THREE.FaceNormalsHelper( chunk, 2, 0x00ff00, 12 );
-            //WORLD_OBJECT.add(helper);    
-                
+    
             if(physical) {WORLD_PHYSICAL.push(chunk);}
         }     
 
     return landMassChunk;
 }
 
+function world_occlusion(){
+    var frustum = new THREE.Frustum();
+    frustum.setFromMatrix( 
+        new THREE.Matrix4().multiplyMatrices( 
+            camera.projectionMatrix, 
+            camera.matrixWorldInverse 
+        ));
 
 
+    if(ANIM_WORLD_OBJECTS != null){
+        if(ANIM_WORLD_OBJECTS.children != null || ANIM_WORLD_OBJECTS.children.length != 0){
+            for(var i = 0; i < ANIM_WORLD_OBJECTS.children.length; i++){
+
+                if(ANIM_WORLD_OBJECTS.children[i].children != null || 
+                    ANIM_WORLD_OBJECTS.children[i].children.length != 0){
+
+                    for(var j = 0; j < ANIM_WORLD_OBJECTS.children[i].children.length; j++){
+                                        
+                        ANIM_WORLD_OBJECTS.children[i].children[j].geometry.computeBoundingSphere();
+
+                        if(frustum.intersectsObject( ANIM_WORLD_OBJECTS.children[i].children[j] )){
+                            ANIM_WORLD_OBJECTS.children[i].children[j].visible = true;
+                        } else {
+                            ANIM_WORLD_OBJECTS.children[i].children[j].visible = false;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
 
 
+    if(WORLD_OBJECT != null){
+        if(WORLD_OBJECT.children != null || WORLD_OBJECT.children.length != 0){
+            for(var i = 0; i < WORLD_OBJECT.children.length; i++){
 
+                if(WORLD_OBJECT.children[i].children != null || 
+                    WORLD_OBJECT.children[i].children.length != 0){
+
+                    for(var j = 0; j < WORLD_OBJECT.children[i].children.length; j++){
+                                        
+                        WORLD_OBJECT.children[i].children[j].geometry.computeBoundingSphere();
+
+                        if(frustum.intersectsObject( WORLD_OBJECT.children[i].children[j] )){
+                            WORLD_OBJECT.children[i].children[j].visible = true;
+                        } else {
+                            WORLD_OBJECT.children[i].children[j].visible = false;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}

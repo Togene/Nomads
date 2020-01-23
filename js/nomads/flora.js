@@ -11,10 +11,15 @@ function tree_create(p, q){
     var tree = new gameobject("tree");
     
     test_trees.push(tree);
-    tree.transform.position = new THREE.Vector3(p.x, p.y, p.z);
+    tree.transform.rotation = new quaternion(
+        rad_to_dag(q.x), 
+        rad_to_dag(q.y), 
+        rad_to_dag(q.z), 
+        rad_to_dag(q.w));
+
     tree.transform.scale = new THREE.Vector3(5,5,5);
-    tree.transform.rotation = new quaternion(rad_to_dag(q.x), rad_to_dag(q.y), rad_to_dag(q.z), rad_to_dag(q.w));
-    
+    tree.transform.position = new THREE.Vector3(p.x, p.y + tree.transform.scale.y/2, p.z);
+
     create_face(0, tree, buffer, attributes);
     create_face(45, tree, buffer, attributes);
     create_face(135, tree, buffer, attributes);
@@ -200,5 +205,26 @@ function flora_update(delta){
        // test_trees[i].transform.position.y = Math.sin(game_time);
        // test_trees[i].transform.rotation.y += 1;
    }
-//  
+
+   flora_occlusion();
+}
+
+function flora_occlusion(){
+    var frustum = new THREE.Frustum();
+    frustum.setFromMatrix( 
+        new THREE.Matrix4().multiplyMatrices( 
+            camera.projectionMatrix, 
+            camera.matrixWorldInverse 
+        ));
+
+
+    for(var i = 0; i < test_trees.length; i++){
+        var box = test_trees[i].get_component("aabb").toBox3D();
+
+        if(frustum.intersectsBox(box)){
+
+        } else {
+
+        }
+    }
 }

@@ -6,7 +6,7 @@ var rangecheck;
 
 function collision_init(){
     collision_tree = new quad_tree(new rectangle(0, 0, 10000, 10000), 10);
-    rangecheck = new rectangle(0, 0, 30, 30);
+    rangecheck = new rectangle(0, 0, 5, 5);
 }   
 
 function broad_quad_tree_insert(o){

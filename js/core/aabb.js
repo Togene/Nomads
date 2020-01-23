@@ -483,6 +483,10 @@ aabb.prototype.intersect_legacy = function(right){
     return {result: !(lx || rx || by || ty || fz || bz), normal: n};
 }
 
+aabb.prototype.toBox3D = function(){
+    return new THREE.Box3(this.min, this.max);
+}
+
 aabb.prototype.ray_intersect = function(r){
     if(!(r instanceof ray)){return false;}
 

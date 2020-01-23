@@ -84,6 +84,8 @@ function game_update(delta){
     movement(delta);
     physics_update(delta);
     shader_update(delta);
+    world_update(delta);
+    
     update(delta);
 
     for(var i = 0; i < Scene.length; i++){
