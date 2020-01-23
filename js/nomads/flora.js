@@ -69,8 +69,8 @@ function TestTree(){
         //console.log(z);
 
         test_trees.push(tree);
-        tree.transform.position = new THREE.Vector3(15, 1.25, z);
         tree.transform.scale = new THREE.Vector3(5,5,5);
+        tree.transform.position = new THREE.Vector3(0, tree.transform.scale.y/2, 0);
         tree.transform.rotation = new quaternion(0, 90, 0, 1);
         
         create_face(0, tree, buffer, attributes);

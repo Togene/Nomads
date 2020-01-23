@@ -119,7 +119,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			var x = (ix * segment_width - width_half);
 
 			//---------------------- Future verts ------------------------------
-			var x1 =((ix + 1) * segment_width - width_half);
+			var x1 = ((ix + 1) * segment_width - width_half);
 			//---------------------- Future verts ------------------------------
 
 			//------------------------ MAP SAMPLING --------------------------- \\
@@ -226,16 +226,18 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 					var radians = Math.acos( curface.normal.dot( up ) );
 
 					// create a rotation matrix that implements that rotation
-					var mat = new THREE.Matrix4().makeRotationAxis( axis, radians );
+					//var mat = new THREE.Matrix4().makeRotationAxis( axis, radians );
 
 					// apply the rotation to the quart
-					quart = new THREE.Quaternion().setFromRotationMatrix (mat);
+					quart = new THREE.Quaternion().setFromAxisAngle  (axis, radians);
 					//cu.rotation.getRotationFromMatrix( mat, cu.scale );
 
 					var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 					var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
 					var cube = new THREE.Mesh( geometry, material );
 					cube.position.set(curface.centre.x, curface.centre.y, curface.centre.z);
+					cube.rotation.setFromQuaternion(quart);
+					//console.log(cube.rotation);
 					scene.add( cube );
 
 					//tree_create(curface.centre, quart);

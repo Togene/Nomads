@@ -18,9 +18,10 @@ function TestNPC(){
         var x = (i * spacing) - (num_npcs/2) * spacing;
         var z = (j * spacing) - (num_npcs/2) * spacing;
             
-        npc.transform.position = new THREE.Vector3(x + 20, 0, z + 20);
+ 
         npc.transform.rotation = new quaternion(0, 0, 0, 1 );
         npc.transform.scale = new THREE.Vector3(1,1,1);
+        npc.transform.position = new THREE.Vector3(x + 20, npc.transform.scale.y/2, z + 20);
 
         var npc_decomposer = new decomposer(
             [ MapToSS(0, 0),],

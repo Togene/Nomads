@@ -21,7 +21,6 @@ var mapindex = [
 ];
 
 function world_init() {
-
     World_Generate();
 }
 
