@@ -69,7 +69,7 @@
 
 			vec4 tex = texture2D( map, uvIndex);
 
-			if (tex.a != 1.0) 
+			if (tex.a < 1.0) 
 			discard;
 
 			gl_FragColor = (tex * vec4(colorPass, 1.0) * vec4(fogColor,1.0));

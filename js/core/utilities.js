@@ -2,8 +2,17 @@ const pixel = 0.03125;
 const sprite_size = pixel * 32; // would be just 1 :| 
 const EPSILON = 1e-8;
 
-function dag_to_rad(d){return d * (Math.PI/180);}
-function rad_to_dag(d){return d * (180/Math.PI);}
+function dag_to_rad(d){return d * Math.PI/180.0;}
+function rad_to_dag(d){return d * 180.0/Math.PI;}
+
+//https://gist.github.com/timknip/1154512
+function copy_sign(a, b) {
+			return b < 0 ? -Math.abs(a) : Math.abs(a);
+}
+
+function round(value){
+    return Math.round((value + EPSILON) * 100) / 100;
+}
 
 //adds small margin to floating point numbers to account for floating point errors
 function bais_greater_than(a, b){

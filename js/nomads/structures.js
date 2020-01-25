@@ -23,7 +23,9 @@ function TestStructures(){
             var z = (j * spacing) - (floor_grid_size/2) * spacing;
 
             floor_square.transform.position = new THREE.Vector3(x + 20, 0, z + 20);
-            floor_square.transform.rotation = new quaternion( 90, 0, 0, 1 );
+            floor_square.transform.rotation = new quaternion(0, 0, 0, 1, 
+                new THREE.Vector3(1, 0, 0), dag_to_rad(90));
+
             floor_square.transform.scale = new THREE.Vector3(2,2,2);
 
             var floor_square_decomposer = new decomposer(

@@ -24,6 +24,9 @@ function init(){
     scene.add(directionalLight);
 
     scene.add(grid_helper);
+
+    scene.fog = new THREE.Fog(new THREE.Color(0xffffff), 0.0025, 400);
+
 }
 
 function animate(){

@@ -8,7 +8,7 @@ var direction = new THREE.Vector3();
 var bounce_distance = 8;
 
 var step = 4;
-var speed_mult = 6;
+var speed_mult = 15;
 
 function controller_init(){
     controls = new THREE.PointerLockControls( camera, document.body );

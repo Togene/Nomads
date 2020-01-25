@@ -11,15 +11,12 @@ function tree_create(p, q){
     var tree = new gameobject("tree");
     
     test_trees.push(tree);
-    tree.transform.rotation = new quaternion(
-        rad_to_dag(q.x), 
-        rad_to_dag(q.y), 
-        rad_to_dag(q.z), 
-        rad_to_dag(q.w));
-
+      
+ 
     tree.transform.scale = new THREE.Vector3(5,5,5);
-    tree.transform.position = new THREE.Vector3(p.x, p.y + tree.transform.scale.y/2, p.z);
-
+    tree.transform.position = new THREE.Vector3(0, 0, 0);
+    tree.transform.rotation = new quaternion(0,0,0,1);
+    
     create_face(0, tree, buffer, attributes);
     create_face(45, tree, buffer, attributes);
     create_face(135, tree, buffer, attributes);
@@ -54,7 +51,8 @@ function tree_create(p, q){
     );
     
     CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 1, false, false);
-
+    return tree;
+    
 }
 
 function TestTree(){
@@ -76,10 +74,11 @@ function TestTree(){
         test_trees.push(tree);
         tree.transform.scale = new THREE.Vector3(5,5,5);
         tree.transform.position = new THREE.Vector3(0, tree.transform.scale.y/2, 0);
-        tree.transform.rotation = new quaternion(0, 90, 0, 1);
+        tree.transform.rotation = new quaternion(0, 0, 0, 1);
         
         create_face(0, tree, buffer, attributes);
         create_face(45, tree, buffer, attributes);
+        create_face(90, tree, buffer, attributes);
         create_face(135, tree, buffer, attributes);
         
         leaves = new gameobject("leaves");
@@ -127,7 +126,7 @@ function create_face(y_rot, tree, buffer, attributes){
     root.add_child(trunk);
     trunk.add_child(branch);
 
-    root.transform.rotation = new quaternion(0, y_rot, 0, 1 );
+    root.transform.rotation = new quaternion(0, 0, 0, 1, new THREE.Vector3(0, 1, 0), dag_to_rad(y_rot));
     
     var root_decomposer = new decomposer(
         [ MapToSS(0, 0),],
@@ -202,8 +201,8 @@ function create_face(y_rot, tree, buffer, attributes){
 function flora_update(delta){
   
    for(var i = 0; i < test_trees.length; i++){
-       // test_trees[i].transform.position.y = Math.sin(game_time);
-       // test_trees[i].transform.rotation.y += 1;
+        //test_trees[i].transform.position.y = Math.sin(game_time);
+        //test_trees[i].transform.rotation.y += .01;
    }
 
    flora_occlusion();

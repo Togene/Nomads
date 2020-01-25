@@ -13,38 +13,47 @@ function quaternion(x, y, z, w, axis = null, angle = null, rot = null){
         this.y = axis.y * sinHalfAngle;
         this.z = axis.z * sinHalfAngle;
         this.w = cosHalfAngle;
-    } else if(rot != null){
+
+    } else if (rot != null){
 
         var trace = rot.get(0, 0) + rot.get(1, 1) + rot.get(2, 2);
-
+     
         if(trace > 0){
-            var s = 0.5 / Math.sqrt(trace + 1.0);
-            w = 0.25 / s;
-            x = (rot.get(1, 2) - rot.get(2, 1)) * s;
-            y = (rot.get(2, 0) - rot.get(0, 2)) * s;
-            z = (rot.get(0, 1) - rot.get(1, 0)) * s;
+           
+           var s = 0.5 / Math.sqrt(trace + 1.0);
+           this.w = 0.25 / s;
+           this.x = (rot.get(1, 2) - rot.get(2, 1)) * s;
+           this.y = (rot.get(2, 0) - rot.get(0, 2)) * s;
+           this.z = (rot.get(0, 1) - rot.get(1, 0)) * s;
+
         } else {
 
             if(rot.get(0,0) > rot.get(1, 1) && rot.get(0, 0) > rot.get(2, 2)){
-                var s = 2.0 * Math.sqrt(1.0 + rot.get(0, 0) - rot.get(1, 1) - rot.get(2, 2));
-                w = (rot.get(1, 2) - rot.get(2, 1)) / s;
-                x = 0.25 * s;
-                y = (rot.get(1, 0) + rot.get(0, 1)) / s;
-                z = (rot.get(2, 0) + rot.get(0, 2)) / s;
-            } else if(rot.get(1, 1) > rot.get(2, 2)){
-                var s = 2.0 * Math.sqrt(1.0 + rot.get(1, 1) - rot.get(0, 0) - rot.get(2,2));
-                w = (rot.get(2, 0) - rot.get(0, 2)) / s;
-                x = (rot.get(1, 0) + rot.get(0, 1)) / s;
-                y = 0.25 * s;
-                z = (rot.get(2, 1) + rot.get(1, 2)) / s;
-            } else {
-                var s = 2.0 * Math.sqrt(1.0 + rot.get(2, 2) - rot.get(0, 0) - rot.get(1, 1));
-                w = (rot.get(0, 1) - rot.get(1, 0)) / s;
-                x = (rot.get(2, 0) + rot.get(0, 2)) / s;
-                y = (rot.get(1, 2) + rot.get(2, 1)) / s;
-                z = 0.25 * s;
-            }
 
+                var s = 2.0 * Math.sqrt(1.0 + rot.get(0, 0) - rot.get(1, 1) - rot.get(2, 2));
+
+                this.w = (rot.get(1, 2) - rot.get(2, 1)) / s;
+                this.x = 0.25 * s;
+                this.y = (rot.get(1, 0) + rot.get(0, 1)) / s;
+                this.z = (rot.get(2, 0) + rot.get(0, 2)) / s;
+
+            } else if(rot.get(1, 1) > rot.get(2, 2)){
+                
+                var s = 2.0 * Math.sqrt(1.0 + rot.get(1, 1) - rot.get(0, 0) - rot.get(2,2));
+
+                this.w = (rot.get(2, 0) - rot.get(0, 2)) / s;
+                this.x = (rot.get(1, 0) + rot.get(0, 1)) / s;
+                this.y = 0.25 * s;
+                this.z = (rot.get(2, 1) + rot.get(1, 2)) / s;
+            } else {
+
+                var s = 2.0 * Math.sqrt(1.0 + rot.get(2, 2) - rot.get(0, 0) - rot.get(1, 1));
+
+                this.w = (rot.get(0, 1) - rot.get(1, 0)) / s;
+                this.x = (rot.get(2, 0) + rot.get(0, 2)) / s;
+                this.y = (rot.get(1, 2) + rot.get(2, 1)) / s;
+                this.z = 0.25 * s;
+            }
         }
 
         var length = Math.sqrt(
@@ -53,10 +62,10 @@ function quaternion(x, y, z, w, axis = null, angle = null, rot = null){
             this.z * this.z + 
             this.w * this.w);
 
-        x /= length;
-        y /= length;
-        z /= length;
-        w /= length;
+         this.x /= length;
+         this.y /= length;
+         this.z /= length;
+         this.w /= length;
     }
 
 }
@@ -194,7 +203,6 @@ quaternion.prototype.slerp = function(dest, lerp, shortest){
     return m;
 }
 
-
 quaternion.prototype.get_forward = function(){
     return new THREE.Vector3(0, 0, 1).rotate(this);
 }
@@ -243,6 +251,40 @@ quaternion.prototype.to_three_q = function(){
         dag_to_rad(this.y), 
         dag_to_rad(this.z), 
         dag_to_rad(this.w));
+}
+
+quaternion.prototype.to_three_q_rad = function(){
+    return new THREE.Quaternion(
+        (this.x), 
+        (this.y), 
+        (this.z), 
+        (this.w));
+}
+
+//https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+quaternion.prototype.to_euler = function(){
+    
+    //roll x axis rotation
+    var sinr_cosp = 2 * (this.w * this.x + this.y * this.z);
+    var cosr_cosp = 1 - 2 * (this.x * this.x + this.y * this.y);
+    var roll = Math.atan2(sinr_cosp, cosr_cosp);
+
+    //pitch y axis rotation
+    var sin_p = 2 * (this.w * this.y - this.z * this.x);
+
+    var pitch = 0.0;
+    if(Math.abs(sin_p) >= 1){
+        pitch = copy_sign(Math.PI / 2, sin_p); //use 90 degrees if out of range
+    } else {
+        pitch = Math.asin(sin_p);
+    }
+
+    //yaw z axis rotation
+    var siny_cosp = 2 * (this.w * this.z + this.x * this.y);
+    var cosy_cosp = 1 - 2 * (this.y * this.y + this.z * this.z);
+    var yaw = Math.atan2(siny_cosp, cosy_cosp);
+
+    return new THREE.Vector3(((roll)), ((pitch)), ((yaw)));
 }
 
 quaternion.prototype.name = "quaternion";

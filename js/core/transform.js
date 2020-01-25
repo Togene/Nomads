@@ -23,8 +23,13 @@ transform.prototype.hasChanged = function(){
 }
 
 transform.prototype.get_transformation = function(){
-    var t = new matrix().init_translation(this.position.x, this.position.y, this.position.z);;
-    var r = new matrix().init_rotation(this.rotation.x, this.rotation.y, this.rotation.z);
+    var t = new matrix().init_translation(this.position.x, this.position.y, this.position.z);
+    
+    var euler = this.rotation.to_euler()
+    
+    if(this.parent != null && this.parent.name == "leaves"){euler.z = 90;}
+
+    var r = new matrix().init_rotation((rad_to_dag(euler.x)), (rad_to_dag(euler.y)), (rad_to_dag(euler.z)));
     var s = new matrix().init_scale(this.scale.x, this.scale.y, this.scale.z);
     var p = this.get_parent_matrix();
 
@@ -82,15 +87,17 @@ transform.prototype.rotate = function(ax, an){
     this.rotation = q;
 }
 
-transform.prototype.look_at = function(p, up){
-    this.rot = this.get_look_direction(p, up);
+transform.prototype.get_look_direction = function(p, up){
+
+    var dir = p.clone().sub(this.position).normalize();
+
+    var m = new matrix().init_rotation_fu(dir , up);
+    
+    return new quaternion(0, 0, 0, 1, null, null, m);
 }
 
-transform.prototype.get_look_direction = function(p, up){
-    var m = new matrix();
-    m.init_rotation(p.sub(this.position).normalized, up);
-
-    var q = new quaternion({rot:m});
+transform.prototype.look_at = function(p, up){
+    this.rotation = this.get_look_direction(p, up);
 }
 
 transform.prototype.get_transformed_position = function(){
@@ -118,8 +125,6 @@ transform.prototype.set_parent = function(t){
     }
 }
 
-
-
 transform.prototype.set_position = function(p){
     this.position = p;
 }
@@ -135,5 +140,7 @@ transform.prototype.clone = function() {
 transform.prototype.has_rotated = function(){
     return this.rotation.x != 0 || this.rotation.y != 0 || this.rotation.z != 0;
 }
+
+
 
 transform.prototype.name = "transform";

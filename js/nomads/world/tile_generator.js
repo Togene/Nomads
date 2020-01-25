@@ -58,13 +58,16 @@ face3D.prototype.CalculateNormal = function (debug = false) {
 	this.normal = normal1.clone().add(normal0).normalize();
 	this.centre = getPointInBetweenByPerc(this.p0, this.p3, 0.5);
 
-	//if (debug) {
-	//	if (this.normal.y != 1) {
-	//		var arrowHelper = new THREE.ArrowHelper(
-	//			this.normal, this.centre, 25, 0xff0000);
-	//		scene.add(arrowHelper);
-	//	}
-	//}
+	if (debug) {
+		if (this.normal.y != 1) {
+
+			var col = new THREE.Color(this.normal.x, this.normal.y, this.normal.z);
+
+			var arrowHelper = new THREE.ArrowHelper(
+				this.normal, this.centre, 5, col.getHex());
+			scene.add(arrowHelper);
+		}
+	}
 }
 
 function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, levelOfDetial, ChunkSize, Worldx, Worldy, mapsize, gridsize, scale, xIndex, yIndex, buffers, yoffset) {
@@ -192,7 +195,6 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			//--------------------------FACE-------------------------------------
 			if ((ix + 1) < gridX1 && (iy + 1) < gridY1) {
 					
-					
 					var curface	= new face3D(
 							new THREE.Vector3(obj_x, finalP, obj_y),
 							new THREE.Vector3(obj_x1, finalP_x, obj_y),
@@ -201,35 +203,86 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 
 					faces.push(curface);
 
-					curface.CalculateNormal(true);
+					curface.CalculateNormal(false);
 					//curface.index = Index_xy/4;
 					
 					if(r_d == 255) {	
+
+						var axis = new THREE.Vector3();
+						var up = new THREE.Vector3(0, 1, 0);;
+
+						if (curface.normal.y == 1 || curface.normal.y == -1) {
+							axis = new THREE.Vector3(1, 0, 0);
+						} else {
+							axis = new THREE.Vector3().crossVectors(up, curface.normal);
+						}
+						//determine the amount to rotate
+						var radians = Math.acos(curface.normal.dot(up)) * 2.5;
 
 					}
 					
 					if(g_d == 255) {	
 						var axis = new THREE.Vector3();
-						var up = new THREE.Vector3(0, 1, 0);
+						var up = new THREE.Vector3(0, 1, 0);;
 
 						if (curface.normal.y == 1 || curface.normal.y == -1) {
 							axis = new THREE.Vector3(1, 0, 0);
 						} else {
-							axis = new THREE.Vector3().crossVectors(up, curface.normal).clone();
+							axis = new THREE.Vector3().crossVectors(up, curface.normal);
 						}
+						//determine the amount to rotate
+						var radians = Math.acos(curface.normal.dot(up)) * 2.5;
+
+						//quart = new THREE.Quaternion().setFromAxisAngle(axis, (radians));
+
+						//
+						//var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+						//var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+						//var cube = new THREE.Mesh( geometry, material );
+//
+						//cube.position.set(
+						//	curface.centre.x,
+						//	curface.centre.y,
+						//	curface.centre.z
+						//);
+						//cube.lookAt(
+						//	new THREE.Vector3(
+						//		curface.centre.x + curface.normal.x,
+						//		curface.centre.y + curface.normal.y,
+						//		curface.centre.z + curface.normal.z
+						//	)
+						//);
+//
+						//cube.position.set(
+						//	curface.centre.x + curface.normal.x/2,
+						//	curface.centre.y + curface.normal.y/2,
+						//	curface.centre.z + curface.normal.z/2
+						//);
+//
+						//scene.add( cube );
+
+						var tree = tree_create(curface.centre);
+
+						//tree.transform.rotation = new quaternion(0, 0, 0, 0, 
+						//	new THREE.Vector3(1,0,0), dag_to_rad(45));
 						
-						// determine the amount to rotate
-						var radians = Math.acos(curface.normal.dot(up));
+						//console.log(tree.transform.rotation.to_euler());
+						
+						tree.transform.position = new THREE.Vector3(
+							curface.centre.x + curface.normal.x * 2.5 + 3 * pixel,
+							curface.centre.y + curface.normal.y * 2.5 ,
+							curface.centre.z + curface.normal.z * 2.5
+						);
 
-						quart = new THREE.Quaternion().setFromAxisAngle(axis, rad_to_dag(radians));
+						tree.transform.rotation = new quaternion(0,0,0,0, axis, radians);
+						//tree.transform.rotation = tree.transform.get_look_direction(
+						//	new THREE.Vector3(
+						//	curface.centre.x + curface.normal.x,
+						//	curface.centre.y + curface.normal.y,
+						//	curface.centre.z + curface.normal.z
+						//, new THREE.Vector3(0, 1, 0));
 
-						tree_create(curface.centre, quart);
-
-						if (curface.normal.y != 1) {
-							var arrowHelper = new THREE.ArrowHelper(
-								curface.normal, curface.centre, 25, 0xff0000);
-							scene.add(arrowHelper);
-						}
+						//console.log("mine", (tree.transform.rotation.to_euler()), "theres", cube.rotation);
 
 				}
 			}

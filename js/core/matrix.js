@@ -9,6 +9,8 @@ function matrix(){
 
         this.m[i] = col;
     }
+
+    this.init_identity()
 };
 
 matrix.prototype.init_identity = function(){
@@ -65,6 +67,31 @@ matrix.prototype.init_rotation = function(x, y, z){
     this.m = (rz.mul(ry.mul(rx))).m;
 
     return this;
+}
+
+matrix.prototype.init_rotation_fur = function(forward, up, right){
+    
+    var f = forward.clone();
+    var r = right.clone();
+    var u = up.clone();
+
+    this.m[0][0] = r.x; this.m[0][1] = r.y; this.m[0][2] = r.z; this.m[0][3] = 0;
+    this.m[1][0] = u.x; this.m[1][1] = u.y; this.m[1][2] = u.z; this.m[1][3] = 0;
+    this.m[2][0] = f.x; this.m[2][1] = f.y; this.m[2][2] = f.z; this.m[2][3] = 0;
+    this.m[3][0] = 0;   this.m[3][1] = 0;   this.m[3][2] = 0;   this.m[3][3] = 1;
+
+    return this;
+}
+
+matrix.prototype.init_rotation_fu = function(forward, up){
+    
+    var f = forward.normalize();
+    var r = up.normalize();
+    r.cross(f);
+    
+    var u = f.cross(r).clone();
+
+    return this.init_rotation_fur(f, u, r);
 }
 
 matrix.prototype.transform = function(r){

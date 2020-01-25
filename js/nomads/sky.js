@@ -51,8 +51,9 @@ function update_sky(delta){
         sky_colors[(sky_index + 1) % sky_colors.length],
         sky_lerp_index);
     renderer.setClearColor(current_color.getHex(), 1 );
-
-    sky.transform.rotation.x += cycle_length/360;
+    scene.fog.color = current_color;
+    sky.transform.rotation.x += dag_to_rad(cycle_length/ 360);
+    
 }
 
 //TODO: Create Star Map :|
