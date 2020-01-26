@@ -13,7 +13,9 @@
 		attribute vec2 uvoffset;
 	
 		attribute float type;
-	
+		attribute float fog;
+		varying float fog_pass;
+
 		varying vec2 vUv;
 		uniform float spriteSheetX;
 		uniform float spriteSheetY;
@@ -21,6 +23,7 @@
 		attribute vec2 animationFrame;
 		uniform float time;
 		uniform float animationSwitch;
+	
 
 		varying vec2 framePass;
 		varying vec3 colorPass;
@@ -92,6 +95,6 @@
 			uvoffsetPass = uvoffset;
 			spritesheetsizePass = vec2(spriteSheetX, spriteSheetY);	
 		
-
+			fog_pass = fog;
 			gl_Position = finalPosition;
 		}

@@ -191,6 +191,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 
 			var r_d = detialMap.data[Index_xy];
 			var g_d = detialMap.data[Index_xy + 1];
+			var b_d = detialMap.data[Index_xy + 2];
 
 			//--------------------------FACE-------------------------------------
 			if ((ix + 1) < gridX1 && (iy + 1) < gridY1) {
@@ -217,7 +218,41 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 							axis = new THREE.Vector3().crossVectors(up, curface.normal);
 						}
 						//determine the amount to rotate
-						var radians = Math.acos(curface.normal.dot(up)) * 2.5;
+						var radians = Math.acos(curface.normal.dot(up));
+
+						var npc = npc_create(curface.centre);
+
+						npc.transform.position = new THREE.Vector3(
+							curface.centre.x + curface.normal.x * npc.transform.scale.x/2,
+							curface.centre.y + curface.normal.y * npc.transform.scale.y/2,
+							curface.centre.z + curface.normal.z * npc.transform.scale.z/2,
+						);
+
+						npc.transform.rotation = new quaternion(0,0,0,0, axis, radians);
+					}
+
+					if(b_d == 255) {	
+
+						var axis = new THREE.Vector3();
+						var up = new THREE.Vector3(0, 1, 0);;
+
+						if (curface.normal.y == 1 || curface.normal.y == -1) {
+							axis = new THREE.Vector3(1, 0, 0);
+						} else {
+							axis = new THREE.Vector3().crossVectors(up, curface.normal);
+						}
+						//determine the amount to rotate
+						var radians = Math.acos(curface.normal.dot(up));
+
+						var s = box_create(curface.centre);
+
+						s.transform.rotation = new quaternion(0,0,0,0, axis, radians);
+						
+						s.transform.position = new THREE.Vector3(
+							curface.centre.x + curface.normal.x * s.transform.scale.x/2,
+							curface.centre.y + curface.normal.y * s.transform.scale.y/2,
+							curface.centre.z + curface.normal.z * s.transform.scale.z/2,
+						);
 
 					}
 					
@@ -231,59 +266,17 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 							axis = new THREE.Vector3().crossVectors(up, curface.normal);
 						}
 						//determine the amount to rotate
-						var radians = Math.acos(curface.normal.dot(up)) * 2.5;
-
-						//quart = new THREE.Quaternion().setFromAxisAngle(axis, (radians));
-
-						//
-						//var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-						//var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-						//var cube = new THREE.Mesh( geometry, material );
-//
-						//cube.position.set(
-						//	curface.centre.x,
-						//	curface.centre.y,
-						//	curface.centre.z
-						//);
-						//cube.lookAt(
-						//	new THREE.Vector3(
-						//		curface.centre.x + curface.normal.x,
-						//		curface.centre.y + curface.normal.y,
-						//		curface.centre.z + curface.normal.z
-						//	)
-						//);
-//
-						//cube.position.set(
-						//	curface.centre.x + curface.normal.x/2,
-						//	curface.centre.y + curface.normal.y/2,
-						//	curface.centre.z + curface.normal.z/2
-						//);
-//
-						//scene.add( cube );
+						var radians = Math.acos(curface.normal.dot(up));
 
 						var tree = tree_create(curface.centre);
 
-						//tree.transform.rotation = new quaternion(0, 0, 0, 0, 
-						//	new THREE.Vector3(1,0,0), dag_to_rad(45));
-						
-						//console.log(tree.transform.rotation.to_euler());
-						
 						tree.transform.position = new THREE.Vector3(
-							curface.centre.x + curface.normal.x * 2.5 + 3 * pixel,
-							curface.centre.y + curface.normal.y * 2.5 ,
-							curface.centre.z + curface.normal.z * 2.5
+							curface.centre.x + curface.normal.x * tree.transform.scale.x/2,
+							curface.centre.y + curface.normal.y * tree.transform.scale.y/2,
+							curface.centre.z + curface.normal.z * tree.transform.scale.z/2,
 						);
 
 						tree.transform.rotation = new quaternion(0,0,0,0, axis, radians);
-						//tree.transform.rotation = tree.transform.get_look_direction(
-						//	new THREE.Vector3(
-						//	curface.centre.x + curface.normal.x,
-						//	curface.centre.y + curface.normal.y,
-						//	curface.centre.z + curface.normal.z
-						//, new THREE.Vector3(0, 1, 0));
-
-						//console.log("mine", (tree.transform.rotation.to_euler()), "theres", cube.rotation);
-
 				}
 			}
 			//--------------------------FACE-------------------------------------
@@ -335,6 +328,34 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	}
 
 	return geo;
+}
+
+function create_decube(p, n, q){
+
+	var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+	var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+	var cube = new THREE.Mesh( geometry, material );
+
+	cube.position.set(
+		p.x,
+		p.y,
+		p.z
+	);
+	cube.lookAt(
+		new THREE.Vector3(
+			p.x + n.x,
+			p.y + n.y,
+			p.z + n.z
+		)
+	);
+
+	cube.position.set(
+		p.x + n.x/2,
+		p.y + n.y/2,
+		p.z + n.z/2
+	);
+
+	scene.add( cube );
 }
 
 function place(){

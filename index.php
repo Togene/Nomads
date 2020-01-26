@@ -46,6 +46,8 @@
 			<script src = "js/nomads/world/generator_utilities/noise_from_texture.js"></script>
 			<script src = "js/nomads/world/generator_utilities/regions.js"></script>
 
+			<script src = "js/nomads/yard_stick.js"></script>
+			<script src = "js/nomads/box.js"></script>
 			<script src = "js/nomads/fauna.js"></script>
 			<script src = "js/nomads/flora.js"></script>
 			<script src = "js/nomads/humanoids.js"></script>

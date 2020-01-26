@@ -16,14 +16,41 @@ function broad_quad_tree_insert(o){
 function collision_update(delta){
     //broad_collision_check(delta);
     player_collision_check(delta);
-    floor_collision_check(delta)
+    floor_collision_check(delta);
 }
 
 function floor_collision_check(delta){
     if(collision_tree != undefined && player != undefined) {
         collision_tree.forEach(function(e){
             //floor_narrow_check(e, delta);
+            land_check(e, delta);
         });
+    }
+}
+
+function land_check(e, delta){
+
+    if(WORLD_COLLISION_ARRAY != null || WORLD_COLLISION_ARRAY.length != 0){
+        var raycaster = new THREE.Raycaster(new THREE.Vector3(
+            e.transform.position.x,
+            0,
+            e.transform.position.z), 
+            new THREE.Vector3(0, 1, 0), 0, 5);
+    
+        var intersections = raycaster.intersectObjects(WORLD_COLLISION_ARRAY);
+    
+        var onObject = intersections.length > 0;
+        
+        var lb = e.get_component("rigidbody");
+
+        if(intersections[0] !== undefined && lb != null){
+            var height = intersections[0].point.y;
+            if(e.name == "player"){
+                lb.ground(intersections[0].point.y, true);
+            } else {
+                lb.ground(intersections[0].point.y, false);
+            }
+        }
     }
 }
 

@@ -8,6 +8,7 @@ function create_buffer(){
         uvoffsets: [],
         animationFrame: [],
         type: [],
+        fog: [],
         normals: [],
         m0: [], //matrix in segments because set attributes is a bitch :(
         m1: [],
@@ -43,6 +44,8 @@ function PopulateBuffer(position, orient, scale, buffer, renderer){
 
     buffer.type.push(renderer.type);
 
+    buffer.fog.push(renderer.fog);
+
     buffer.normals.push(0.0, 1.0, 0.0);
 
     //Most Transform information now within the matrix 
@@ -63,6 +66,7 @@ function PopulateBuffer(position, orient, scale, buffer, renderer){
     );
 
     buffer.index ++;
+
 }
 
 function UpdateAttribute(attributes){
@@ -86,6 +90,7 @@ function CreateInstance(id, world, buffer, attributes, spritesheetsize, shader, 
     var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.scales), 3);
     var animationFrameAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animationFrame), 2);
     var typeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.type), 1);
+    var fogAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.fog), 1);
     var normalsAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.normals), 3);
     var m0Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m0), 4);
     var m1Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m1), 4);
@@ -99,6 +104,7 @@ function CreateInstance(id, world, buffer, attributes, spritesheetsize, shader, 
     geometry.setAttribute('scale', scaleAttribute);
     geometry.setAttribute('animationFrame', animationFrameAttribute);
     geometry.setAttribute('type', typeAttribute);
+    geometry.setAttribute('fog', fogAttribute);
     geometry.setAttribute('normal', normalsAttribute);
     
     geometry.setAttribute('m0', m0Attribute);

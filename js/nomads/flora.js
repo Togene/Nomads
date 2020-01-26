@@ -1,7 +1,6 @@
 var test_trees = [];
 
 function tree_create(p, q){
-
     var shader = get_data("instance_shader");
     var buffer = create_buffer();
     var attributes = [];
@@ -11,9 +10,8 @@ function tree_create(p, q){
     var tree = new gameobject("tree");
     
     test_trees.push(tree);
-      
  
-    tree.transform.scale = new THREE.Vector3(5,5,5);
+    tree.transform.scale = new THREE.Vector3(1,1,1);
     tree.transform.position = new THREE.Vector3(0, 0, 0);
     tree.transform.rotation = new quaternion(0,0,0,1);
     
@@ -26,6 +24,7 @@ function tree_create(p, q){
     tree.add_child(leaves);
 
     leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
+
     tree.get_component("aabb");
 
     var leaves_decomposer = new decomposer(
@@ -40,12 +39,12 @@ function tree_create(p, q){
     );
     
     leaves.add_component(leaves_decomposer);
-    tree.add_component(new aabb(tree.transform, 1, 2, 1, true, 0xFFFFFF, true));
+    tree.add_component(new aabb(tree.transform, 0.5, 0.5, 0.5, true, 0xFFFFFF, true));
     
     PopulateBuffer(
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(10, 10, 10), 
+        new THREE.Vector3(2, 2, 2), 
         buffer, 
         leaves_decomposer
     );
@@ -72,7 +71,7 @@ function TestTree(){
         //console.log(z);
 
         test_trees.push(tree);
-        tree.transform.scale = new THREE.Vector3(5,5,5);
+        tree.transform.scale = new THREE.Vector3(3,3,3);
         tree.transform.position = new THREE.Vector3(0, tree.transform.scale.y/2, 0);
         tree.transform.rotation = new quaternion(0, 0, 0, 1);
         

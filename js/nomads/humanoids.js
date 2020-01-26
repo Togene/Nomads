@@ -1,5 +1,55 @@
 var test_npcs = [];
 
+function npc_create(){
+    var npc_shader = get_data("instance_shader");
+    var buffer = create_buffer();
+    var attributes = [];
+
+    var npc = new gameobject("npc");
+                    
+    test_npcs.push(npc);
+
+    npc.transform.rotation = new quaternion(0, 0, 0, 1 );
+    npc.transform.scale = new THREE.Vector3(1,1,1);
+    npc.transform.position = new THREE.Vector3(0, 0, 0);
+
+    var npc_decomposer = new decomposer(
+        [ MapToSS(0, 0),],
+        new THREE.Vector2(1, 1),
+        [ new THREE.Color(0xffffff) ],
+        new THREE.Vector3(0, 0, 0),
+        npc.transform,
+        0,
+        attributes,
+        buffer.index,
+    );
+
+    npc.add_component(new aabb(npc.transform, .5, .5, .5, true, 0x00FF00, true));
+    npc.add_component(new rigidbody(1, false));
+    npc.add_component(npc_decomposer);
+    npc.add_component(new ray(npc.transform.position, new THREE.Vector3(0, -1, 0)));
+        
+    PopulateBuffer(
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, 0), 
+        npc.transform.scale,
+        buffer, 
+        npc_decomposer);
+
+    CreateInstance(
+    "Test", 
+    animated_sprites, 
+    buffer, 
+    attributes, 
+    sprite_sheet_size , 
+    npc_shader, 
+    4, 
+    true, 
+    true);
+
+    return npc;
+}
+
 function TestNPC(){
     var npc_shader = get_data("instance_shader");
     var buffer = create_buffer();

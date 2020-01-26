@@ -20,13 +20,12 @@ function init(){
     var grid_helper = new THREE.GridHelper(size, divisions);
     grid_helper.position.set(0, 0, 0);
 
-    var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
     scene.add(directionalLight);
 
     scene.add(grid_helper);
 
-    scene.fog = new THREE.Fog(new THREE.Color(0xffffff), 0.0025, 400);
-
+    scene.fog = new THREE.Fog(new THREE.Color(0xffffff), 0.0025, 1000);
 }
 
 function animate(){

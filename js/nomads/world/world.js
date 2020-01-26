@@ -5,13 +5,11 @@ const TEXTURE_RESOLUTION = 256;
 const TILE_GRID_SIZE = 16; //how many times is the tile chopped up into smaller bits
 const WORLD_PHYSICAL = [];
 var WORLD_OBJECT;
+var WORLD_COLLISION_ARRAY = new Array();
+
 var ANIM_WORLD_OBJECTS;
 var SEED = 123;
-const W_TILE_SCALE = 0.15;
-
-const WORLD_TILE_SCALE = 0.25;
-
-var volmetric_cube;
+const W_TILE_SCALE = pixel * 2;
 
 var mapindex = [
     1,
@@ -40,7 +38,7 @@ function World_Generate() {
     persistance = 2.9;//randomRange(0.65, 0.85);
     lacunarity = 0.21;//randomRange(1.9, 2.2);
     octaves = 5;//Math.round(randomRange(4, 6));
-    noiseScale = 3;//randomRange(10, 200);
+    noiseScale = 3;//randomRange(10, 200);  
     */
 
     //var maps = MapGenerator(5, 1.9, 0.21, SEED, 1, new THREE.Vector2(0, 0), TEXTURE_RESOLUTION);
@@ -99,7 +97,8 @@ function World_Generate() {
     scene.add(WORLD_OBJECT);
 }
 
-function CreateTile(shader, height, color, detial_map, detial_test, gridSize, scale, buffers, physical, yoffset) {
+function CreateTile(shader, height, color, detial_map, detial_test, 
+    gridSize, scale, buffers, physical, yoffset) {
 
     var landMassChunk = new THREE.Object3D();
     
@@ -113,6 +112,9 @@ function CreateTile(shader, height, color, detial_map, detial_test, gridSize, sc
         lights: true,
         wireframe: shader.extra.wf,
         transparent: shader.extra.trans,
+        polygonOffset: true,
+        polygonOffsetFactor: 1, // positive value pushes polygon further away
+        polygonOffsetUnits: 1,
         fog: true
     });
 
@@ -143,7 +145,7 @@ function CreateTile(shader, height, color, detial_map, detial_test, gridSize, sc
             var y_loc = ((y) * chunkSize) + world_mapping;
 
             var chunkgeo = GenerateTileMesh(
-                height, detial_map, 100, 1.0, detial, chunkSize / gridSize,
+                height, detial_map, 50, 1.0, detial, chunkSize / gridSize,
                 x_loc,
                 y_loc,
                 chunkSize, gridSize, scale, x, y, buffers, yoffset);
@@ -152,12 +154,18 @@ function CreateTile(shader, height, color, detial_map, detial_test, gridSize, sc
 
             var chunk = new THREE.Mesh(chunkgeo, material);
 
+            // wireframe
+            var geo = new THREE.EdgesGeometry( chunk.geometry ); // or WireframeGeometry
+            var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } );
+            var wireframe = new THREE.LineSegments( geo, mat );
+            chunk.add( wireframe );
+            
+            if(physical) { WORLD_COLLISION_ARRAY.push(chunk) };
+
             chunk.castShadow = true; //default is false
             chunk.receiveShadow = true; //default
             chunk.scale.set(1, 1, 1);
             landMassChunk.add(chunk);
-    
-            if(physical) {WORLD_PHYSICAL.push(chunk);}
         }     
 
     return landMassChunk;

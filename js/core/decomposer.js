@@ -1,5 +1,5 @@
 
-function decomposer(ss, frames, colors, offset, trans, type, attributes, index){
+function decomposer(ss, frames, colors, offset, trans, type, attributes, index, fog = 1){
     this.ssIndex = ss;
     this.animationFrames = frames;
     this.colors = colors;
@@ -9,6 +9,7 @@ function decomposer(ss, frames, colors, offset, trans, type, attributes, index){
     
     this.matrix = this.transform.get_transformation().toMatrix4();
     this.type = type;
+    this.fog = fog;
 
     if(index == undefined){console.error("Missing Index.");}
 

@@ -56,10 +56,10 @@ function game_bootstrap(data){
     //cube1.matrixAutoUpdate = false;
     //cube2.matrixAutoUpdate = false;
 
-    TestCreatures();
-    TestTree();
-    TestStructures();
-    TestNPC();
+    //TestCreatures();
+    //TestTree();
+    //TestStructures();
+    //TestNPC();
     
     for(var i = 0; i < Scene.length; i++){
         //Scene[i].information();

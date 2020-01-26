@@ -9,6 +9,8 @@
 
 		uniform float time;
 		uniform float animationSwitch;
+		varying float fog_pass;
+
 		uniform float is3D;
 
 		varying vec2 framePass;
@@ -72,11 +74,14 @@
 			if (tex.a < 1.0) 
 			discard;
 
-			gl_FragColor = (tex * vec4(colorPass, 1.0) * vec4(fogColor,1.0));
+			gl_FragColor = (tex * vec4(colorPass, 1.0));
 
-			float depth = (gl_FragCoord.z / gl_FragCoord.w);
+			if(fog_pass == 1.0)
+			{
+				float depth = (gl_FragCoord.z / gl_FragCoord.w);
 
-          	float fogFactor = smoothstep( fogNear, fogFar, depth * 3.0);
-          	gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor);
+				float fogFactor = smoothstep( fogNear, fogFar, depth * 3.0);
+				gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor);
+			}
 
 		}

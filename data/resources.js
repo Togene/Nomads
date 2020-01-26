@@ -18,6 +18,7 @@ const MapFileurl =[
     'img/sprite_sheets/sky.png',
     'img/sprite_sheets/structures.png',
     'img/sprite_sheets/lithies.png',
+    'img/sprite_sheets/debug.png',
 ];
 
 function raw_resource(n, t, d){
@@ -74,9 +75,9 @@ const raw_resources = [
         "crab_isle",
         't', 
         new tile_resource(
-            'img/tile/crab_island_color.png', 
-            'img/tile/crab_island.png', 
-            'img/tile/crab_island_detail.png',
+            'img/tile/Crab_Island/Crab_Island_color.png', 
+            'img/tile/Crab_Island/Crab_Island_height.png', 
+            'img/tile/Crab_Island/Crab_Island_detail.png',
         )),
     new raw_resource(
         "water_tile",
@@ -84,7 +85,7 @@ const raw_resources = [
         new tile_resource(
             'img/tile/water_tile.png', 
             'img/tile/water_level_color.png', 
-            'img/tile/crab_island_detail.png',
+            'img/tile/water_level_color.png',
         )),
     new raw_resource(
         "sea_floor",

@@ -4,6 +4,7 @@ var time = 0;
 var sky_index = 0;
 var sky_lerp_index = 0;
 var sky = new gameobject("sky");
+var step;
 
 var sky_colors = [
     new THREE.Color( 0xEDA479), //Prime Morning
@@ -52,7 +53,10 @@ function update_sky(delta){
         sky_lerp_index);
     renderer.setClearColor(current_color.getHex(), 1 );
     scene.fog.color = current_color;
-    sky.transform.rotation.x += dag_to_rad(cycle_length/ 360);
+   
+    step += (Math.PI*2 / cycle_length)/360;
+    if(step > 100) { step = 0;}
+    sky.transform.rotation = new quaternion(0,0,0,1, new THREE.Vector3(1, 0, 0), step);
     
 }
 
@@ -93,6 +97,7 @@ function prime_star_init(buffer, attributes){
             0,
             attributes,
             buffer.index,
+            0
         );
         
         star.add_component(star_decomposer);
@@ -132,6 +137,7 @@ function sun_init(buffer, attributes){
         0,
         attributes,
         buffer.index,
+        0,
     );
     
     sun.add_component(sun_decomposer);
@@ -148,19 +154,22 @@ function sun_init(buffer, attributes){
 function moon_init(buffer, attributes){
 
     var moon = new gameobject("moon");
+  
     sky.add_child(moon);
+
 
     var moon_decomposer = new decomposer (
         [ MapToSS(0, 2),],
         new THREE.Vector2(1,1),
         [ 
-          new THREE.Color(0xFFD27D),
+          new THREE.Color(0xFFFFFF),
         ],
         new THREE.Vector3(0, 0, 0),
         moon.transform,
         0,
         attributes,
         buffer.index,
+        0,
     );
     
     moon.add_component(moon_decomposer);
