@@ -7,7 +7,7 @@ function player_init(){
     player = new gameobject("player");
 
     player.transform.position = new THREE.Vector3(0, 10, 0);
-    player.transform.scale = new THREE.Vector3(1, 1, 1);
+    player.transform.scale = new THREE.Vector3(1, 2, 1);
     player.transform.rotation = new quaternion(0, 0, 0, 1);
 
     player_box = new aabb(player.transform, 0.5, 1, 0.5, true, 0xFF0000, true);
@@ -36,5 +36,8 @@ function player_update(delta){
         if(collider.colliding){
            
         }
+        //console.log(player.transform.position);
     }
+
+   
 }

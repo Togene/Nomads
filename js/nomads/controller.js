@@ -96,10 +96,14 @@ function controller_key_init(){
 }
 
 function get_step_x(){
+    var step = speed;
+
     return direction.x * step * speed_mult;
 }
 
 function get_step_z(){
+    var step = speed;
+
     return direction.z * step * speed_mult;
 }
 
@@ -115,8 +119,7 @@ function movement(delta){
             direction.z = Number( moveForward ) - Number( moveBackward );
             direction.x = Number( moveRight ) - Number( moveLeft );
             direction.normalize(); 
-            
-            console.log(step * speed_mult);
+  
             if(shift) { speed_mult = 2.1;} else { speed_mult = 1;}
 
             if ((moveForward || moveBackward)){

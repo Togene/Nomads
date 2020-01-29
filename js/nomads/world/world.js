@@ -10,6 +10,7 @@ var WORLD_COLLISION_ARRAY = new Array();
 var ANIM_WORLD_OBJECTS;
 var SEED = 123;
 const W_TILE_SCALE = pixel * 2;
+var wire_framing = false;
 
 var mapindex = [
     1,
@@ -155,10 +156,13 @@ function CreateTile(shader, height, color, detial_map, detial_test,
             var chunk = new THREE.Mesh(chunkgeo, material);
 
             // wireframe
-            var geo = new THREE.EdgesGeometry( chunk.geometry ); // or WireframeGeometry
-            var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } );
-            var wireframe = new THREE.LineSegments( geo, mat );
-            chunk.add( wireframe );
+            if(wire_framing){
+                var geo = new THREE.EdgesGeometry( chunk.geometry ); // or WireframeGeometry
+                var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } );
+                var wireframe = new THREE.LineSegments( geo, mat );
+                chunk.add( wireframe );
+            }
+
             
             if(physical) { WORLD_COLLISION_ARRAY.push(chunk) };
 

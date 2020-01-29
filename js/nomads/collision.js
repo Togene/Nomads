@@ -14,9 +14,10 @@ function broad_quad_tree_insert(o){
 }
 
 function collision_update(delta){
-    //broad_collision_check(delta);
-    player_collision_check(delta);
+    broad_collision_check(delta);
+    //player_collision_check(delta);
     floor_collision_check(delta);
+
 }
 
 function floor_collision_check(delta){
@@ -43,12 +44,13 @@ function land_check(e, delta){
         
         var lb = e.get_component("rigidbody");
 
-        if(intersections[0] !== undefined && lb != null){
-            var height = intersections[0].point.y;
-            if(e.name == "player"){
-                lb.ground(intersections[0].point.y, true);
-            } else {
-                lb.ground(intersections[0].point.y, false);
+        if(intersections[0] !== undefined){
+            if( lb != undefined){
+                if(e.name == "player"){
+                    lb.ground(intersections[0].point.y, true);
+                } else {
+                    lb.ground(intersections[0].point.y, false);
+                }
             }
         }
     }
@@ -92,15 +94,23 @@ function player_collision_check(delta){
 function broad_collision_check(delta){
     if(collision_tree != undefined && player != undefined) {
         collision_tree.forEach(function(e){
-            near = [];
-            near_debug = [];
-            
-            rangecheck.x = e.transform.position.x
-            rangecheck.y = e.transform.position.z;
-            collision_tree.query(rangecheck, near, near_debug);
+            if(e != undefined && e.get_component("rigidbody") != undefined){
+                near = [];
+                near_debug = [];
+                var rangecheck = new rectangle(0, 0, 5, 5);
 
-            near.splice( near.indexOf(e), 1 );
-            narrow_collision_check(near, e, delta);
+                rangecheck.x = e.transform.position.x
+                rangecheck.y = e.transform.position.z;
+
+                collision_tree.query(rangecheck, near, near_debug);
+                
+                near.sort(function(a, b){
+                    return a.d - b.d;
+                });
+
+                //near.splice( near.indexOf(e), 1 );
+                narrow_collision_check(near, e, delta);
+            }
         });
     }
 }
@@ -116,50 +126,78 @@ function narrow_collision_check(near, e, delta){
         //console.log(near.length);
         for(var i = 0; i < near.length; i++) {
            
-            var r = near[i].get_component("aabb");
-            var rb = near[i].get_component("rigidbody");
+            if (near[i].o == e){continue;}
+
+            var r = near[i].o.get_component("aabb");
+            var rb = near[i].o.get_component("rigidbody");
             r.set_colliding(false);
-            var delt = near[i].transform.position.clone().sub(e.transform.position.clone());
+            var delt = near[i].o.transform.position.clone().sub(e.transform.position.clone());
             delt.y = 0;
-            
-            
-            //Sat for OOB, Swept for AABB
-           
-            if(e.transform.has_rotated() || near[i].transform.has_rotated()){
-                var sat = l.intersect_sat_aabb(r);
 
-                if(sat.result && (near[i].name != "player" && near[i].name != "floor")){
-                    l.set_colliding(true);
-                    r.set_colliding(true);
-                    
-                    lb.null_velocity();
-                    
-                    if(rb != null) rb.null_velocity();
+            if(sat_response(e, l, r, lb, rb, near[i].o)){return;};
+            //sweet_response(e, l, r, lb, rb)
 
-                    e.transform.position.z += sat.axis.z * sat.gap;
-                    e.transform.position.x += sat.axis.x * sat.gap;
-                    return;
-                }
+            //TODO: check for 90/180/270 dagree's as not roated
+            if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
+                //Sat for OOB, 
             } else {
-                    var sweep = l.intersect_sweep_aabb(r, delt);
-
-                    if(sweep.hit != null && (near[i].name != "player" && near[i].name != "floor")){
-                                    
-                           lb.null_velocity();
-                                    
-                           collision_sweep_response(sweep, e, r);
-                                    
-                           l.set_colliding(true);
-                           r.set_colliding(true);
-                           return;
-                    }
-            }
-
-            collision_ray_response(l, r, lr, lb, near[i]);
+                //Swept for AABB
+            } 
+ 
+            collision_ray_response(l, r, lr, lb, near[i].o);
 
             r.set_colliding(false);
         }
     }
+}
+
+function sat_response(e, l, r, lb, rb, near){
+
+    //lb = e's aabb 
+    var sat = l.intersect_sat_aabb(r);
+    // && near[i].name != "floor"
+    if(sat.result){
+        l.set_colliding(true);
+        r.set_colliding(true);
+
+        if(lb != undefined){
+            lb.null_velocity();
+            e.transform.position.z += sat.axis.z * sat.gap ;
+            e.transform.position.x += sat.axis.x * sat.gap ;
+        } 
+        if(rb != undefined){
+            rb.null_velocity();
+            near.transform.position.z -= sat.axis.z * sat.gap ;
+            near.transform.position.x -= sat.axis.x * sat.gap ;
+
+            if(lb != undefined)
+                rb.add_force(lb.get_magnitude()/rb.mass, lb.get_direction());
+            else 
+                rb.null_velocity();
+        } 
+
+        return true;
+    }
+
+    return false;
+}
+
+function sweet_response(e, l, r, lb, rb){
+
+    var sweep = l.intersect_sweep_aabb(r, delt);
+                    
+    if(sweep.hit != null && (near[i].name != "player")){
+                   
+           l.set_colliding(true);
+           r.set_colliding(true);
+           
+           if(lb != undefined) lb.null_velocity();
+           if(rb != undefined) rb.null_velocity();
+    
+           collision_sweep_response(sweep, e, r);
+
+           //return;
+    }   
 }
 
 function collision_ray_response(l, r, lr, lb, r_o){

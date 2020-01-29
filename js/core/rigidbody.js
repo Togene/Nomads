@@ -132,8 +132,7 @@ rigidbody.prototype.update_aabb_position = function(delta){
 // Get current direction of velocity with added direction from rotation
 
 rigidbody.prototype.get_direction = function(){
-    var dir = this.velocity.clone().normalize();
-    return dir;
+    return this.velocity.clone().normalize();
 }
 // Get current direction of velocity with added direction from rotation
 rigidbody.prototype.get_flip_direction = function(){
@@ -169,11 +168,13 @@ rigidbody.prototype.ground = function(y, isplayer){
 
     var diffrence = this.parent.transform.position.y - y;
     var col = this.parent.get_component("aabb");
-
+   
     //! .1 + collider size (which is 1)
     if(diffrence < (col.h + .1)){
-        this.parent.transform.position.y = y + (col.h + .01);
+
+        this.parent.transform.position.y = y + ( this.parent.transform.scale.y/2 + .01);
         this.velocity.y = 0;
+
         if(isplayer) {
             canJump = true;
         }
@@ -207,13 +208,13 @@ rigidbody.prototype.null_velocity = function(){
     this.velocity.z -= this.velocity.z;
     this.velocity.x -= this.velocity.x;
 
-    if(Math.abs(this.velocity.z) < 1){
-        this.velocity.z -= get_step_z();
-    }
-
-    if(Math.abs(this.velocity.x) < 1){
-        this.velocity.x -= get_step_x();
-    }
+    //if(Math.abs(this.velocity.z) < 1){
+    //    this.velocity.z -= get_step_z();
+    //}
+//
+    //if(Math.abs(this.velocity.x) < 1){
+    //    this.velocity.x -= get_step_x();
+    //}
 }
 
 //push transform without velocity

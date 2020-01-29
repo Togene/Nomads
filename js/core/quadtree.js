@@ -180,7 +180,11 @@ quad_tree.prototype.query = function(range, found, debug){
 
     for(var i = 0; i < this.objects.length; i++){
         if(range.contains(this.objects[i])){
-            found.push(this.objects[i]);
+            var range_vector = new THREE.Vector3(range.x, 0, range.y);
+
+            var d = range_vector.distanceToSquared(this.objects[i].transform.position);
+  
+            found.push({o: this.objects[i], d: d});
             debug.push(this.objects[i].name);
         }
         

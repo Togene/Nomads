@@ -62,6 +62,7 @@ function create_box_face(y_rot, axis, offset, parent, buffer, attributes){
         1,
         attributes,
         buffer.index,
+        0,
     );
     
     face.add_component(face_decomposer);
