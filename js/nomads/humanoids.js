@@ -85,7 +85,7 @@ function TestNPC(){
         );
 
         npc.add_component(new aabb(npc.transform, .5, .5, .5, true, 0x00FF00, true));
-        npc.add_component(new rigidbody(1, false));
+        npc.add_component(new rigidbody(25, false));
         npc.add_component(npc_decomposer);
         npc.add_component(new ray(npc.transform.position, new THREE.Vector3(0, -1, 0)));
             
@@ -114,7 +114,7 @@ function humanoid_update(delta){
 
     if(test_npcs.length != 0){
         for(var i = 0; i < test_npcs.length; i++){
-            test_npcs[i].transform.rotation.y += 0.5;
+            //test_npcs[i].transform.rotation.y += 0.5;
         }
     }
 

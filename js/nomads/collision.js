@@ -135,7 +135,6 @@ function narrow_collision_check(near, e, delta){
             delt.y = 0;
 
             if(sat_response(e, l, r, lb, rb, near[i].o)){return;};
-            //sweet_response(e, l, r, lb, rb)
 
             //TODO: check for 90/180/270 dagree's as not roated
             if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
@@ -161,19 +160,24 @@ function sat_response(e, l, r, lb, rb, near){
         r.set_colliding(true);
 
         if(lb != undefined){
-            lb.null_velocity();
-            e.transform.position.z += sat.axis.z * sat.gap ;
-            e.transform.position.x += sat.axis.x * sat.gap ;
+            e.transform.position.z += (sat.axis.z * sat.gap)/2;
+            e.transform.position.x += (sat.axis.x * sat.gap)/2;
+
+            if(rb != undefined){
+                lb.null_velocity();
+            } else {
+                lb.null_velocity();
+            }
         } 
         if(rb != undefined){
-            rb.null_velocity();
-            near.transform.position.z -= sat.axis.z * sat.gap ;
-            near.transform.position.x -= sat.axis.x * sat.gap ;
+            near.transform.position.z -= (sat.axis.z * sat.gap)/2;
+            near.transform.position.x -= (sat.axis.x * sat.gap)/2;
 
-            if(lb != undefined)
-                rb.add_force(lb.get_magnitude()/rb.mass, lb.get_direction());
-            else 
+            if(lb != undefined){
                 rb.null_velocity();
+            } else {
+                rb.null_velocity();
+            }
         } 
 
         return true;

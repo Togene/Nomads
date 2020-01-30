@@ -4,6 +4,7 @@
 		
 		varying vec3 vecNormal;
 		uniform float time;
+		varying float d_to_camera;
 		//uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHTS ];
 		//varying vec4 vDirectionalShadowCoord[ NUM_DIR_LIGHTS ];
 
@@ -27,7 +28,7 @@
 			 // store the world position as varying for lighting
 			
 			gl_Position = projectionMatrix * mvPosition;
-
+			d_to_camera = gl_Position.w;
 			//for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {
 			//	vDirectionalShadowCoord[ i ] = directionalShadowMatrix[ i ] * worldPosition;
 			//}
