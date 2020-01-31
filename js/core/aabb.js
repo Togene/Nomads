@@ -264,28 +264,76 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
 //credit : http://www.dyn4j.org/2010/01/sat/
 //helping with SAT collision detection
-aabb.prototype.get_verts = function(){
+aabb.prototype.get_verts = function(face){
     var vertices = [];
     
     var transform_clone = this.parent.transform.clone();
     transform_clone.scale = new THREE.Vector3(1,1,1);
     var m = transform_clone.get_transformation().toMatrix4();
 
+    //if(face == "b"){console.log("getting bottom face");}
+
     var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
     vert_0.applyMatrix4(m);
-    vertices.push(vert_0);
-     
+    
     var vert_1 = new THREE.Vector3(this.w, -this.h, -this.d);
     vert_1.applyMatrix4(m);
-    vertices.push(vert_1);
-    
-    var vert_3 = new THREE.Vector3(this.w, -this.h, this.d);
-    vert_3.applyMatrix4(m);
-    vertices.push(vert_3);
 
-    var vert_2 = new THREE.Vector3(-this.w, -this.h, this.d);
+    var vert_2 = new THREE.Vector3(this.w, -this.h, this.d);
     vert_2.applyMatrix4(m);
-    vertices.push(vert_2);
+
+    var vert_3 = new THREE.Vector3(-this.w, -this.h, this.d);
+    vert_3.applyMatrix4(m);
+
+    var vert_4 = new THREE.Vector3(-this.w, this.h, -this.d);
+    vert_4.applyMatrix4(m);
+    
+    var vert_5 = new THREE.Vector3(this.w, this.h, -this.d);
+    vert_5.applyMatrix4(m);
+
+    var vert_6 = new THREE.Vector3(this.w, this.h, this.d);
+    vert_6.applyMatrix4(m);
+
+    var vert_7 = new THREE.Vector3(-this.w, this.h, this.d);
+    vert_7.applyMatrix4(m);
+    
+    if(face == "b"){
+        //console.log("getting bottom");
+        vertices.push(vert_0);
+        vertices.push(vert_1);
+        vertices.push(vert_2);
+        vertices.push(vert_3);
+    } else if (face == "t"){
+        //console.log("getting top");
+        vertices.push(vert_4);
+        vertices.push(vert_5);
+        vertices.push(vert_6);
+        vertices.push(vert_7);
+    } else if (face == "r"){
+        //console.log("getting right");
+        vertices.push(vert_4);
+        vertices.push(vert_5);
+        vertices.push(vert_6);
+        vertices.push(vert_7);
+    } else if (face == "l"){
+       // console.log("getting left");
+        vertices.push(vert_4);
+        vertices.push(vert_5);
+        vertices.push(vert_6);
+        vertices.push(vert_7);
+    }else if (face == "f"){
+       // console.log("getting front");
+        vertices.push(vert_4);
+        vertices.push(vert_5);
+        vertices.push(vert_6);
+        vertices.push(vert_7);
+    } else if (face == "ba"){
+       // console.log("getting back");
+        vertices.push(vert_4);
+        vertices.push(vert_5);
+        vertices.push(vert_6);
+        vertices.push(vert_7);
+    }
 
     //console.log(vertices);
     return vertices;
@@ -326,6 +374,7 @@ aabb.prototype.get_norms = function(v){
 };
 
 aabb.prototype.get_axes = function(v){
+
     axes = [v.length];
 
     for(var i = 0; i < v.length; i++){
@@ -362,21 +411,51 @@ aabb.prototype.project = function(n, v){
     return new projection(min, max);
 }
 
+
+aabb.prototype.intersect_sat_aabb_face = function(face, right){
+ 
+}
+
 //credit to Randy Gaul manifold generation :
 //https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
-
 aabb.prototype.intersect_sat_aabb = function(right){
-
     var overlap = Infinity;
     var axis = null;
 
-    var v = this.get_verts();
-    var a  = this.get_axes(v);
+    //need to get all 6 faces
+    var v = this.get_verts("b");
+    
+    var f = [];
+    //, "t", "l", "r", "f", "ba"
+    var sides_tokens = ["b"];
+    var a;
 
-    var rv =  right.get_verts();
-    var ra  = right.get_axes(rv);
+    for(var i = 0; i < sides_tokens.length; i++){
+        var verts = this.get_verts(sides_tokens[i]);
+        f.push(verts);
+        if(i == 0)
+            a = this.get_axes(verts);
+        else   
+            a.concat(this.get_axes(verts));
+    }
+
+    var rf = [];
+    var rv =  right.get_verts("b");
+    var ra;
+
+    for(var i = 0; i < sides_tokens.length; i++){
+        var verts = right.get_verts(sides_tokens[i]);
+        rf.push(verts);
+
+        if(i == 0)
+            ra = right.get_axes(verts);
+        else   
+            ra.concat(right.get_axes(verts));
+    }
+
 
     for(var i = 0; i < a.length; i++){
+
         var proj_1 = this.project(a[i], v);
         var proj_2 = right.project(a[i], rv);
 
@@ -422,6 +501,7 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
     
     return {result: true, axis: axis, gap: overlap};
+
 }
 
 

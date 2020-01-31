@@ -160,23 +160,28 @@ function sat_response(e, l, r, lb, rb, near){
         r.set_colliding(true);
 
         if(lb != undefined){
-            e.transform.position.z += (sat.axis.z * sat.gap)/2;
-            e.transform.position.x += (sat.axis.x * sat.gap)/2;
+
+            lb.null_velocity();
 
             if(rb != undefined){
-                lb.null_velocity();
+                e.transform.position.z += (sat.axis.z * sat.gap)/2;
+                e.transform.position.x += (sat.axis.x * sat.gap)/2;
             } else {
-                lb.null_velocity();
+                e.transform.position.z += (sat.axis.z * sat.gap);
+                e.transform.position.x += (sat.axis.x * sat.gap);
             }
         } 
+
         if(rb != undefined){
-            near.transform.position.z -= (sat.axis.z * sat.gap)/2;
-            near.transform.position.x -= (sat.axis.x * sat.gap)/2;
+
+            rb.null_velocity();
 
             if(lb != undefined){
-                rb.null_velocity();
+                near.transform.position.z -= (sat.axis.z * sat.gap)/2;
+                near.transform.position.x -= (sat.axis.x * sat.gap)/2;
             } else {
-                rb.null_velocity();
+                near.transform.position.z -= (sat.axis.z * sat.gap);
+                near.transform.position.x -= (sat.axis.x * sat.gap);
             }
         } 
 
