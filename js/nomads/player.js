@@ -15,11 +15,23 @@ function player_init(){
     player.add_component(player_box);
     player.add_component(new rigidbody(180, false));
 
-    //player_face_ray = new ray(player.transform.position, new THREE.Vector3(0, 0, 1));
+    //player_face_ray = new ray(player.transform.position, new THREE.Vector3(0.5, -1, 0));
     //player.add_component(player_face_ray);
-    
-    player_down_ray = new ray(player.transform.position, new THREE.Vector3(0, -1, 0));
-    player.add_component(player_down_ray);
+
+
+    var pos = player.transform.position.clone();
+
+    player_down_ray_0 = new ray(new THREE.Vector3(pos.x - 0.5, pos.y, pos.z + 0.5), new THREE.Vector3(0, -1, 0));
+    player.add_component(player_down_ray_0);
+
+    player_down_ray_1 = new ray(new THREE.Vector3(pos.x + 0.5, pos.y, pos.z + 0.5), new THREE.Vector3(0, -1, 0));
+    player.add_component(player_down_ray_1);
+
+    player_down_ray_2 = new ray(new THREE.Vector3(pos.x - 0.5, pos.y, pos.z - 0.5), new THREE.Vector3(0, -1, 0));
+    player.add_component(player_down_ray_2);
+
+    player_down_ray_3 = new ray(new THREE.Vector3(pos.x - 0.5, pos.y, pos.z + 0.5), new THREE.Vector3(0, -1, 0));
+    player.add_component(player_down_ray_3);
 }
 
 function get_player_direction(){

@@ -134,17 +134,32 @@ function narrow_collision_check(near, e, delta){
             var delt = near[i].o.transform.position.clone().sub(e.transform.position.clone());
             delt.y = 0;
 
-            if(sat_response(e, l, r, lb, rb, near[i].o)){return;};
+                        
+            if(lr.length != undefined){
+                for(var j = 0; j < lr.length; j++){
+                    collision_ray_response(l, r, lr[j], lb, near[i].o);
+                }
+            } else { 
+                collision_ray_response(l, r, lr, lb, near[i].o);
+            }
+
+        
 
             //TODO: check for 90/180/270 dagree's as not roated
             if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
                 //Sat for OOB, 
+                if(sat_response(e, l, r, lb, rb, near[i].o)){};
+               
+
             } else {
                 //Swept for AABB
+                if(sat_response(e, l, r, lb, rb, near[i].o)){};
+                //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
             } 
- 
-            collision_ray_response(l, r, lr, lb, near[i].o);
 
+           
+    
+           
             r.set_colliding(false);
         }
     }
@@ -155,6 +170,8 @@ function sat_response(e, l, r, lb, rb, near){
     //lb = e's aabb 
     var sat = l.intersect_sat_aabb(r);
     // && near[i].name != "floor"
+    
+       
     if(sat.result){
         l.set_colliding(true);
         r.set_colliding(true);
@@ -191,11 +208,11 @@ function sat_response(e, l, r, lb, rb, near){
     return false;
 }
 
-function sweet_response(e, l, r, lb, rb){
+function sweep_response(e, l, r, lb, rb, near, delt){
 
     var sweep = l.intersect_sweep_aabb(r, delt);
                     
-    if(sweep.hit != null && (near[i].name != "player")){
+    if(sweep.hit != null && (near.name != "player")){
                    
            l.set_colliding(true);
            r.set_colliding(true);
@@ -212,7 +229,7 @@ function sweet_response(e, l, r, lb, rb){
 function collision_ray_response(l, r, lr, lb, r_o){
     var intersection = r.ray_intersect(lr);
 
-    if(intersection.val && (r_o.name != "player" && r_o.name != "floor")){
+    if(intersection.val && (r_o.name != "player")){
         lr.set_intersecting(true);
 
         if(r_o.name == "player"){

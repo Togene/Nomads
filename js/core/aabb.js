@@ -297,12 +297,27 @@ aabb.prototype.get_verts = function(face){
     var vert_7 = new THREE.Vector3(-this.w, this.h, this.d);
     vert_7.applyMatrix4(m);
     
+    /*
+        v7 ------ v6
+        |          |
+        |          |
+        |          |
+        v4 ------ v5
+
+
+        v3 ------ v2
+        |          |
+        |          |
+        |          |
+        v0 ------ v1
+    */
     if(face == "b"){
         //console.log("getting bottom");
         vertices.push(vert_0);
         vertices.push(vert_1);
         vertices.push(vert_2);
         vertices.push(vert_3);
+        vertices.push(vert_7);
     } else if (face == "t"){
         //console.log("getting top");
         vertices.push(vert_4);
@@ -311,26 +326,26 @@ aabb.prototype.get_verts = function(face){
         vertices.push(vert_7);
     } else if (face == "r"){
         //console.log("getting right");
-        vertices.push(vert_4);
+        vertices.push(vert_1);
         vertices.push(vert_5);
         vertices.push(vert_6);
-        vertices.push(vert_7);
+        vertices.push(vert_2);
     } else if (face == "l"){
        // console.log("getting left");
+        vertices.push(vert_3);
+        vertices.push(vert_0);
         vertices.push(vert_4);
-        vertices.push(vert_5);
-        vertices.push(vert_6);
         vertices.push(vert_7);
     }else if (face == "f"){
        // console.log("getting front");
-        vertices.push(vert_4);
+        vertices.push(vert_0);
+        vertices.push(vert_1);
         vertices.push(vert_5);
-        vertices.push(vert_6);
-        vertices.push(vert_7);
+        vertices.push(vert_4);
     } else if (face == "ba"){
        // console.log("getting back");
-        vertices.push(vert_4);
-        vertices.push(vert_5);
+        vertices.push(vert_3);
+        vertices.push(vert_2);
         vertices.push(vert_6);
         vertices.push(vert_7);
     }
@@ -373,7 +388,7 @@ aabb.prototype.get_norms = function(v){
     return {n: normals, m: mids};
 };
 
-aabb.prototype.get_axes = function(v){
+aabb.prototype.get_axes = function(v, face_index){
 
     axes = [v.length];
 
@@ -383,11 +398,8 @@ aabb.prototype.get_axes = function(v){
         var edge = p1.clone().sub(p2);
         var normal = edge.perp().normalize();
 
-        if(normal.x == 0){normal.x = 0;}
-        if(normal.z == 0){normal.z = 0;}
-        if(normal.y == 0){normal.y = 0;}
 
-        axes[i] = normal;
+        axes[i] = {n: normal, i: face_index};
     }
 
     return axes;
@@ -412,55 +424,26 @@ aabb.prototype.project = function(n, v){
 }
 
 
-aabb.prototype.intersect_sat_aabb_face = function(face, right){
- 
-}
+aabb.prototype.intersect_sat_aabb_face = function(this_f, right_f, i, right){
 
-//credit to Randy Gaul manifold generation :
-//https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
-aabb.prototype.intersect_sat_aabb = function(right){
+    var result = {result: false, axis: new THREE.Vector3(0,0,0), gap: 0}
     var overlap = Infinity;
-    var axis = null;
+    var axis = new  THREE.Vector3(0,0,0);
 
     //need to get all 6 faces
-    var v = this.get_verts("b");
+    var v = this.get_verts(this_f);
+    var a = this.get_axes(v, i);
     
-    var f = [];
-    //, "t", "l", "r", "f", "ba"
-    var sides_tokens = ["b"];
-    var a;
-
-    for(var i = 0; i < sides_tokens.length; i++){
-        var verts = this.get_verts(sides_tokens[i]);
-        f.push(verts);
-        if(i == 0)
-            a = this.get_axes(verts);
-        else   
-            a.concat(this.get_axes(verts));
-    }
-
-    var rf = [];
-    var rv =  right.get_verts("b");
-    var ra;
-
-    for(var i = 0; i < sides_tokens.length; i++){
-        var verts = right.get_verts(sides_tokens[i]);
-        rf.push(verts);
-
-        if(i == 0)
-            ra = right.get_axes(verts);
-        else   
-            ra.concat(right.get_axes(verts));
-    }
+    var rv =  right.get_verts(right_f);
+    var ra = right.get_axes(rv, i);
 
 
     for(var i = 0; i < a.length; i++){
-
-        var proj_1 = this.project(a[i], v);
-        var proj_2 = right.project(a[i], rv);
+        var proj_1 = this.project(a[i].n, v);
+        var proj_2 = right.project(a[i].n, rv);
 
         if(!proj_1.overlap(proj_2)){
-            return {result: false};
+            return result;
         } else {
 
             var o = proj_1.get_overlap(proj_2);
@@ -468,17 +451,17 @@ aabb.prototype.intersect_sat_aabb = function(right){
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                axis = a[i];
+                axis = a[i].n;
             }
         }
     }
 
     for(var i = 0; i < ra.length; i++){
-        var proj_1 = this.project(ra[i], v);
-        var proj_2 = right.project(ra[i], rv);
+        var proj_1 = this.project(ra[i].n, v);
+        var proj_2 = right.project(ra[i].n, rv);
 
         if(!proj_1.overlap(proj_2)){
-            return {result: false};
+            return result;
         } else {
 
             var o = proj_1.get_overlap(proj_2);
@@ -486,10 +469,11 @@ aabb.prototype.intersect_sat_aabb = function(right){
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                axis = ra[i];
+                axis = ra[i].n;
             }
         }
     }
+
     var p0 = this.parent.transform.position.clone();
     var p1 = right.parent.transform.position.clone();
 
@@ -499,9 +483,22 @@ aabb.prototype.intersect_sat_aabb = function(right){
         axis.negate();
     }
 
-    
-    return {result: true, axis: axis, gap: overlap};
+    result.result = true;
+    result.axis = axis;
+    result.gap = overlap;
 
+    return result;
+}
+
+//credit to Randy Gaul manifold generation :
+//https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
+aabb.prototype.intersect_sat_aabb = function(right){
+
+    var side = this.intersect_sat_aabb_face("f", "f", 0, right);
+    var bottom = this.intersect_sat_aabb_face("b", "b", 0, right);
+ 
+
+    return bottom;
 }
 
 
