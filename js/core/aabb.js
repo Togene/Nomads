@@ -496,8 +496,6 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
     var side = this.intersect_sat_aabb_face("f", "f", 0, right);
     var bottom = this.intersect_sat_aabb_face("b", "b", 0, right);
- 
-
     return bottom;
 }
 

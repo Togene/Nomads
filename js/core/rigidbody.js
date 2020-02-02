@@ -166,7 +166,7 @@ rigidbody.prototype.add_force = function(f, d, delta){
 
 rigidbody.prototype.ground = function(y, isplayer){
 
-    var diffrence = this.parent.transform.position.y - y;
+    var diffrence = Math.abs(this.parent.transform.position.y - y);
     var col = this.parent.get_component("aabb");
    
     //! .1 + collider size (which is 1)
