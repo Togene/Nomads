@@ -93,16 +93,17 @@ aabb.prototype.update = function(delta){
             this.decube.update(this.min, this.max, this.parent.transform, delta);
         }
     }
+    this.decube.set_active(true);
 
-    if(this.colliding && this.decube != null){
-        this.decube.set_active(true);
-        this.set_visule_color(this.active_color);
-    }
-    
-    if(!this.colliding && this.decube != null){
-        this.decube.set_active(false);
-        this.set_visule_color(this.non_active_color);
-    }
+    //if(this.colliding && this.decube != null){
+    //    this.decube.set_active(true);
+    //    this.set_visule_color(this.active_color);
+    //}
+    //
+    //if(!this.colliding && this.decube != null){
+    //    this.decube.set_active(false);
+    //    this.set_visule_color(this.non_active_color);
+    //}
 }
 
 aabb.prototype.direct_position_set = function(p){
@@ -262,6 +263,36 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
     return sw;
 }
 
+//edges to grab axis's, verts for projections
+aabb.prototype.get_edges = function(v){
+       
+       /*
+        v4 ------ v7
+        |          |
+        |          |
+        |          |
+        v5 ------ v6
+
+
+        v3 ------ v2
+        |          |
+        |          |
+        |          |
+        v0 ------ v1
+        
+        */
+    
+    return [
+        v[0], v[1],
+        v[2], v[3],
+
+        v[4], v[5],
+        v[6], v[7],
+
+        v[2], v[3]
+    ]
+}
+
 //credit : http://www.dyn4j.org/2010/01/sat/
 //helping with SAT collision detection
 aabb.prototype.get_verts = function(face){
@@ -270,8 +301,23 @@ aabb.prototype.get_verts = function(face){
     var transform_clone = this.parent.transform.clone();
     transform_clone.scale = new THREE.Vector3(1,1,1);
     var m = transform_clone.get_transformation().toMatrix4();
-
+    //vert_0.applyMatrix4(m);
     //if(face == "b"){console.log("getting bottom face");}
+
+        /*
+        v4 ------ v7
+        |          |
+        |          |
+        |          |
+        v5 ------ v6
+
+
+        v3 ------ v2
+        |          |
+        |          |
+        |          |
+        v0 ------ v1
+    */
 
     var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
     vert_0.applyMatrix4(m);
@@ -285,70 +331,27 @@ aabb.prototype.get_verts = function(face){
     var vert_3 = new THREE.Vector3(-this.w, -this.h, this.d);
     vert_3.applyMatrix4(m);
 
-    var vert_4 = new THREE.Vector3(-this.w, this.h, -this.d);
+    var vert_4 = new THREE.Vector3(-this.w, this.h, this.d);
     vert_4.applyMatrix4(m);
     
-    var vert_5 = new THREE.Vector3(this.w, this.h, -this.d);
+    var vert_5 = new THREE.Vector3(-this.w, this.h, -this.d);
     vert_5.applyMatrix4(m);
 
-    var vert_6 = new THREE.Vector3(this.w, this.h, this.d);
+    var vert_6 = new THREE.Vector3(this.w, this.h, -this.d);
     vert_6.applyMatrix4(m);
 
-    var vert_7 = new THREE.Vector3(-this.w, this.h, this.d);
+    var vert_7 = new THREE.Vector3(this.w, this.h, this.d);
     vert_7.applyMatrix4(m);
-    
-    /*
-        v7 ------ v6
-        |          |
-        |          |
-        |          |
-        v4 ------ v5
 
+    vertices.push(vert_0);
+    vertices.push(vert_1);
+    vertices.push(vert_2);
+    vertices.push(vert_3);
 
-        v3 ------ v2
-        |          |
-        |          |
-        |          |
-        v0 ------ v1
-    */
-    if(face == "b"){
-        //console.log("getting bottom");
-        vertices.push(vert_0);
-        vertices.push(vert_1);
-        vertices.push(vert_2);
-        vertices.push(vert_3);
-        vertices.push(vert_7);
-    } else if (face == "t"){
-        //console.log("getting top");
-        vertices.push(vert_4);
-        vertices.push(vert_5);
-        vertices.push(vert_6);
-        vertices.push(vert_7);
-    } else if (face == "r"){
-        //console.log("getting right");
-        vertices.push(vert_1);
-        vertices.push(vert_5);
-        vertices.push(vert_6);
-        vertices.push(vert_2);
-    } else if (face == "l"){
-       // console.log("getting left");
-        vertices.push(vert_3);
-        vertices.push(vert_0);
-        vertices.push(vert_4);
-        vertices.push(vert_7);
-    }else if (face == "f"){
-       // console.log("getting front");
-        vertices.push(vert_0);
-        vertices.push(vert_1);
-        vertices.push(vert_5);
-        vertices.push(vert_4);
-    } else if (face == "ba"){
-       // console.log("getting back");
-        vertices.push(vert_3);
-        vertices.push(vert_2);
-        vertices.push(vert_6);
-        vertices.push(vert_7);
-    }
+    vertices.push(vert_4);
+    vertices.push(vert_5);
+    vertices.push(vert_6);
+    vertices.push(vert_7);
 
     //console.log(vertices);
     return vertices;
@@ -397,12 +400,15 @@ aabb.prototype.get_axes = function(v, face_index){
         var p2 = v[ i + 1 == v.length ? 0 : i + 1];
         var edge = p1.clone().sub(p2);
         var normal = edge.perp().normalize();
-
-
+    
         axes[i] = {n: normal, i: face_index};
     }
 
-    return axes;
+    return [
+        {n: new THREE.Vector3(0, 1, 0), e: edge.clone()},
+        {n: new THREE.Vector3(1, 0, 0), e: edge.clone()},
+        {n: new THREE.Vector3(0, 0, 1), e: edge.clone()},
+    ];
 }
 
 aabb.prototype.project = function(n, v){
@@ -426,21 +432,42 @@ aabb.prototype.project = function(n, v){
 
 aabb.prototype.intersect_sat_aabb_face = function(this_f, right_f, i, right){
 
-    var result = {result: false, axis: new THREE.Vector3(0,0,0), gap: 0}
+    var result = {result: false, axis: new THREE.Vector3(0,0,0), gap: 0, direction: new THREE.Vector3()}
     var overlap = Infinity;
     var axis = new  THREE.Vector3(0,0,0);
 
     //need to get all 6 faces
     var v = this.get_verts(this_f);
-    var a = this.get_axes(v, i);
-    
-    var rv =  right.get_verts(right_f);
-    var ra = right.get_axes(rv, i);
+    var e = this.get_edges(v);
+    var a = this.get_axes(e, i);
 
+    var rv =  right.get_verts(right_f);
+    var re = right.get_edges(rv);
+    var ra = right.get_axes(re, i);
+
+    // all axis's i guess?
+    //var other_axis = [];
+    var this_edge = null;
+    var right_edge = null;
+
+    //https://gamedev.stackexchange.com/questions/44500/how-many-and-which-axes-to-use-for-3d-obb-collision-with-sat
+    //thanks for the help Acegikmo & ken
+
+    all_axis = a;
+    a.concat(ra);
 
     for(var i = 0; i < a.length; i++){
-        var proj_1 = this.project(a[i].n, v);
-        var proj_2 = right.project(a[i].n, rv);
+        for(var j = 0; j < ra.length; j++){
+            var cross_normal = a[i].n.clone().cross(ra[j].n.clone()).normalize();
+
+            if(cross_normal.x != 0 && cross_normal.y != 0 && cross_normal.z != 0)
+                all_axis.push({n:cross_normal, i:0})
+        }
+    }
+
+    for(var i = 0; i < all_axis.length; i++){
+        var proj_1 = this.project(all_axis[i].n, e);
+        var proj_2 = right.project(all_axis[i].n, re);
 
         if(!proj_1.overlap(proj_2)){
             return result;
@@ -451,41 +478,76 @@ aabb.prototype.intersect_sat_aabb_face = function(this_f, right_f, i, right){
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                axis = a[i].n;
+                axis = all_axis[i].n;
+                this_edge = proj_1;
+                right_edge = proj_2;
             }
         }
     }
 
-    for(var i = 0; i < ra.length; i++){
-        var proj_1 = this.project(ra[i].n, v);
-        var proj_2 = right.project(ra[i].n, rv);
+    //for(var i = 0; i < ra.length; i++){
+    //    var proj_1 = this.project(ra[i].n, e);
+    //    var proj_2 = right.project(ra[i].n, re);
+//
+    //    if(!proj_1.overlap(proj_2)){
+    //        return result;
+    //    } else {
+//
+    //        var o = proj_1.get_overlap(proj_2);
+//
+    //        if(o < overlap){
+    //            //set to axis
+    //            overlap = o;
+    //            axis = ra[i].n;
+    //        }
+    //    }
+    //}
 
-        if(!proj_1.overlap(proj_2)){
-            return result;
-        } else {
+    //console.log(a);
 
-            var o = proj_1.get_overlap(proj_2);
 
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = ra[i].n;
-            }
-        }
-    }
+
+
+    //for(var i = 0; i < other_axis.length; i++){
+    //    console.log("eh?")
+    //    var proj_1 = this.project(other_axis[i].n, v);
+    //    var proj_2 = right.project(other_axis[i].n, rv);
+//
+    //    if(!proj_1.overlap(proj_2)){
+    //        return result;
+    //    } else {
+//
+    //        var o = proj_1.get_overlap(proj_2);
+//
+    //        if(o < overlap){
+    //            //set to axis
+    //            overlap = o;
+    //            axis = other_axis[i].n;
+    //        }
+    //    }
+    //}
+
+    //var face = this.get_face(axis);
 
     var p0 = this.parent.transform.position.clone();
     var p1 = right.parent.transform.position.clone();
 
     var direction = p0.sub(p1);
 
-    if(axis.dot(direction) < 0.0){
+    if(axis.clone().dot(direction) < 0.0){
         axis.negate();
     }
+
+    //var dot = axis.clone().dot(direction.normalize());
 
     result.result = true;
     result.axis = axis;
     result.gap = overlap;
+    //result.direction = new THREE.Vector3(axis.x * dot, axis.y * dot, axis.z * dot);
+
+
+   // console.log(this_edge);
+    //console.log(right_edge);
 
     return result;
 }
@@ -494,9 +556,15 @@ aabb.prototype.intersect_sat_aabb_face = function(this_f, right_f, i, right){
 //https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
 aabb.prototype.intersect_sat_aabb = function(right){
 
-    var side = this.intersect_sat_aabb_face("f", "f", 0, right);
-    var bottom = this.intersect_sat_aabb_face("b", "b", 0, right);
-    return bottom;
+    var side_tokens = ["b"];
+
+    var sat_sides = []
+
+    for(var i = 0; i < side_tokens.length; i++){
+            sat_sides.push(this.intersect_sat_aabb_face(side_tokens[i], side_tokens[i], 0, right));
+    }
+
+    return sat_sides;
 }
 
 

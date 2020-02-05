@@ -4,7 +4,7 @@ var time = 0;
 var sky_index = 0;
 var sky_lerp_index = 0;
 var sky = new gameobject("sky");
-var step;
+var step = 0;
 
 var sky_colors = [
     new THREE.Color( 0xEDA479), //Prime Morning
@@ -13,7 +13,7 @@ var sky_colors = [
 ];
 
 function sky_init(){
-
+    step = 0;
     var shader = get_data("instance_shader");
     var buffer = create_buffer();
     var attributes = [];
@@ -55,7 +55,7 @@ function update_sky(delta){
     scene.fog.color = current_color;
    
     step += (Math.PI*2 / cycle_length)/360;
-    if(step > 100) { step = 0;}
+    //if(step > 100) { step = 0;}
     sky.transform.rotation = new quaternion(0,0,0,1, new THREE.Vector3(1, 0, 0), step);
     
 }
@@ -86,11 +86,7 @@ function prime_star_init(buffer, attributes){
             [ MapToSS(0, 0),],
             new THREE.Vector2(2,1),
             [ 
-              new THREE.Color(0xFFD27D),
-              new THREE.Color(0xFFA371),
-              new THREE.Color(0xA6A8FF),
-              new THREE.Color(0xFFFA86),
-              new THREE.Color(0xA87BFF),
+                new THREE.Color(0xFFFFFF),
             ],
             new THREE.Vector3(0, 0, 0),
             star.transform,
@@ -121,16 +117,13 @@ function sun_init(buffer, attributes){
     var sun = new gameobject("sun");
     sky.add_child(sun);
     //sun.transform.position = new THREE.Vector3(0, 0, 0);
+    sun.transform.scale = new THREE.Vector3(1,1,1);
 
     var sun_decomposer = new decomposer(
         [ MapToSS(0, 1),],
         new THREE.Vector2(1,1),
         [ 
           new THREE.Color(0xFFD27D),
-          new THREE.Color(0xFFA371),
-          new THREE.Color(0xA6A8FF),
-          new THREE.Color(0xFFFA86),
-          new THREE.Color(0xA87BFF),
         ],
         new THREE.Vector3(0, 0, 0),
         sun.transform,
@@ -143,9 +136,9 @@ function sun_init(buffer, attributes){
     sun.add_component(sun_decomposer);
 
     PopulateBuffer(
-        new THREE.Vector3(0, 1000, 0), //dont need this anymore
+        new THREE.Vector3(0, 2000, 0), //dont need this anymore
         new THREE.Vector3(0, 0, 0), //dont need this anymore
-        new THREE.Vector3(100, 100, 100), //dont need this anymore
+        new THREE.Vector3(800, 800, 800), //dont need this anymore
         buffer, 
         sun_decomposer);
 
@@ -175,9 +168,9 @@ function moon_init(buffer, attributes){
     moon.add_component(moon_decomposer);
 
     PopulateBuffer(
-        new THREE.Vector3(0, -1000, 0), //dont need this anymore
+        new THREE.Vector3(0, -2000, 0), //dont need this anymore
         new THREE.Vector3(0, 0, 0), //dont need this anymore
-        new THREE.Vector3(100, 100, 100), //dont need this anymore
+        new THREE.Vector3(300, 300, 300), //dont need this anymore
         buffer, 
         moon_decomposer);
 

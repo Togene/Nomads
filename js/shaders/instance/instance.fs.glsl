@@ -76,8 +76,7 @@
 
 			gl_FragColor = (tex * vec4(colorPass, 1.0));
 
-			if(fog_pass == 1.0)
-			{
+			if(fog_pass == 1.0){
 				float depth = (gl_FragCoord.z / gl_FragCoord.w);
 
 				float fogFactor = smoothstep( fogNear, fogFar, depth * 3.0);
