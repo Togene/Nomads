@@ -7,8 +7,6 @@
 function rectangle(x, y, w, h){
     this.x = x; // CENTER X
     this.y = y; // CENTER Y
-    this.z = 1; // CENTER z
-
     this.w = w;
     this.h = h;
 }
@@ -182,7 +180,7 @@ quad_tree.prototype.query = function(range, found, debug){
 
     for(var i = 0; i < this.objects.length; i++){
         if(range.contains(this.objects[i])){
-            var range_vector = new THREE.Vector3(range.x, range.z, range.y);
+            var range_vector = new THREE.Vector3(range.x, 0, range.y);
 
             var d = range_vector.distanceToSquared(this.objects[i].transform.position);
   

@@ -101,7 +101,6 @@ function broad_collision_check(delta){
 
                 rangecheck.x = e.transform.position.x
                 rangecheck.y = e.transform.position.z;
-                rangecheck.z = e.transform.position.y;
 
                 collision_tree.query(rangecheck, near, near_debug);
                 
@@ -134,16 +133,10 @@ function narrow_collision_check(near, e, delta){
             r.set_colliding(false);
             var delt = near[i].o.transform.position.clone().sub(e.transform.position.clone());
             delt.y = 0;
-            
-            //if(lr.length != undefined){
-            //    for(var j = 0; j < lr.length; j++){
-            //        collision_ray_response(l, r, lr[j], lb, near[i].o);
-            //    }
-            //} else { 
-            //    collision_ray_response(l, r, lr, lb, near[i].o);
-            //}
-            
-            for(var m = 0; m < 2; m ++){
+
+                        
+
+        
 
             //TODO: check for 90/180/270 dagree's as not roated
             if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
@@ -156,11 +149,18 @@ function narrow_collision_check(near, e, delta){
                 if(sat_response(e, l, r, lb, rb, near[i].o)){};
                 //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
             } 
+
+            if(lr.length != undefined){
+                for(var j = 0; j < lr.length; j++){
+                    collision_ray_response(l, r, lr[j], lb, near[i].o);
+                }
+            } else { 
+                collision_ray_response(l, r, lr, lb, near[i].o);
             }
 
-
+    
            
-            //r.set_colliding(false);
+            r.set_colliding(false);
         }
     }
 }
@@ -171,40 +171,46 @@ function sat_response(e, l, r, lb, rb, near){
     var sat = l.intersect_sat_aabb(r);
     // && near[i].name != "floor"
        
-    for(var i = 0; i < sat.length; i++){
+    if(sat.result) {
 
-        if(sat[i].result) {
+        var has_rb = rb != undefined;
+        var has_lb = lb != undefined;
 
-            var has_rb = rb != undefined;
-            var has_lb = lb != undefined;
-    
-            l.set_colliding(true);
-            r.set_colliding(true);
-            
-            console.log(sat[i].axis);
-
-            //TODO : change to proper force_add
-            if(has_lb){ 
-                lb.null_velocity();
-                e.transform.position.z += (sat[i].axis.z * sat[i].gap * 1.0001);
-                e.transform.position.y += (sat[i].axis.y * sat[i].gap * 4.0001);
-                e.transform.position.x += (sat[i].axis.x * sat[i].gap * 1.0001);
+        l.set_colliding(true);
+        r.set_colliding(true);
+        
+        //TODO : change to proper force_add
+        if(has_lb){ 
+            lb.null_velocity();
+            if(has_rb) { 
+                e.transform.position.z += (sat.axis.z * sat.gap)/2;
+                e.transform.position.y += (sat.axis.y * sat.gap)/2;
+                e.transform.position.x += (sat.axis.x * sat.gap)/2;
             } else {
+                e.transform.position.z += (sat.axis.z * sat.gap);
+                e.transform.position.y += (sat.axis.y * sat.gap);
+                e.transform.position.x += (sat.axis.x * sat.gap);
             }
-    
-            if(has_rb){ 
-                rb.null_velocity();
-                near.transform.position.z -= (sat[i].axis.z * sat[i].gap * 1.0001);
-                near.transform.position.y -= (sat[i].axis.y * sat[i].gap * 4.0001);
-                near.transform.position.x -= (sat[i].axis.x * sat[i].gap * 1.0001);
-            } else {
-            } 
-    
-            return true;
+
+        } else {
         }
 
-    }
+        if(has_rb){ 
+            rb.null_velocity();
+            if(has_lb) { 
+                near.transform.position.z -= (sat.axis.z * sat.gap)/2;
+                near.transform.position.y -= (sat.axis.y * sat.gap)/2;
+                near.transform.position.x -= (sat.axis.x * sat.gap)/2;
+            } else {
+                near.transform.position.z -= (sat.axis.z * sat.gap);
+                near.transform.position.y -= (sat.axis.y * sat.gap);
+                near.transform.position.x -= (sat.axis.x * sat.gap);
+            }
+        } else {
+        } 
 
+        return true;
+    }
 
     return false;
 }

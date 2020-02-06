@@ -71,7 +71,6 @@ face3D.prototype.CalculateNormal = function (debug = false) {
 }
 
 function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, levelOfDetial, ChunkSize, Worldx, Worldy, mapsize, gridsize, scale, xIndex, yIndex, buffers, yoffset) {
-	var temp_count = 0;
 
 	var bufferGeometry = new THREE.BufferGeometry();
 	
@@ -252,11 +251,10 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 						
 						s.transform.position = new THREE.Vector3(
 							curface.centre.x + curface.normal.x * s.transform.scale.x/2,
-							curface.centre.y + curface.normal.y * s.transform.scale.y * temp_count + 1,
+							curface.centre.y + curface.normal.y * s.transform.scale.y*3,
 							curface.centre.z + curface.normal.z * s.transform.scale.z/2,
 						);
 
-						temp_count++;
 					}
 					
 					if(g_d == 255) {	
