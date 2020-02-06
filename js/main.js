@@ -9,7 +9,7 @@ function init(){
     renderer.setClearColor( 0x379FE8, 1 );
     document.body.appendChild( renderer.domElement );
     
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1500);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 3000);
     camera.position.z = 5;
 
     window.addEventListener( 'resize', onWindowResize, false );    

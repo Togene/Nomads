@@ -4,7 +4,7 @@ var time = 0;
 var sky_index = 0;
 var sky_lerp_index = 0;
 var sky = new gameobject("sky");
-var step;
+var step = 0;
 
 var sky_colors = [
     new THREE.Color( 0xEDA479), //Prime Morning
@@ -107,9 +107,9 @@ function prime_star_init(buffer, attributes){
             direction.x * random_range(min_distance, max_distance), 
             direction.y * random_range(min_distance, max_distance), 
             direction.z * random_range(min_distance, max_distance)
-            ), //dont need this anymore
-            new THREE.Vector3(0, 0, 0), //dont need this anymore
-            new THREE.Vector3(15, 15, 15), //dont need this anymore
+            ), 
+            new THREE.Vector3(0, 0, 0), 
+            new THREE.Vector3(15, 15, 15),
             buffer, 
             star_decomposer
             );
@@ -127,10 +127,6 @@ function sun_init(buffer, attributes){
         new THREE.Vector2(1,1),
         [ 
           new THREE.Color(0xFFD27D),
-          new THREE.Color(0xFFA371),
-          new THREE.Color(0xA6A8FF),
-          new THREE.Color(0xFFFA86),
-          new THREE.Color(0xA87BFF),
         ],
         new THREE.Vector3(0, 0, 0),
         sun.transform,
@@ -145,7 +141,7 @@ function sun_init(buffer, attributes){
     PopulateBuffer(
         new THREE.Vector3(0, 1000, 0), //dont need this anymore
         new THREE.Vector3(0, 0, 0), //dont need this anymore
-        new THREE.Vector3(100, 100, 100), //dont need this anymore
+        new THREE.Vector3(500, 500, 500), //dont need this anymore
         buffer, 
         sun_decomposer);
 
@@ -177,7 +173,7 @@ function moon_init(buffer, attributes){
     PopulateBuffer(
         new THREE.Vector3(0, -1000, 0), //dont need this anymore
         new THREE.Vector3(0, 0, 0), //dont need this anymore
-        new THREE.Vector3(100, 100, 100), //dont need this anymore
+        new THREE.Vector3(200, 200, 200), //dont need this anymore
         buffer, 
         moon_decomposer);
 

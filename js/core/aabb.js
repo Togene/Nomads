@@ -94,15 +94,17 @@ aabb.prototype.update = function(delta){
         }
     }
 
-    if(this.colliding && this.decube != null){
-        this.decube.set_active(true);
-        this.set_visule_color(this.active_color);
-    }
-    
-    if(!this.colliding && this.decube != null){
-        this.decube.set_active(false);
-        this.set_visule_color(this.non_active_color);
-    }
+    this.decube.set_active(true);
+
+    //if(this.colliding && this.decube != null){
+    //    this.decube.set_active(true);
+    //    this.set_visule_color(this.active_color);
+    //}
+    //
+    //if(!this.colliding && this.decube != null){
+    //    this.decube.set_active(false);
+    //    this.set_visule_color(this.non_active_color);
+    //}
 }
 
 aabb.prototype.direct_position_set = function(p){
@@ -264,7 +266,7 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
 //credit : http://www.dyn4j.org/2010/01/sat/
 //helping with SAT collision detection
-aabb.prototype.get_verts = function(face){
+aabb.prototype.get_verts = function(){
     var vertices = [];
     
     var transform_clone = this.parent.transform.clone();
@@ -297,6 +299,21 @@ aabb.prototype.get_verts = function(face){
     var vert_7 = new THREE.Vector3(-this.w, this.h, this.d);
     vert_7.applyMatrix4(m);
     
+
+    vertices.push(vert_0);
+    vertices.push(vert_1);
+    vertices.push(vert_2);
+    vertices.push(vert_3);
+    vertices.push(vert_4);
+    vertices.push(vert_5);
+    vertices.push(vert_6);
+    vertices.push(vert_7);
+
+    //console.log(vertices);
+    return vertices;
+}
+
+aabb.prototype.get_edges = function(v){
     /*
         v7 ------ v6
         |          |
@@ -311,47 +328,48 @@ aabb.prototype.get_verts = function(face){
         |          |
         v0 ------ v1
     */
-    if(face == "b"){
-        //console.log("getting bottom");
-        vertices.push(vert_0);
-        vertices.push(vert_1);
-        vertices.push(vert_2);
-        vertices.push(vert_3);
-        vertices.push(vert_7);
-    } else if (face == "t"){
-        //console.log("getting top");
-        vertices.push(vert_4);
-        vertices.push(vert_5);
-        vertices.push(vert_6);
-        vertices.push(vert_7);
-    } else if (face == "r"){
-        //console.log("getting right");
-        vertices.push(vert_1);
-        vertices.push(vert_5);
-        vertices.push(vert_6);
-        vertices.push(vert_2);
-    } else if (face == "l"){
-       // console.log("getting left");
-        vertices.push(vert_3);
-        vertices.push(vert_0);
-        vertices.push(vert_4);
-        vertices.push(vert_7);
-    }else if (face == "f"){
-       // console.log("getting front");
-        vertices.push(vert_0);
-        vertices.push(vert_1);
-        vertices.push(vert_5);
-        vertices.push(vert_4);
-    } else if (face == "ba"){
-       // console.log("getting back");
-        vertices.push(vert_3);
-        vertices.push(vert_2);
-        vertices.push(vert_6);
-        vertices.push(vert_7);
+
+    return [
+        v[0], v[1],
+        v[2], v[3],
+        v[0], v[4],
+        v[5], v[6],
+        v[7], v[4],
+    ];
+}
+
+//grab the face from MTV information
+
+aabb.prototype.get_face = function(n, v){
+     /*
+        v7 ------ v6
+        |          |
+        |          |
+        |          |
+        v4 ------ v5
+
+
+        v3 ------ v2
+        |          |
+        |          |
+        |          |
+        v0 ------ v1
+    */
+
+    if(n.x == 0 && n.y == 1 && n.z == 0){
+        console.log("getting up?");
+    } else if(n.x == 0 && n.y == -1 && n.z == 0){
+        console.log("getting down?");
+    } else if(n.x == 1 && n.y == 0 && n.z == 0){
+        console.log("getting left?");
+    } else if(n.x == -1 && n.y == 0 && n.z == 0){
+        console.log("getting right?");
+    } else if(n.x == 0 && n.y == 0 && n.z == 1){
+        console.log("getting front?");
+    } else if(n.x == 0 && n.y == 0 && n.z == -1){
+        console.log("getting back?");
     }
 
-    //console.log(vertices);
-    return vertices;
 }
 
 aabb.prototype.refrence_transform = function(v, m){
@@ -388,7 +406,7 @@ aabb.prototype.get_norms = function(v){
     return {n: normals, m: mids};
 };
 
-aabb.prototype.get_axes = function(v, face_index){
+aabb.prototype.get_axes = function(v){
 
     axes = [v.length];
 
@@ -399,7 +417,7 @@ aabb.prototype.get_axes = function(v, face_index){
         var normal = edge.perp().normalize();
 
 
-        axes[i] = {n: normal, i: face_index};
+        axes[i] = {n: normal, v0:p1.clone(), v1:p2.clone()};
     }
 
     return axes;
@@ -423,61 +441,125 @@ aabb.prototype.project = function(n, v){
     return new projection(min, max);
 }
 
-
-aabb.prototype.intersect_sat_aabb_face = function(this_f, right_f, i, right){
-
-    var result = {result: false, axis: new THREE.Vector3(0,0,0), gap: 0}
+//credit to Randy Gaul manifold generation :
+//https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
+aabb.prototype.intersect_sat_aabb = function(right){
+    
+    var result = {result: false, axis: new THREE.Vector3(0,0,0), gap: 0, direction: new THREE.Vector3()}
     var overlap = Infinity;
-    var axis = new  THREE.Vector3(0,0,0);
+    var shortest_dist = Infinity;
+
+    var axis = new THREE.Vector3(0,0,0);
+    
+    var v0 = new THREE.Vector3(0,0,0);
+    var v1 = new THREE.Vector3(0,0,0);
 
     //need to get all 6 faces
-    var v = this.get_verts(this_f);
-    var a = this.get_axes(v, i);
+    var v = this.get_verts();
+    var e = this.get_edges(v);
+    var a = this.get_axes(e);
     
-    var rv =  right.get_verts(right_f);
-    var ra = right.get_axes(rv, i);
+    var rv =  right.get_verts();
+    var re = right.get_edges(rv)
+    var ra = right.get_axes(re);
 
-
-    for(var i = 0; i < a.length; i++){
-        var proj_1 = this.project(a[i].n, v);
-        var proj_2 = right.project(a[i].n, rv);
-
-        if(!proj_1.overlap(proj_2)){
-            return result;
-        } else {
-
-            var o = proj_1.get_overlap(proj_2);
-
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = a[i].n;
-            }
-        }
-    }
-
-    for(var i = 0; i < ra.length; i++){
-        var proj_1 = this.project(ra[i].n, v);
-        var proj_2 = right.project(ra[i].n, rv);
-
-        if(!proj_1.overlap(proj_2)){
-            return result;
-        } else {
-
-            var o = proj_1.get_overlap(proj_2);
-
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = ra[i].n;
-            }
-        }
-    }
+    var me = false;
 
     var p0 = this.parent.transform.position.clone();
     var p1 = right.parent.transform.position.clone();
 
-    var direction = p0.sub(p1);
+    var direction = p0.clone().sub(p1).normalize();
+    var distance = p0.distanceToSquared(p1);
+    //TODO: grab cross axis's from both axis's
+    
+
+    var axes = a;
+    axes.concat(ra);
+
+    for(var i = 0; i < axes.length; i++){
+        var proj_1 = this.project(axes[i].n, e);
+        var proj_2 = right.project(axes[i].n, re);
+
+        if(!proj_1.overlap(proj_2)){
+            return result;
+        } else {
+
+            var o = proj_1.get_overlap(proj_2);
+
+            var c = new THREE.Vector3(
+                (axes[i].v0.x +  axes[i].v1.x)/2, 
+                (axes[i].v0.y +  axes[i].v1.y)/2, 
+                (axes[i].v0.z +  axes[i].v1.z)/2);
+
+            var d = p0.distanceToSquared(c);
+            // && d < shortest_dist
+
+            if(o < overlap){
+                //set to axis
+                overlap = o;
+                shortest_dist = d;
+
+                axis = axes[i].n;
+                me = true;
+                v0 = axes[i].v0;
+                v1 = axes[i].v1;
+
+ 
+            }
+        }
+    }
+
+    //for(var i = 0; i < a.length; i++){
+    //    var proj_1 = this.project(a[i].n, v);
+    //    var proj_2 = right.project(a[i].n, rv);
+//
+    //    if(!proj_1.overlap(proj_2)){
+    //        return result;
+    //    } else {
+//
+    //        var o = proj_1.get_overlap(proj_2);
+//
+    //        // 
+    //        if(o < overlap){
+    //            //set to axis
+    //            overlap = o;
+    //            axis = a[i].n;
+    //            me = true;
+    //        }
+    //    }
+    //}
+//
+    //for(var i = 0; i < ra.length; i++){
+    //    var proj_1 = this.project(ra[i].n, v);
+    //    var proj_2 = right.project(ra[i].n, rv);
+//
+    //    if(!proj_1.overlap(proj_2)){
+    //        return result;
+    //    } else {
+//
+    //        var o = proj_1.get_overlap(proj_2);
+//
+    //        if(o < overlap){
+    //            //set to axis
+    //            overlap = o;
+    //            axis = ra[i].n;
+    //            me = false;
+    //        }
+    //    }
+    //}
+
+    var geometry = new THREE.BoxGeometry( .1, .1, .1 );
+    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    var cube = new THREE.Mesh( geometry, material );
+    cube.position.copy(v0);
+    
+    var material2 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var cube2 = new THREE.Mesh( geometry, material2 );
+    cube2.position.copy(v1);
+
+    scene.add( cube );
+    scene.add( cube2 );
+
 
     if(axis.dot(direction) < 0.0){
         axis.negate();
@@ -487,16 +569,20 @@ aabb.prototype.intersect_sat_aabb_face = function(this_f, right_f, i, right){
     result.axis = axis;
     result.gap = overlap;
 
+
+    //if axis is from this, grab face from this
+    //else get from other side
+    if(me){
+        this.get_face(axis, v);
+    } else{
+        this.get_face(axis, rv);
+    }
+    
+    //console.log(c);
+    
+    //result.direction = c.clone();//direction.clone().add(axis.clone()).normalize();
+
     return result;
-}
-
-//credit to Randy Gaul manifold generation :
-//https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
-aabb.prototype.intersect_sat_aabb = function(right){
-
-    var side = this.intersect_sat_aabb_face("f", "f", 0, right);
-    var bottom = this.intersect_sat_aabb_face("b", "b", 0, right);
-    return bottom;
 }
 
 

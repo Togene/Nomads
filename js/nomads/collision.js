@@ -136,7 +136,6 @@ function narrow_collision_check(near, e, delta){
 
                         
 
-        
 
             //TODO: check for 90/180/270 dagree's as not roated
             if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
@@ -150,13 +149,13 @@ function narrow_collision_check(near, e, delta){
                 //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
             } 
 
-            if(lr.length != undefined){
-                for(var j = 0; j < lr.length; j++){
-                    collision_ray_response(l, r, lr[j], lb, near[i].o);
-                }
-            } else { 
-                collision_ray_response(l, r, lr, lb, near[i].o);
-            }
+            //if(lr.length != undefined){
+            //    for(var j = 0; j < lr.length; j++){
+            //        collision_ray_response(l, r, lr[j], lb, near[i].o);
+            //    }
+            //} else { 
+            //    collision_ray_response(l, r, lr, lb, near[i].o);
+            //}
 
     
            
