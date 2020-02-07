@@ -300,14 +300,28 @@ aabb.prototype.get_verts = function(){
     vert_7.applyMatrix4(m);
     
 
+      /*
+        v7 ------ v6
+        |          |
+        |          |
+        |          |
+        v4 ------ v5
+
+
+        v3 ------ v2
+        |          |
+        |          |
+        |          |
+        v0 ------ v1
+    */
     vertices.push(vert_0);
     vertices.push(vert_1);
     vertices.push(vert_2);
     vertices.push(vert_3);
-    vertices.push(vert_4);
-    vertices.push(vert_5);
-    vertices.push(vert_6);
     vertices.push(vert_7);
+    vertices.push(vert_6);
+    vertices.push(vert_5);
+    vertices.push(vert_4);
 
     //console.log(vertices);
     return vertices;
@@ -356,20 +370,27 @@ aabb.prototype.get_face = function(n, v){
         v0 ------ v1
     */
 
+    
+
     if(n.x == 0 && n.y == 1 && n.z == 0){
         console.log("getting up?");
+        return [v[0], v[1], v[2], v[3]];
     } else if(n.x == 0 && n.y == -1 && n.z == 0){
         console.log("getting down?");
+        return [v[4], v[5], v[6], v[7]];
     } else if(n.x == 1 && n.y == 0 && n.z == 0){
         console.log("getting left?");
+        return [v[0], v[4], v[7], v[3]];
     } else if(n.x == -1 && n.y == 0 && n.z == 0){
         console.log("getting right?");
+        return [v[1], v[2], v[6], v[5]];
     } else if(n.x == 0 && n.y == 0 && n.z == 1){
         console.log("getting front?");
+        return [v[0], v[1], v[5], v[4]];
     } else if(n.x == 0 && n.y == 0 && n.z == -1){
         console.log("getting back?");
+        return [v[2], v[3], v[7], v[6]];
     }
-
 }
 
 aabb.prototype.refrence_transform = function(v, m){
@@ -447,38 +468,27 @@ aabb.prototype.intersect_sat_aabb = function(right){
     
     var result = {result: false, axis: new THREE.Vector3(0,0,0), gap: 0, direction: new THREE.Vector3()}
     var overlap = Infinity;
-    var shortest_dist = Infinity;
-
     var axis = new THREE.Vector3(0,0,0);
-    
-    var v0 = new THREE.Vector3(0,0,0);
-    var v1 = new THREE.Vector3(0,0,0);
 
     //need to get all 6 faces
     var v = this.get_verts();
-    var e = this.get_edges(v);
-    var a = this.get_axes(e);
+    var a = this.get_axes(v);
     
     var rv =  right.get_verts();
-    var re = right.get_edges(rv)
-    var ra = right.get_axes(re);
-
-    var me = false;
+    var ra = right.get_axes(rv);
 
     var p0 = this.parent.transform.position.clone();
     var p1 = right.parent.transform.position.clone();
 
     var direction = p0.clone().sub(p1).normalize();
-    var distance = p0.distanceToSquared(p1);
+
     //TODO: grab cross axis's from both axis's
-    
 
-    var axes = a;
-    axes.concat(ra);
+    var me = false;
 
-    for(var i = 0; i < axes.length; i++){
-        var proj_1 = this.project(axes[i].n, e);
-        var proj_2 = right.project(axes[i].n, re);
+    for(var i = 0; i < a.length; i++){
+        var proj_1 = this.project(a[i].n, v);
+        var proj_2 = right.project(a[i].n, rv);
 
         if(!proj_1.overlap(proj_2)){
             return result;
@@ -486,79 +496,34 @@ aabb.prototype.intersect_sat_aabb = function(right){
 
             var o = proj_1.get_overlap(proj_2);
 
-            var c = new THREE.Vector3(
-                (axes[i].v0.x +  axes[i].v1.x)/2, 
-                (axes[i].v0.y +  axes[i].v1.y)/2, 
-                (axes[i].v0.z +  axes[i].v1.z)/2);
-
-            var d = p0.distanceToSquared(c);
-            // && d < shortest_dist
-
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                shortest_dist = d;
-
-                axis = axes[i].n;
                 me = true;
-                v0 = axes[i].v0;
-                v1 = axes[i].v1;
-
- 
+                axis = a[i].n;
             }
         }
     }
 
-    //for(var i = 0; i < a.length; i++){
-    //    var proj_1 = this.project(a[i].n, v);
-    //    var proj_2 = right.project(a[i].n, rv);
-//
-    //    if(!proj_1.overlap(proj_2)){
-    //        return result;
-    //    } else {
-//
-    //        var o = proj_1.get_overlap(proj_2);
-//
-    //        // 
-    //        if(o < overlap){
-    //            //set to axis
-    //            overlap = o;
-    //            axis = a[i].n;
-    //            me = true;
-    //        }
-    //    }
-    //}
-//
-    //for(var i = 0; i < ra.length; i++){
-    //    var proj_1 = this.project(ra[i].n, v);
-    //    var proj_2 = right.project(ra[i].n, rv);
-//
-    //    if(!proj_1.overlap(proj_2)){
-    //        return result;
-    //    } else {
-//
-    //        var o = proj_1.get_overlap(proj_2);
-//
-    //        if(o < overlap){
-    //            //set to axis
-    //            overlap = o;
-    //            axis = ra[i].n;
-    //            me = false;
-    //        }
-    //    }
-    //}
+    for(var i = 0; i < ra.length; i++){
+        var proj_1 = this.project(ra[i].n, v);
+        var proj_2 = right.project(ra[i].n, rv);
 
-    var geometry = new THREE.BoxGeometry( .1, .1, .1 );
-    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    var cube = new THREE.Mesh( geometry, material );
-    cube.position.copy(v0);
-    
-    var material2 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-    var cube2 = new THREE.Mesh( geometry, material2 );
-    cube2.position.copy(v1);
+        if(!proj_1.overlap(proj_2)) {
+            return result;
+        } else {
 
-    scene.add( cube );
-    scene.add( cube2 );
+            var o = proj_1.get_overlap(proj_2);
+
+            if(o < overlap){
+                //set to axis
+                overlap = o;
+                me = false;
+                axis = ra[i].n;
+            }
+        }
+    }
+
 
 
     if(axis.dot(direction) < 0.0){
@@ -568,19 +533,6 @@ aabb.prototype.intersect_sat_aabb = function(right){
     result.result = true;
     result.axis = axis;
     result.gap = overlap;
-
-
-    //if axis is from this, grab face from this
-    //else get from other side
-    if(me){
-        this.get_face(axis, v);
-    } else{
-        this.get_face(axis, rv);
-    }
-    
-    //console.log(c);
-    
-    //result.direction = c.clone();//direction.clone().add(axis.clone()).normalize();
 
     return result;
 }

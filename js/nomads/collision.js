@@ -149,6 +149,7 @@ function narrow_collision_check(near, e, delta){
                 //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
             } 
 
+            
             //if(lr.length != undefined){
             //    for(var j = 0; j < lr.length; j++){
             //        collision_ray_response(l, r, lr[j], lb, near[i].o);
@@ -156,8 +157,6 @@ function narrow_collision_check(near, e, delta){
             //} else { 
             //    collision_ray_response(l, r, lr, lb, near[i].o);
             //}
-
-    
            
             r.set_colliding(false);
         }

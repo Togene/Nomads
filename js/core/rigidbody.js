@@ -47,7 +47,7 @@ rigidbody.prototype.update = function(delta){
 
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
-        //this.update_aabb_position(delta);
+        this.update_aabb_position(delta);
 
         this.forward(-(this.velocity.z * delta));
         this.right(-(this.velocity.x * delta));
@@ -64,7 +64,7 @@ rigidbody.prototype.update = function(delta){
             this.velocity.y = 0;
             this.parent.transform.position.y = 10;
         } else {
-            this.velocity.y -= 6.8 * (10.0) * delta; // 100.0 = mass
+                this.velocity.y -= 6.8 * (10.0) * delta; // 100.0 = mass
         }
 
         //*-------------------- Caps -----------------------
@@ -120,7 +120,7 @@ rigidbody.prototype.update_aabb_position = function(delta){
     var pos_clone = this.parent.transform.position.clone();
     var col = this.parent.get_component("aabb");
 
-    var projection_mag = 1.0; //! 1 second in the future? or .1 steps in the future?
+    var projection_mag = 1.1; //! 1 second in the future? or .1 steps in the future?
 
     pos_clone.addScaledVector(forward, -((this.velocity.z * projection_mag) * delta));
     pos_clone.addScaledVector(right, -((this.velocity.x * projection_mag) * delta));
