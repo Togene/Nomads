@@ -135,21 +135,6 @@ function narrow_collision_check(near, e, delta){
             delt.y = 0;
 
                         
-
-
-            //TODO: check for 90/180/270 dagree's as not roated
-            if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
-                //Sat for OOB, 
-                if(sat_response(e, l, r, lb, rb, near[i].o)){};
-               
-
-            } else {
-                //Swept for AABB
-                if(sat_response(e, l, r, lb, rb, near[i].o)){};
-                //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
-            } 
-
-            
             //if(lr.length != undefined){
             //    for(var j = 0; j < lr.length; j++){
             //        collision_ray_response(l, r, lr[j], lb, near[i].o);
@@ -157,6 +142,23 @@ function narrow_collision_check(near, e, delta){
             //} else { 
             //    collision_ray_response(l, r, lr, lb, near[i].o);
             //}
+
+            if(sat_response(e, l, r, lb, rb, near[i].o)){};
+
+            //TODO: check for 90/180/270 dagree's as not roated
+           //if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
+           //    //Sat for OOB, 
+           //    
+           //   
+
+           //} else {
+           //    //Swept for AABB
+           //    if(sat_response(e, l, r, lb, rb, near[i].o)){};
+           //    //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
+           //} 
+
+            
+      
            
             r.set_colliding(false);
         }
@@ -165,49 +167,9 @@ function narrow_collision_check(near, e, delta){
 
 function sat_response(e, l, r, lb, rb, near){
 
-    //lb = e's aabb 
-    var sat = l.intersect_sat_aabb(r);
-    // && near[i].name != "floor"
-       
-    if(sat.result) {
+    sat = l.intersect_sat_aabb(r, new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0));
 
-        var has_rb = rb != undefined;
-        var has_lb = lb != undefined;
-
-        l.set_colliding(true);
-        r.set_colliding(true);
-        
-        //TODO : change to proper force_add
-        if(has_lb){ 
-            lb.null_velocity();
-            if(has_rb) { 
-                e.transform.position.z += (sat.axis.z * sat.gap)/2;
-                e.transform.position.y += (sat.axis.y * sat.gap)/2;
-                e.transform.position.x += (sat.axis.x * sat.gap)/2;
-            } else {
-                e.transform.position.z += (sat.axis.z * sat.gap);
-                e.transform.position.y += (sat.axis.y * sat.gap);
-                e.transform.position.x += (sat.axis.x * sat.gap);
-            }
-
-        } else {
-        }
-
-        if(has_rb){ 
-            rb.null_velocity();
-            if(has_lb) { 
-                near.transform.position.z -= (sat.axis.z * sat.gap)/2;
-                near.transform.position.y -= (sat.axis.y * sat.gap)/2;
-                near.transform.position.x -= (sat.axis.x * sat.gap)/2;
-            } else {
-                near.transform.position.z -= (sat.axis.z * sat.gap);
-                near.transform.position.y -= (sat.axis.y * sat.gap);
-                near.transform.position.x -= (sat.axis.x * sat.gap);
-            }
-        } else {
-        } 
-
-        return true;
+    if(sat.result){
     }
 
     return false;

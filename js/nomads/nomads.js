@@ -78,9 +78,9 @@ function game_bootstrap(data){
 */
 function game_update(delta){
     game_time += delta * game_speed;
-
-    collision_update(delta);
+    
     player_update(delta);
+    collision_update(delta);
     movement(delta);
     physics_update(delta);
     shader_update(delta);

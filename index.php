@@ -28,6 +28,7 @@
 			<script src = "js/core/projection.js"></script>
 			<script src = "js/core/decomposer.js"></script>
 			<script src = "js/core/decube.js"></script>
+			<script src = "js/core/edge.js"></script>
 			<script src = "js/core/gameobject.js"></script>
 			<script src = "js/core/quadtree.js"></script>
 			<script src = "js/core/ray.js"></script>

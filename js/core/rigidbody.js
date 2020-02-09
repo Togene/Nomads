@@ -47,7 +47,8 @@ rigidbody.prototype.update = function(delta){
 
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
-        this.update_aabb_position(delta);
+        //this.update_aabb_position(delta);
+        //col.set_projection(new THREE.Vector3(1.1, 1.1, 1.1));
 
         this.forward(-(this.velocity.z * delta));
         this.right(-(this.velocity.x * delta));
@@ -64,7 +65,7 @@ rigidbody.prototype.update = function(delta){
             this.velocity.y = 0;
             this.parent.transform.position.y = 10;
         } else {
-                this.velocity.y -= 6.8 * (10.0) * delta; // 100.0 = mass
+            this.velocity.y -= 6.8 * (10.0) * delta; // 100.0 = mass
         }
 
         //*-------------------- Caps -----------------------
@@ -80,9 +81,13 @@ rigidbody.prototype.cap = function(delta){
     if(Math.abs(this.velocity_direction.x) < 0.2){this.velocity_direction.x = 0;}
     if(Math.abs(this.velocity_direction.z) < 0.2){this.velocity_direction.z = 0;}
     if(Math.abs(this.velocity_direction.y) < 0.2){this.velocity_direction.y = 0;}
-    if(Math.abs(this.velocity.x) < 0.1){this.x = 0;}
-    if(Math.abs(this.velocity.z) < 0.1){this.z = 0;}
-    if(Math.abs(this.velocity.y) < 0.1){this.y = 0;}
+    
+    if(Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;}
+    if(Math.abs(this.velocity.z) < 0.1){this.velocity.z = 0;}
+    if(Math.abs(this.velocity.y) < 0.1){this.velocity.y = 0;}
+
+    //if(this.parent.name == "player")
+    //    console.log(this.velocity);
 }
 
 rigidbody.prototype.forward = function(distance){
@@ -124,7 +129,7 @@ rigidbody.prototype.update_aabb_position = function(delta){
 
     pos_clone.addScaledVector(forward, -((this.velocity.z * projection_mag) * delta));
     pos_clone.addScaledVector(right, -((this.velocity.x * projection_mag) * delta));
-    pos_clone.addScaledVector(new THREE.Vector3(0, 1, 0), -(this.velocity.y * projection_mag) * delta);
+    pos_clone += (this.velocity.y * delta);
  
     col.direct_position_set(pos_clone);
 }

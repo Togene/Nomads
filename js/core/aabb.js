@@ -28,6 +28,9 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
         this.d
     );
 
+    //how far the aabb will be projected into the future
+    this.projection = new THREE.Vector3(1,1,1);
+
     this.max.applyMatrix4(transform_clone.get_transformation().toMatrix4());
     this.min.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
@@ -41,7 +44,11 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     this.decube.update(this.min, this.max, transform, 1);
 };
 
-aabb.prototype.min_max_set = function(){
+aabb.prototype.set_projection = function(v){
+    this.projection.copy(v);
+}
+
+aabb.prototype.min_max_set = function(t){
     this.min = new THREE.Vector3(
         -this.w,
         -this.h,
@@ -55,13 +62,8 @@ aabb.prototype.min_max_set = function(){
     );
 
     if(this.parent != null){
-        
-        var transform_clone = this.parent.transform.clone();
-        
-        transform_clone.scale = new THREE.Vector3(1,1,1);
-        
-        this.max.applyMatrix4(transform_clone.get_transformation().toMatrix4());
-        this.min.applyMatrix4(transform_clone.get_transformation().toMatrix4());
+        this.max.applyMatrix4(t.get_transformation().toMatrix4());
+        this.min.applyMatrix4(t.get_transformation().toMatrix4());
     }
 }
 
@@ -76,21 +78,29 @@ aabb.prototype.set_visule_color = function(hex){
 }
 
 aabb.prototype.update = function(delta){
+
     if(!(this.centre.equals(this.parent.transform.get_transformed_position()))){
      
         this.centre.copy(this.parent.transform.get_transformed_position());
 
         var transform_clone = this.parent.transform.clone();
         transform_clone.scale = new THREE.Vector3(1,1,1);
-    
-        this.min_max_set();
+        
+        transform_clone.position = 
+            new THREE.Vector3(
+                transform_clone.position.x * this.projection.x,
+                transform_clone.position.y * this.projection.y,
+                transform_clone.position.z * this.projection.z
+            );
+
+        this.min_max_set(transform_clone);
         this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
     }
         
     if(this.decube != null){
         if( this.parent != null){
-            this.decube.update(this.min, this.max, this.parent.transform, delta);
+            this.decube.update(this.min, this.max, this.parent.transform, this.projection, delta);
         }
     }
 
@@ -266,15 +276,15 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
 //credit : http://www.dyn4j.org/2010/01/sat/
 //helping with SAT collision detection
-aabb.prototype.get_verts = function(){
+aabb.prototype.get_verts = function(l_start, l_step){
     var vertices = [];
     
     var transform_clone = this.parent.transform.clone();
+    //transform_clone.position;
     transform_clone.scale = new THREE.Vector3(1,1,1);
+    
     var m = transform_clone.get_transformation().toMatrix4();
-
-    //if(face == "b"){console.log("getting bottom face");}
-
+ 
     var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
     vert_0.applyMatrix4(m);
     
@@ -314,6 +324,9 @@ aabb.prototype.get_verts = function(){
         |          |
         v0 ------ v1
     */
+
+    //at this point the velocity should already be added
+    //so we need to substract and
     vertices.push(vert_0);
     vertices.push(vert_1);
     vertices.push(vert_2);
@@ -323,7 +336,6 @@ aabb.prototype.get_verts = function(){
     vertices.push(vert_5);
     vertices.push(vert_4);
 
-    //console.log(vertices);
     return vertices;
 }
 
@@ -344,11 +356,8 @@ aabb.prototype.get_edges = function(v){
     */
 
     return [
-        v[0], v[1],
-        v[2], v[3],
         v[0], v[4],
-        v[5], v[6],
-        v[7], v[4],
+        v[4], v[0]
     ];
 }
 
@@ -437,7 +446,6 @@ aabb.prototype.get_axes = function(v){
         var edge = p1.clone().sub(p2);
         var normal = edge.perp().normalize();
 
-
         axes[i] = {n: normal, v0:p1.clone(), v1:p2.clone()};
     }
 
@@ -466,7 +474,12 @@ aabb.prototype.project = function(n, v){
 //https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
 aabb.prototype.intersect_sat_aabb = function(right){
     
-    var result = {result: false, axis: new THREE.Vector3(0,0,0), gap: 0, direction: new THREE.Vector3()}
+    var body = this.parent.get_component("rigidbody");
+
+    if(body != null){
+        velocity_direction = body.get_direction().clone().normalize();
+    }
+
     var overlap = Infinity;
     var axis = new THREE.Vector3(0,0,0);
 
@@ -477,29 +490,20 @@ aabb.prototype.intersect_sat_aabb = function(right){
     var rv =  right.get_verts();
     var ra = right.get_axes(rv);
 
-    var p0 = this.parent.transform.position.clone();
-    var p1 = right.parent.transform.position.clone();
-
-    var direction = p0.clone().sub(p1).normalize();
-
     //TODO: grab cross axis's from both axis's
-
-    var me = false;
-
     for(var i = 0; i < a.length; i++){
         var proj_1 = this.project(a[i].n, v);
         var proj_2 = right.project(a[i].n, rv);
 
         if(!proj_1.overlap(proj_2)){
-            return result;
+            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
         } else {
 
             var o = proj_1.get_overlap(proj_2);
-
+   
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                me = true;
                 axis = a[i].n;
             }
         }
@@ -510,7 +514,7 @@ aabb.prototype.intersect_sat_aabb = function(right){
         var proj_2 = right.project(ra[i].n, rv);
 
         if(!proj_1.overlap(proj_2)) {
-            return result;
+            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
         } else {
 
             var o = proj_1.get_overlap(proj_2);
@@ -518,25 +522,185 @@ aabb.prototype.intersect_sat_aabb = function(right){
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                me = false;
                 axis = ra[i].n;
             }
         }
     }
+    var p0 = this.parent.transform.position.clone();
+    var p1 = right.parent.transform.position.clone();
 
-
+    var direction = p0.sub(p1).normalize();
 
     if(axis.dot(direction) < 0.0){
         axis.negate();
     }
 
-    result.result = true;
-    result.axis = axis;
-    result.gap = overlap;
+    //this best, edge
+    //right best edge
+    var edge0 = this.get_edge({result: true, axis: axis, gap: overlap}, v);
+    var edge1 = right.get_edge({result: true, axis: axis.clone().negate(), gap: overlap}, rv);
 
-    return result;
+    var points = this.sutherland_hodgman(edge0, edge1, axis);
+
+    if(points != undefined){
+        for(var i = 0; i < points.length; i++){
+            var geometry = new THREE.BoxGeometry( .1, .1, .1 );
+            var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+            var cube = new THREE.Mesh( geometry, material );
+            cube.position.copy(points[i]);
+            scene.add( cube );
+        }
+    }
+
+
+    return {result: true, axis: axis, gap: overlap};
 }
 
+aabb.prototype.get_edge = function(r, vertices){
+    
+    //step 1 find farthest vertex
+    //within the polygon along seperation normal;
+    var c = vertices.length;
+    var n = r.axis;
+    var max = -Infinity;
+    var index = 0;
+
+    for(var i = 0; i < c; i++){
+        var projection = n.dot(vertices[i]);
+        
+        if(projection > max){
+            max = projection;
+            index = i;
+        }
+    }
+  
+    //step 2
+    // new we need to use the edge that 
+    // is most perp either
+    // right or the left
+    //! might be a problem
+    //! getting prevois or next vertex 
+    var v = vertices[index];
+    var v1 = vertices[(index + 1) % vertices.length];
+    var v0 = vertices[(index - 1 <= 0) ? vertices.length-1 : index-1];
+    //! might be a problem
+
+    //v1 to v
+    var l = v.clone().sub(v1);
+    l.normalize();
+
+    //v0 to v
+    var r = v.clone().sub(v0);
+    r.normalize();
+
+    //the edge that is most perp
+    // to n will have a dot product closer to zero
+
+    if(r.dot(n) <= l.dot(n)){
+        return new edge(v, v0, v);
+    } else {
+        return new edge(v, v, v1);
+    }
+}
+
+
+aabb.prototype.sutherland_hodgman = function(e0, e1, n){
+    var ref, inc;
+    var flip = false;
+
+    if(Math.abs(e0.dot(n)) <= Math.abs(e1.dot(n))){
+        ref = e0.clone();
+        inc = e1.clone();
+    } else {
+        ref = e1.clone();
+        inc = e0.clone();
+
+        flip = true;
+    }
+
+    //the edge vector
+    var refv = ref.clone();
+    //! might be a problem
+    refv.normalize();
+
+    var o1 = refv.dot(ref.v0);
+
+    var cp = this.clip(inc.v0, inc.v1, refv, o1);
+
+    //if we dont have 2 points, return
+    if(cp.length < 2) return;
+
+    //clip whats left of the incident edge by
+    //the second vertex of the refrence edge
+    //but we need to clip the oppsite direction
+    //so we flip the direction and offset
+    var o2 = refv.dot(ref.v1);
+
+    var cp2 = this.clip(cp[0], cp[1], refv.negate(), -o2);
+    //if we dont have 2 points left then fail
+    if(cp2.length < 2) return;
+    
+    //get the frence edge normal
+    //! might be a problem
+    var ref_norm = ref.cross(-1.0);
+    //if we had a flip the incident and refrences edges
+    //then we need to flip the refrence edge normal to
+    //clip properly
+
+    if(flip) ref_norm.negate();
+
+    //get the largest depth
+    var max = ref_norm.dot(ref.max);
+    //make sure the final points are not past the maximum
+
+    if(ref_norm.dot(cp2[0]) - max < 0.0){
+        cp2.splice( cp2.indexOf(cp2[0]), 0 );
+    } 
+
+    if(ref_norm.dot(cp2[1]) - max < 0.0){
+        cp2.splice( cp2.indexOf(cp2[1]), 0 );
+    }
+    cp2.concat(cp);
+
+    return cp2;
+}
+
+//clips the line sergment points v1, v2
+//if they are past o along n
+aabb.prototype.clip = function(v1, v2, n, o){
+    var clipped_points = [];
+  
+    var d1 = n.dot(v1) - o;
+    var d2 = n.dot(v2) - o;
+
+    //if either point is past o along n
+    //then we can keep the point
+    if(d1 >= 0.0) clipped_points.push(v1);
+    if(d2 >= 0.0) clipped_points.push(v2);
+
+    //finally we need to check if they
+    //are on opposing sides so that we can
+    //compute the correct point
+
+    if(d1 * d2 < 0.0){
+        //if they are on diffrent sides of the
+        //offset, d1 and d2 will be a (+) * (-)
+        //and will yield a (-) and there be less then zero
+        //get the vector for the edge we are clipping
+
+        var e = v2.clone().sub(v1);
+        //compute the location along e
+        var u = d1 / (d1 - d2);
+        e.multiplyScalar(u);
+        e.add(v1);
+
+        //add the point
+     
+        clipped_points.push(e);
+    }
+
+    return clipped_points;
+}
 
 aabb.prototype.intersect_legacy = function(right){
     var lx = false;

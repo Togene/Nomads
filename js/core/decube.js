@@ -77,9 +77,16 @@ decube.prototype.update_line = function(l, s, f){
     l.geometry.normalsNeedUpdate = true;
 }
 
-decube.prototype.update = function(min, max, t, delta){
+decube.prototype.update = function(min, max, t, p, delta){
     this.t = t.clone();
-    this.update_points(min, max);
+    
+    this.t.position = new THREE.Vector3(
+        this.t.position.x * p.x,
+        this.t.position.y * p.y,
+        this.t.position.z * p.z
+    );
+
+    this.update_points(min, max, p);
 }
 
 decube.prototype.set_color = function(hex){
@@ -87,7 +94,7 @@ decube.prototype.set_color = function(hex){
     this.line_mat.color = new THREE.Color(hex);
 }
 
-decube.prototype.update_points = function(min, max){
+decube.prototype.update_points = function(min, max, projection){
     
     this.line_mat.visible = this.active;
 
