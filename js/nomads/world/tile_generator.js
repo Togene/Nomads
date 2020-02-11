@@ -252,7 +252,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 						
 						s.transform.position = new THREE.Vector3(
 							curface.centre.x + curface.normal.x * s.transform.scale.x/2,
-							curface.centre.y + curface.normal.y * s.transform.scale.y*step+1,
+							curface.centre.y + curface.normal.y * s.transform.scale.y/2,
 							curface.centre.z + curface.normal.z * s.transform.scale.z/2,
 						);
 						

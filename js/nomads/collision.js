@@ -167,9 +167,11 @@ function narrow_collision_check(near, e, delta){
 
 function sat_response(e, l, r, lb, rb, near){
 
-    sat = l.intersect_sat_aabb(r, new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0));
+    sat = l.intersect_sat_aabb(r);
 
     if(sat.result){
+        if(lb != undefined){lb.null_velocity();}
+        if(rb != undefined){rb.null_velocity();}
     }
 
     return false;
