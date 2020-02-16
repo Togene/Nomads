@@ -25,6 +25,7 @@
 			<script src = "js/core/matrix.js"></script>
 			<script src = "js/core/quaternion.js"></script>
 			<script src = "js/core/transform.js"></script>
+			<script src = "js/core/planar_projection.js"></script>
 			<script src = "js/core/projection.js"></script>
 			<script src = "js/core/decomposer.js"></script>
 			<script src = "js/core/decube.js"></script>
@@ -34,6 +35,7 @@
 			<script src = "js/core/ray.js"></script>
 			<script src = "js/core/sweep.js"></script>
 			<script src = "js/core/hit.js"></script>
+			<script src = "js/core/sutherland_hodgman.js"></script>
 			<script src = "js/core/aabb.js"></script>
 			<script src = "js/core/rigidbody.js"></script>
 

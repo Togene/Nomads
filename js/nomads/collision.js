@@ -131,7 +131,7 @@ function narrow_collision_check(near, e, delta){
             var r = near[i].o.get_component("aabb");
             var rb = near[i].o.get_component("rigidbody");
             r.set_colliding(false);
-            var delt = near[i].o.transform.position.clone().sub(e.transform.position.clone());
+            var delt = near[i].o.transform.position.clone().sub(e.transform.position);
             delt.y = 0;
 
                         
@@ -142,6 +142,7 @@ function narrow_collision_check(near, e, delta){
             //} else { 
             //    collision_ray_response(l, r, lr, lb, near[i].o);
             //}
+
 
             if(sat_response(e, l, r, lb, rb, near[i].o)){};
 
@@ -156,10 +157,7 @@ function narrow_collision_check(near, e, delta){
            //    if(sat_response(e, l, r, lb, rb, near[i].o)){};
            //    //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
            //} 
-
-            
       
-           
             r.set_colliding(false);
         }
     }
@@ -170,6 +168,10 @@ function sat_response(e, l, r, lb, rb, near){
     sat = l.intersect_sat_aabb(r);
 
     if(sat.result){
+            e.transform.position.x += sat.axis.x * sat.gap;
+            e.transform.position.z += sat.axis.z * sat.gap;
+            e.transform.position.y += sat.axis.y * sat.gap;
+
         if(lb != undefined){lb.null_velocity();}
         if(rb != undefined){rb.null_velocity();}
     }
@@ -181,18 +183,21 @@ function sweep_response(e, l, r, lb, rb, near, delt){
 
     var sweep = l.intersect_sweep_aabb(r, delt);
                     
-    if(sweep.hit != null && (near.name != "player")){
+    if(sweep.hit != null){ 
+        return true;
+    } else {
+        return false;
+    }
                    
-           l.set_colliding(true);
-           r.set_colliding(true);
-           
-           if(lb != undefined) lb.null_velocity();
-           if(rb != undefined) rb.null_velocity();
-    
-           collision_sweep_response(sweep, e, r);
-
-           //return;
-    }   
+      //     l.set_colliding(true);
+      //     r.set_colliding(true);
+      //     
+      //     if(lb != undefined) lb.null_velocity();
+      //     if(rb != undefined) rb.null_velocity();
+    //
+      //     collision_sweep_response(sweep, e, r);
+//
+      //     //return;
 }
 
 function collision_ray_response(l, r, lr, lb, r_o){

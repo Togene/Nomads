@@ -300,33 +300,36 @@ aabb.prototype.get_verts = function(face){
     var vertices = [];
     
     var transform_clone = this.parent.transform.clone();
-    //transform_clone.position;
     transform_clone.scale = new THREE.Vector3(1,1,1);
     
     var m = transform_clone.get_transformation().toMatrix4();
- 
-    var vert_0 = new THREE.Vector3(-this.w, -this.h, -this.d);
+    
+    var h = this.h * 1.0;
+    var w = this.w * 1.0;
+    var d = this.d * 1.0;
+
+    var vert_0 = new THREE.Vector3(-w, -h, -d);
     vert_0.applyMatrix4(m);
     
-    var vert_1 = new THREE.Vector3(this.w, -this.h, -this.d);
+    var vert_1 = new THREE.Vector3(w, -h, -d);
     vert_1.applyMatrix4(m);
 
-    var vert_2 = new THREE.Vector3(this.w, -this.h, this.d);
+    var vert_2 = new THREE.Vector3(w, -h, d);
     vert_2.applyMatrix4(m);
 
-    var vert_3 = new THREE.Vector3(-this.w, -this.h, this.d);
+    var vert_3 = new THREE.Vector3(-w, -h, d);
     vert_3.applyMatrix4(m);
 
-    var vert_4 = new THREE.Vector3(-this.w, this.h, -this.d);
+    var vert_4 = new THREE.Vector3(-w, h, -d);
     vert_4.applyMatrix4(m);
     
-    var vert_5 = new THREE.Vector3(this.w, this.h, -this.d);
+    var vert_5 = new THREE.Vector3(w, h, -d);
     vert_5.applyMatrix4(m);
 
-    var vert_6 = new THREE.Vector3(this.w, this.h, this.d);
+    var vert_6 = new THREE.Vector3(w, h, d);
     vert_6.applyMatrix4(m);
 
-    var vert_7 = new THREE.Vector3(-this.w, this.h, this.d);
+    var vert_7 = new THREE.Vector3(-w, h, d);
     vert_7.applyMatrix4(m);
     
 
@@ -357,21 +360,74 @@ aabb.prototype.get_verts = function(face){
         vertices.push(vert_5);
         vertices.push(vert_6);
         vertices.push(vert_7);
-    }else if(face == "+x"){
-        vertices.push(vert_1);
-        vertices.push(vert_2);
+    } else if(face == "+x"){
         vertices.push(vert_6);
         vertices.push(vert_5);
-
-    }else if(face == "-x"){
-        vertices.push(vert_3);
-        vertices.push(vert_0);
-        vertices.push(vert_4);
+        vertices.push(vert_1);
+        vertices.push(vert_2);
+    } else if(face == "-x"){
         vertices.push(vert_7);
+        vertices.push(vert_4);
+        vertices.push(vert_0);
+        vertices.push(vert_3);
+    } else if(face == "+z"){
+        vertices.push(vert_2);
+        vertices.push(vert_3);
+        vertices.push(vert_7);
+        vertices.push(vert_6);
+    } else if(face == "-z"){
+        vertices.push(vert_0);
+        vertices.push(vert_1);
+        vertices.push(vert_5);
+        vertices.push(vert_4);
+    } else if(face == "all"){
+        vertices.push(vert_0);
+        vertices.push(vert_1);
+        vertices.push(vert_2);
+        vertices.push(vert_3);
 
+        vertices.push(vert_7);
+        vertices.push(vert_4);
+        vertices.push(vert_5);
+        vertices.push(vert_6);
     }
 
     return vertices;
+}
+
+aabb.prototype.edges = function(v){
+         /*
+        v7 ------ v6
+        |          |
+        |          |
+        |          |
+        v4 ------ v5
+
+
+        v3 ------ v2
+        |          |
+        |          |
+        |          |
+        v0 ------ v1
+    */
+
+    return [
+        v[0], v[1],
+        v[1], v[2],
+        v[2], v[3],
+        v[3], v[0],
+
+        v[4], v[5],
+        v[5], v[6],
+        v[6], v[7],
+        v[7], v[4],
+
+        v[3], v[7],
+        v[2], v[6],
+        v[1], v[5],
+        v[0], v[4],
+
+    ]
 }
 
 aabb.prototype.refrence_transform = function(v, m){
@@ -418,14 +474,34 @@ aabb.prototype.get_axes = function(v){
         var edge = p1.clone().sub(p2);
         var normal = edge.perp().normalize();
 
-        axes[i] = {n: normal, v0:p1.clone(), v1:p2.clone()};
+        axes[i] = {n:normal, v0:p1, v1:p2};
     }
     return axes;
 }
 
+aabb.prototype.get_edge_axes = function(e0, e1) {
+
+    var edge_axes = [];
+
+    for(var i = 0; i < e0.length; i+=2){
+        for(var j = 0; j < e1.length; j+=2){
+            var edge_0 = e0[ (i + 1) % e0.length].clone().sub(e0[i]);
+            var edge_1 = e1[(j + 1) % e1.length].clone().sub(e1[j]);
+
+            var axis = new THREE.Vector3().crossVectors(edge_0, edge_1).normalize();
+            //console.log(axis);
+           if(axis.length() != 0){
+                edge_axes.push(axis);
+           }
+        }
+    }
+
+    return edge_axes;
+}
+
 aabb.prototype.project = function(n, v){
 
-    var min = n.clone().dot(v[0]);
+    var min = n.dot(v[0]);
     var max = min;
 
     for(var i = 1; i < v.length; i++){
@@ -441,29 +517,59 @@ aabb.prototype.project = function(n, v){
     return new projection(min, max);
 }
 
+aabb.prototype.get_face_centre = function(v){
+    return v[0].clone().sub(v[2]).multiplyScalar(0.5);
+}
 //credit to Randy Gaul manifold generation :
 //https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
+
+//for SAT intersecting 
+//!
 aabb.prototype.intersect_sat_aabb = function(right){
-    var y_neg = this.intersect_sat_aabb_face(right, "-y");
-    var y_pos = this.intersect_sat_aabb_face(right, "+y");
-
-    var x_neg = this.intersect_sat_aabb_face(right, "-x");
-    var x_pos = this.intersect_sat_aabb_face(right, "+x");
-    //z_neg.result || z_pos.result || 
-    return {result:y_neg.result || y_pos.result}
-}
-
-aabb.prototype.intersect_sat_aabb_face = function(right, face){
     
     var overlap = Infinity;
     var axis = new THREE.Vector3(0,0,0);
 
-    //need to get all 6 faces
-    var v = this.get_verts(face);
-    var a = this.get_axes(v);
+    var v = this.get_verts("all"); // verts
+    var a = this.get_axes(v); // normal axes (faces)
+    var e = this.edges(v); // get edges
+
+    var rv =  right.get_verts("all"); // right verts
+    var ra = right.get_axes(rv); // right normal axes (faces)
+    var re = right.edges(rv);
     
-    var rv =  right.get_verts(face);
-    var ra = right.get_axes(rv);
+    var edge_axes = this.get_edge_axes(e, re);
+  
+
+    var p0 = this.parent.transform.position.clone();
+    var p1 = right.parent.transform.position.clone();
+
+    var direction = p0.sub(p1).normalize();
+    var to_direction = direction.clone().negate();
+
+    var isEdge = false;
+
+    for(var i = 0; i < edge_axes.length; i++){
+        var proj_1 = this.project(edge_axes[i], v);
+        var proj_2 = right.project(edge_axes[i], rv);
+
+        if(!proj_1.overlap(proj_2)) {
+            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
+        } else {
+
+            var o = proj_1.get_overlap(proj_2);
+
+            var dot_to_current = edge_axes[i].dot(to_direction);
+            var dot_to_before = axis.dot(to_direction);
+
+            if(o < overlap && dot_to_current < dot_to_before){
+                //set to axis
+                overlap = o;
+                axis = edge_axes[i];
+                isEdge = true;
+            }
+        }
+    }
 
     //TODO: grab cross axis's from both axis's
     for(var i = 0; i < a.length; i++){
@@ -475,15 +581,19 @@ aabb.prototype.intersect_sat_aabb_face = function(right, face){
         } else {
 
             var o = proj_1.get_overlap(proj_2);
-   
-            if(o < overlap){
+
+            var dot_to_current = edge_axes[i].dot(to_direction);
+            var dot_to_before = axis.dot(to_direction);
+
+            if(o < overlap && dot_to_current < dot_to_before){
                 //set to axis
                 overlap = o;
                 axis = a[i].n;
+                isEdge = false;
             }
         }
     }
-
+  
     for(var i = 0; i < ra.length; i++){
         var proj_1 = this.project(ra[i].n, v);
         var proj_2 = right.project(ra[i].n, rv);
@@ -493,206 +603,52 @@ aabb.prototype.intersect_sat_aabb_face = function(right, face){
         } else {
 
             var o = proj_1.get_overlap(proj_2);
+            
+            var dot_to_current = edge_axes[i].dot(to_direction);
+            var dot_to_before = axis.dot(to_direction);
 
-            if(o < overlap){
+            if(o < overlap && dot_to_current < dot_to_before){
                 //set to axis
                 overlap = o;
                 axis = ra[i].n;
+                isEdge = false;
             }
         }
     }
-    var p0 = this.parent.transform.position.clone();
-    var p1 = right.parent.transform.position.clone();
 
-    var direction = p0.sub(p1).normalize();
+ 
 
     var this_axis = axis.clone();
 
     if(this_axis.dot(direction) < 0.0){
-        this_axis.negate();
-    }
-
-    //this best, edge
-    //right best edge
-    var edge0 = this.get_edge({result: true, axis: this_axis.negate(), gap: overlap}, v);
-    var edge1 = right.get_edge({result: true, axis: this_axis.negate(), gap: overlap}, rv);
-
-    //edge0.debug(0xff0000);
-    //edge1.debug(0x00ff00);
-
-    var right_points = right.sutherland_hodgman(edge0, edge1, this_axis.negate());
-    var this_points = this.sutherland_hodgman(edge1, edge0, this_axis.negate());
-
-    if(face == "-y"){
-        right.debug_points[0].position.copy(right_points[0]);
-        right.debug_points[1].position.copy(right_points[1]);
-    
-        this.debug_points[0].position.copy(this_points[0]);
-        this.debug_points[1].position.copy(this_points[1]);
-    } else if(face == "+y"){
-        right.debug_points[2].position.copy(right_points[0]);
-        right.debug_points[3].position.copy(right_points[1]);
-    
-        this.debug_points[2].position.copy(this_points[0]);
-        this.debug_points[3].position.copy(this_points[1]);
-    } else if(face == "-x"){
-        right.debug_points[4].position.copy(right_points[0]);
-        right.debug_points[5].position.copy(right_points[1]);
-    
-        this.debug_points[4].position.copy(this_points[0]);
-        this.debug_points[5].position.copy(this_points[1]);
-    } else if(face == "+x"){
-        right.debug_points[6].position.copy(right_points[0]);
-        right.debug_points[7].position.copy(right_points[1]);
-    
-        this.debug_points[6].position.copy(this_points[0]);
-        this.debug_points[7].position.copy(this_points[1]);
+       // this_axis.negate();
     }
 
 
-    return {result: true, axis: axis, gap: overlap};
+    if(Math.abs(this_axis.y) != 0 && (Math.abs(this_axis.x) < 0.8 || Math.abs(this_axis.z) < 0.8)){
+       // var y_sign = Math.sign(this_axis.y)
+       // this_axis.y = 1 * y_sign;
+        //this_axis.x = 0;
+       // this_axis.z = 0;
+        console.log("hit corner?");
+    }
+
+    //var edge0 = get_edge({result: true, axis: this_axis.negate(), gap: overlap}, v);
+    //var edge1 = get_edge({result: true, axis: this_axis.negate(), gap: overlap}, rv);
+//
+    //var right_points = sutherland_hodgman_2D(edge0, edge1, this_axis);
+    //var this_points = sutherland_hodgman_2D(edge1, edge0, this_axis);
+    //
+//
+    //if(right_points != undefined){
+    //        if(this_points != undefined){
+    //        }
+    //}
+    console.log(this_axis);
+
+    return {result: true, axis: this_axis, gap: overlap};
 }
 
-aabb.prototype.get_edge = function(r, vertices){
-    //step 1 find farthest vertex
-    //within the polygon along seperation normal;
-    var n = r.axis;
-    var max = -Infinity;
-    var index = 0;
-
-    for(var i = 0; i < vertices.length; i++){
-        var projection = n.dot(vertices[i]);
-        
-        if(projection > max){
-            max = projection;
-            index = i;
-        }
-    }
-  
-    //step 2
-    // new we need to use the edge that 
-    // is most perp either
-    // right or the left
-    //! might be a problem
-    //! getting prevois or next vertex 
-    var v = vertices[index];
-    var v1 = vertices[(index + 1) % vertices.length];
-    var v0 = vertices[(index - 1 < 0) ? vertices.length-1 : index-1];
-    //! might be a problem
-
-    //v1 to v
-    var l = v.clone().sub(v1).normalize();
-
-    //v0 to v
-    var r = v.clone().sub(v0).normalize();
-
-    //the edge that is most perp
-    // to n will have a dot product closer to zero
-    if(r.dot(n) <= l.dot(n)){
-        return new edge(v, v0, v);
-    } else {
-        return new edge(v, v, v1);
-    }
-}
-
-
-aabb.prototype.sutherland_hodgman = function(e0, e1, n){
-    var ref, inc;
-    var flip = false;
-
-    if(Math.abs(e0.dot(n)) <= Math.abs(e1.dot(n))){
-        ref = e0.clone();
-        inc = e1.clone();
-    } else {
-        ref = e1.clone();
-        inc = e0.clone();
-
-        flip = true;
-    }
-
-    //the edge vector
-    var refv = ref.get_vector().normalize();
-    var o1 = refv.dot(ref.v0);
-
-    var cp = this.clip(inc.v0, inc.v1, refv, o1);
-
-    //if we dont have 2 points, return
-    if(cp.length < 2) return;
-
-    //clip whats left of the incident edge by
-    //the second vertex of the refrence edge
-    //but we need to clip the oppsite direction
-    //so we flip the direction and offset
-    var o2 = refv.dot(ref.v1);
-
-    var cp2 = this.clip(cp[0], cp[1], refv.clone().negate(), o2 * -1);
-    //if we dont have 2 points left then fail
-    if(cp2.length < 2) return;
-    
-    //get the face edge normal
-    //! might be a problem
-    var ref_norm = ref.cross(n);
-    //if we had a flip the incident and refrences edges
-    //then we need to flip the refrence edge normal to
-    //clip properly
-
-    if(flip) ref_norm.negate();
-
-    //get the largest depth
-    var max = ref_norm.dot(ref.max);
-    //make sure the final points are not past the maximum
-
-    
-    if((ref_norm.dot(cp2[1]) - max < 0.0)){
-        //cp2.splice( cp2.indexOf(cp2[1]), 0 );
-    }
-
-    if(ref_norm.dot(cp2[0]) - max < 0.0){
-        //cp2.splice( cp2.indexOf(cp2[0]), 0 );
-    } 
-
-    return cp2;
-}
-
-//clips the line sergment points v1, v2
-//if they are past o along n
-aabb.prototype.clip = function(v0, v1, n, o){
-    var cp = [];
-  
-    var d1 = n.dot(v0) - o;
-    var d2 = n.dot(v1) - o;
-
-    //if either point is past o along n
-    //then we can keep the point
-    if(d1 >= 0.0) cp.push(v0);
-    if(d2 >= 0.0) cp.push(v1);
-
-    //finally we need to check if they
-    //are on opposing sides so that we can
-    //compute the correct point
-
-    if(d1 * d2 < 0.0){
-        //if they are on diffrent sides of the
-        //offset, d1 and d2 will be a (+) * (-)
-        //and will yield a (-) and there be less then zero
-        //get the vector for the edge we are clipping
-
-        var e = v1.clone().sub(v0).clone();
-        //compute the location along e
-        var u = d1 / (d1 - d2);
-
-        e.x *= u;
-        e.y *= u;
-        e.z *= u;
-
-        e.add(v0);
-
-        //add the point
-        cp.push(e);
-    }
-
-    return cp;
-}
 
 aabb.prototype.intersect_legacy = function(right){
     var lx = false;

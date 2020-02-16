@@ -110,7 +110,6 @@ function get_step_z(){
 function movement(delta){
     //var step = step_size;
     var step = speed;
-    delta /= 2;
 
     if(controls !== undefined && player != null){
         if ( controls.isLocked === true ) {

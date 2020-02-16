@@ -46,11 +46,8 @@ edge.prototype.debug = function(hex){
 }
 
 edge.prototype.cross = function(n){
-    var edge = this.v1.clone().sub(this.v0);
-    var edge_normal = new THREE.Vector3().crossVectors(edge, n.clone()).normalize();
-    console.log(edge_normal);
-
-    return edge_normal;
+    var vec = this.v1.clone().sub(this.v0).cross(n);
+    return vec;
 }
 
 edge.prototype.name = "edge";
