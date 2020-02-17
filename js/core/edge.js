@@ -11,7 +11,7 @@ edge.prototype.get_vector = function(){
 
 //this is correct
 edge.prototype.dot = function(n){
-    var vec = this.v1.clone().sub(this.v0);
+    var vec = this.v1.clone().sub(this.v0).normalize();
 
     return vec.dot(n);
 }
@@ -23,12 +23,6 @@ edge.prototype.normalize = function(){
 
 edge.prototype.clone = function(){
     return new edge(this.max.clone(), this.v0.clone(), this.v1.clone());
-}
-
-edge.prototype.negate = function(){
-    var new_edge = new edge(this.max.clone(), this.v0.clone().negate(), this.v1.clone());
-    //console.log("me", this.get_vector().normalize(), "new", new_edge.get_vector().normalize());
-    return new_edge;
 }
 
 edge.prototype.debug = function(hex){
@@ -45,8 +39,9 @@ edge.prototype.debug = function(hex){
     scene.add( cube );
 }
 
-edge.prototype.cross = function(n){
-    var vec = this.v1.clone().sub(this.v0).cross(n);
+edge.prototype.get_edge_normal = function(){
+    var vec = this.v1.clone().cross(this.v0).normalize();
+    console.log(vec);
     return vec;
 }
 

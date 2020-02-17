@@ -168,9 +168,9 @@ function sat_response(e, l, r, lb, rb, near){
     sat = l.intersect_sat_aabb(r);
 
     if(sat.result){
-            e.transform.position.x += sat.axis.x * sat.gap;
-            e.transform.position.z += sat.axis.z * sat.gap;
-            e.transform.position.y += sat.axis.y * sat.gap;
+            //e.transform.position.x += sat.axis.x * sat.gap;
+            //e.transform.position.z += sat.axis.z * sat.gap;
+            //e.transform.position.y += sat.axis.y * sat.gap;
 
         if(lb != undefined){lb.null_velocity();}
         if(rb != undefined){rb.null_velocity();}

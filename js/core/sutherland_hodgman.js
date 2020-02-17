@@ -1,4 +1,29 @@
-function sutherland_hodgman_2D(e0, e1, n){
+
+//axis = of least penetration, provided by SAT collision
+//A - vertices's of A's face
+//B - vertices of face
+function handle_face(axis, A, B){
+
+    //edges from this //.clone().negate()
+    var A_edge = get_edge(axis, A);
+    var B_edge = get_edge(axis, B);
+    
+    var A_points = sutherland_hodgman(A_edge, B_edge, axis);
+    var B_points = sutherland_hodgman(B_edge, A_edge, axis);
+
+    points = B_points.concat(A_points);
+
+    return points;
+}
+
+//axis = of least penetration, provided by SAT collision
+//A - vertices's of A's face
+//B - vertices of face
+function handle_edge(axis, A, B){
+
+}
+
+function sutherland_hodgman(e0, e1, n){
     var ref, inc;
     var flip = false;
 
@@ -13,10 +38,11 @@ function sutherland_hodgman_2D(e0, e1, n){
     }
 
     //the edge vector
-    var refv = ref.get_vector().normalize();
+    var refv = ref.get_vector().clone().normalize();
+    
     var o1 = refv.dot(ref.v0);
 
-    var cp = clip_2D(inc.v0, inc.v1, refv, o1);
+    var cp = clip(inc.v0, inc.v1, refv, o1);
 
     //if we dont have 2 points, return
     if(cp.length < 2) return;
@@ -27,13 +53,13 @@ function sutherland_hodgman_2D(e0, e1, n){
     //so we flip the direction and offset
     var o2 = refv.dot(ref.v1);
 
-    var cp2 = clip_2D(cp[0], cp[1], refv.clone().negate(), -o2);
+    var cp2 = clip(cp[0], cp[1], refv.clone().negate(), -o2);
     //if we dont have 2 points left then fail
     if(cp2.length < 2) return;
     
-    //get the face edge normal
+    // get the reference edge normal
     //! might be a problem
-    var ref_norm = ref.cross(n);
+    var ref_norm = ref.get_edge_normal(); //
     //if we had a flip the incident and refrences edges
     //then we need to flip the refrence edge normal to
     //clip properly
@@ -43,23 +69,21 @@ function sutherland_hodgman_2D(e0, e1, n){
     //get the largest depth
     var max = ref_norm.dot(ref.max);
     //make sure the final points are not past the maximum
+    
+    if(ref_norm.dot(cp2[0]) - max < 0.0){
+        cp2[0] = null;
+    } 
 
-    //cp2 = cp2.concat(cp);
-  
     if((ref_norm.dot(cp2[1]) - max < 0.0)){
-       // cp2.splice( cp2.indexOf(cp2[1]), 1 );
+        cp2[1] = null; 
     }
 
-    if(ref_norm.dot(cp2[0]) - max < 0.0){
-       // cp2.splice( cp2.indexOf(cp2[0]), 1 );
-    } 
-   
     return cp2;
 }
 
 //clips the line sergment points v1, v2
 //if they are past o along n
-function clip_2D (v0, v1, n, o){
+function clip (v0, v1, n, o){
     var cp = [];
   
     var d1 = n.dot(v0) - o;
@@ -80,13 +104,11 @@ function clip_2D (v0, v1, n, o){
         //and will yield a (-) and there be less then zero
         //get the vector for the edge we are clipping
 
-        var e = v1.clone().sub(v0).clone();
+        var e = v1.clone().sub(v0);
         //compute the location along e
         var u = d1 / (d1 - d2);
 
-        e.x *= u;
-        e.y *= u;
-        e.z *= u;
+        e.multiplyScalar(u);
 
         e.add(v0);
 
@@ -98,12 +120,11 @@ function clip_2D (v0, v1, n, o){
 }
 
 
-function get_edge(r, vertices){
+function get_edge(n, vertices){
     //step 1 find farthest vertex
     //within the polygon along seperation normal;
-    var n = r.axis;
     var max = -Infinity;
-    var index = 0;
+    var index = null;
 
     for(var i = 0; i < vertices.length; i++){
         var projection = n.dot(vertices[i]);
