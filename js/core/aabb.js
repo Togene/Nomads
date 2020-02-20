@@ -7,7 +7,7 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
     this.debug_points = [];
 
     //6 faces
-    for(var i = 0; i < 24; i++){
+    for(var i = 0; i < 36; i++){
         //------------------------ CONTACT POINTS DEBUG ----------------//
         var geometry = new THREE.BoxGeometry( .05, .05, .05 );
         var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
@@ -287,9 +287,8 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
     return sw;
 }
 
-//credit : http://www.dyn4j.org/2010/01/sat/
-//helping with SAT collision detection
-aabb.prototype.get_verts = function(face){
+//grabs the aabb's transformed verts
+aabb.prototype.get_verts = function(){
     var vertices = [];
     
     var transform_clone = this.parent.transform.clone();
@@ -324,7 +323,42 @@ aabb.prototype.get_verts = function(face){
 
     var vert_7 = new THREE.Vector3(-w, h, d);
     vert_7.applyMatrix4(m);
-    
+
+    //at this point the velocity should already be added
+    //so we need to substract and
+    vertices.push(vert_0);
+    vertices.push(vert_1);
+    vertices.push(vert_2);
+    vertices.push(vert_3);
+
+    vertices.push(vert_4);
+    vertices.push(vert_5);
+    vertices.push(vert_6);
+    vertices.push(vert_7);
+
+    return vertices;
+}
+
+aabb.prototype.face_helper = function(f){
+    for(var i = 0; i < f.length; i++){
+        var n = f[i].n;
+        if(Math.abs(n.y) < 0.0001){n.y = 0;}
+    }
+
+    return f;
+}
+
+aabb.prototype.get_face = function(f, n){
+    for(var i = 0; i < f.length; i++){
+        if(f[i].n.equals(n)){return f[i];}
+    }
+
+    return null;
+}
+
+//used to create construnct and return the faces
+aabb.prototype.get_faces = function(v){
+        
 
       /*
         v7 ------ v6
@@ -341,60 +375,24 @@ aabb.prototype.get_verts = function(face){
         v0 ------ v1
     */
 
-    //at this point the velocity should already be added
-    //so we need to substract and
+    return this.face_helper([
+        //-y +y faces
+        {v : [v[0], v[1], v[2], v[3]], n : v[3].clone().sub(v[1]).normalize().cross(v[0].clone().sub(v[1]).normalize()).normalize()},
+        {v : [v[4], v[5], v[6], v[7]], n : v[6].clone().sub(v[4]).normalize().cross(v[5].clone().sub(v[4]).normalize()).normalize()},
 
-    if(face == "-y"){
-        vertices.push(vert_0);
-        vertices.push(vert_1);
-        vertices.push(vert_2);
-        vertices.push(vert_3);
-    } else if(face == "+y"){
-        vertices.push(vert_4);
-        vertices.push(vert_5);
-        vertices.push(vert_6);
-        vertices.push(vert_7);
-    }else if(face == "+z"){
-        vertices.push(vert_0);
-        vertices.push(vert_1);
-        vertices.push(vert_5);
-        vertices.push(vert_4);
-    }else if(face == "-z"){
-        vertices.push(vert_2);
-        vertices.push(vert_3);
-        vertices.push(vert_7);
-        vertices.push(vert_6);
-    }else if(face == "+x"){
-        vertices.push(vert_3);
-        vertices.push(vert_0);
-        vertices.push(vert_4);
-        vertices.push(vert_7);
-    }else if(face == "-x"){
-        vertices.push(vert_1);
-        vertices.push(vert_2);
-        vertices.push(vert_6);
-        vertices.push(vert_5);
-    } else {
-        vertices.push(vert_0);
-        vertices.push(vert_1);
-        vertices.push(vert_2);
-        vertices.push(vert_3);
-        
-        vertices.push(vert_7);
-    
-        vertices.push(vert_4);
-        vertices.push(vert_5);
-        vertices.push(vert_6);
-        vertices.push(vert_7);
-    
-        vertices.push(vert_4);
-    
-    }
+        //-x +x faces
+        {v : [v[1], v[2], v[6], v[5]], n : v[6].clone().sub(v[1]).normalize().cross(v[2].clone().sub(v[1]).normalize()).normalize()},
+        {v : [v[0], v[4], v[7], v[3]], n : v[4].clone().sub(v[3]).normalize().cross(v[0].clone().sub(v[3]).normalize()).normalize()},
 
-
-    return vertices;
+         //-z +z faces
+        {v : [v[1], v[0], v[4], v[5]], n : v[5].clone().sub(v[0]).normalize().cross(v[1].clone().sub(v[0]).normalize()).normalize()},
+        {v : [v[3], v[2], v[6], v[7]], n : v[2].clone().sub(v[3]).normalize().cross(v[6].clone().sub(v[3]).normalize()).normalize()},
+    ])
 }
 
+
+
+//gets the edges of the aabb
 aabb.prototype.edges = function(v){
          /*
         v7 ------ v6
@@ -466,16 +464,17 @@ aabb.prototype.get_norms = function(v){
 
 aabb.prototype.get_axes = function(v){
 
-    axes = [v.length];
+    var axes = [3];
 
-    for(var i = 0; i < v.length; i++){
-        var p1 = v[i];
-        var p2 = v[ i + 1 == v.length ? 0 : i + 1];
-        var edge = p1.clone().sub(p2);
-        var normal = edge.perp().normalize();
+    //x axis
+    axes[0] = v[0].clone().sub(v[1]).perp().normalize();
 
-        axes[i] = {n:normal, v0:p1, v1:p2};
-    }
+    //y axis
+    axes[1] = v[0].clone().sub(v[4]).perp().normalize();
+
+    //z axis
+    axes[2] = v[0].clone().sub(v[3]).perp().normalize();
+
     return axes;
 }
 
@@ -517,84 +516,60 @@ aabb.prototype.project = function(n, v){
     return new projection(min, max);
 }
 
+aabb.prototype.get_closest_vert = function(v, p){
+
+    var min = Infinity;
+    var vert = null;
+
+    for(var i = 0; i < v.length; i++){
+        var distance = p.distanceToSquared(v[i]);
+
+        if(distance < min){
+            min = distance;
+            vert = v[i]
+        }
+    }
+
+    return vert;
+}
+
 aabb.prototype.get_face_centre = function(v){
     return v[0].clone().sub(v[2]).multiplyScalar(0.5);
 }
 //credit to Randy Gaul manifold generation :
 //https://www.randygaul.net/2013/03/28/custom-physics-engine-part-2-manifold-generation/
 
+//credit : http://www.dyn4j.org/2010/01/sat/
+//helping with SAT collision detection
+
 //for SAT intersecting 
 //!
-aabb.prototype.intersect_sat_aabb = function(right){
+aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
     
     var overlap = Infinity;
-    var axis = new THREE.Vector3(0,0,0);
+    var axis = new THREE.Vector3();
 
-    var v = this.get_verts("axis"); // verts
-    var v_all = this.get_verts("all");
+    var v = this.get_verts(); // grabs this axis's
     var a = this.get_axes(v); // normal axes (faces)
     var e = this.edges(v); // get edges
 
-    var rv =  right.get_verts("axis"); // right verts
-    var rv_all = right.get_verts("all");
+    var rv =  right.get_verts(); // right verts
     var ra = right.get_axes(rv); // right normal axes (faces)
     var re = right.edges(rv);
     
     var edge_axes = this.get_edge_axes(e, re);
-  
 
     var p0 = this.parent.transform.position.clone();
     var p1 = right.parent.transform.position.clone();
 
-    var direction = p0.sub(p1).normalize();
-    var to_direction = direction.clone().negate();
+    var direction = p0.clone().sub(p1).normalize();
 
-    var isEdge = false;
-
-
-    //TODO: grab cross axis's from both axis's
-    for(var i = 0; i < a.length; i++){
-        var proj_1 = this.project(a[i].n, v_all);
-        var proj_2 = right.project(a[i].n, rv_all);
-
-        if(!proj_1.overlap(proj_2)){
-            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
-        } else {
-
-            var o = proj_1.get_overlap(proj_2);
-
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = a[i].n;
-                isEdge = false;
-            }
-        }
-    }
-  
-    for(var i = 0; i < ra.length; i++){
-        var proj_1 = this.project(ra[i].n, v_all);
-        var proj_2 = right.project(ra[i].n, rv_all);
-
-        if(!proj_1.overlap(proj_2)) {
-            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
-        } else {
-
-            var o = proj_1.get_overlap(proj_2);
-
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = ra[i].n;
-                isEdge = false;
-            }
-        }
-    }
-
+    var this_faces = this.get_faces(v);
+    var right_faces = right.get_faces(rv);
     
-    for(var i = 0; i < edge_axes.length; i++){
-        var proj_1 = this.project(edge_axes[i], v_all);
-        var proj_2 = right.project(edge_axes[i], rv_all);
+    for(var i = 0; i < a.length; i++){
+        var proj_1 = this.project(a[i], v);
+        var proj_2 = right.project(a[i], rv);
 
         if(!proj_1.overlap(proj_2)) {
             return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
@@ -605,51 +580,64 @@ aabb.prototype.intersect_sat_aabb = function(right){
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                axis = edge_axes[i];
-                isEdge = true;
+                axis = a[i];
             }
         }
     }
+
+    for(var i = 0; i < ra.length; i++){
+        var proj_1 = this.project(ra[i], v);
+        var proj_2 = right.project(ra[i], rv);
+
+        if(!proj_1.overlap(proj_2)) {
+            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
+        } else {
+
+            var o = proj_1.get_overlap(proj_2);
+
+            if(o < overlap){
+                //set to axis
+                overlap = o;
+                axis = ra[i];
+            }
+        }
+    }
+
+    //for(var i = 0; i < edge_axes.length; i++){
+    //    var proj_1 = this.project(edge_axes[i], v);
+    //    var proj_2 = right.project(edge_axes[i], rv);
+//
+    //    if(!proj_1.overlap(proj_2)) {
+    //        return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
+    //    } else {
+//
+    //        var o = proj_1.get_overlap(proj_2);
+//
+    //        if(o < overlap){
+    //            //set to axis
+    //            overlap = o;
+    //            axis = edge_axes[i];
+    //            isEdge = true;
+    //        }
+    //    }
+    //}
 
     var this_axis = axis.clone();
    
     if(this_axis.dot(direction) < 0.0){
         this_axis.negate();
     }
-    //"+y", "-y", //"+x", "-x", 
 
-    var get_face = this.get_face(axis);
+    var thisEdge = false;
+    var rightEdge = false;
 
-    var faces = ["+z", "-z"];
-    
-    var normal = [
-        new THREE.Vector3(0, 1, 0), 
-        new THREE.Vector3(0, -1, 0), 
-        new THREE.Vector3(1, 0, 0), 
-        new THREE.Vector3(-1, 0, 0), 
-        new THREE.Vector3(0, 0, 1), 
-        new THREE.Vector3(0, 0, -1), 
-    ];
+    var right_face = this.get_face(right_faces, this_axis);
+    var this_face = this.get_face(this_faces, this_axis);
 
-    if(!isEdge) {
-        var points = [];
-    
-        for(var i = 0; i < faces.length; i++){
-            points = points.concat(handle_face(this_axis, this.get_verts(faces[i]), right.get_verts(faces[i])));
-        }
-        
-        if(points != undefined && points.length != 0){
-            for(var i = 0; i < points.length; i++){
-                if(points[i] != null) {
-                    this.debug_points[i].position.copy(points[i]);
-                } else {
-                    this.debug_points[i].position.copy(new THREE.Vector3(0,0,0));
-                }
-            }
-        }
+    console.log(this_axis);
 
-    } else {
-
+    for(var i = 0; i < this_face.v.length; i++){
+        this.debug_points[i].position.copy(this_face.v[i])
     }
 
     return {result: true, axis: this_axis, gap: overlap};

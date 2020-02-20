@@ -1,4 +1,4 @@
-var box = null;
+var boxes = [];
 
 function box_create(p, q){
     var shader = get_data("instance_shader");
@@ -8,7 +8,7 @@ function box_create(p, q){
     var buffer = create_buffer();
     var attributes = [];
 
-    box = new gameobject("box");
+    var box = new gameobject("box");
      
     box.transform.scale = new THREE.Vector3(1,1,1);
     box.transform.position = new THREE.Vector3(0, 0, 0);
@@ -42,12 +42,13 @@ function box_create(p, q){
     box.add_component(new aabb(box.transform, 0.5, 0.5, 0.5, true, 0xFFFFFF, true));
     
     CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 5, false, false);
+    boxes.push(box);
     return box;
 } 
 
 function create_box_face(y_rot, axis, offset, parent, buffer, attributes){
     
-    var face = new gameobject("root");
+    var face = new gameobject("face");
 
     parent.add_child(face);
 
@@ -79,5 +80,8 @@ function create_box_face(y_rot, axis, offset, parent, buffer, attributes){
 }
 
 function box_update(delta){
-
+    if(boxes != undefined){
+        for(var i = 0; i < boxes.length; i++){
+        }
+    }
 }

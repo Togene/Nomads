@@ -103,6 +103,7 @@ function update(delta){
     fauna_update(delta);
     flora_update(delta);
     humanoid_update(delta);
+    box_update(delta);
 }
 
 

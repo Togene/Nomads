@@ -49,10 +49,7 @@ rigidbody.prototype.update = function(delta){
         //that way it can check collision in advance
         //this.update_aabb_position(delta);
         //col.set_projection(new THREE.Vector3(1.1, 1.1, 1.1));
-
-        this.forward(-(this.velocity.z * delta));
-        this.right(-(this.velocity.x * delta));
-        this.parent.transform.position.y += (this.velocity.y * delta); 
+        this.step(delta)
 
         this.new_parent_position = this.parent.transform.position.clone();
         //------------------ Capture New Position ------------------ 
@@ -90,12 +87,54 @@ rigidbody.prototype.cap = function(delta){
     //    console.log(this.velocity);
 }
 
+rigidbody.prototype.step = function(delta){
+    this.forward(-(this.velocity.z * delta));
+    this.right(-(this.velocity.x * delta));
+    this.parent.transform.position.y += (this.velocity.y * delta); 
+}
+
+//grab a vector with velocity's added
+rigidbody.prototype.get_step = function(delta){
+    var vec = new THREE.Vector3();
+
+    this.add_forward(vec, -(this.velocity.z * delta));
+    this.add_right(vec, -(this.velocity.x * delta));
+    vec.y += (this.velocity.y * delta); 
+
+    //console.log(vec);
+    
+    return vec;
+}
+
+//grab a vector with velocity's added
+rigidbody.prototype.reverse_step = function(vec, delta){
+    this.add_forward(vec, (this.velocity.z * delta));
+    this.add_right(vec, (this.velocity.x * delta));
+    vec.y -= (this.velocity.y * delta); 
+}
+
+rigidbody.prototype.add_forward = function(v, distance){
+    var vec = new THREE.Vector3();
+    vec.setFromMatrixColumn( camera.matrix, 0 );
+    vec.crossVectors( camera.up, vec );
+
+    v.addScaledVector(vec, distance);
+}
+
+rigidbody.prototype.add_right = function(v, distance){
+    var vec = new THREE.Vector3();
+    vec.setFromMatrixColumn( camera.matrix, 0 );
+    v.addScaledVector(vec, distance);
+}
+
+
 rigidbody.prototype.forward = function(distance){
     var vec = new THREE.Vector3();
     vec.setFromMatrixColumn( camera.matrix, 0 );
     vec.crossVectors( camera.up, vec );
     this.parent.transform.position.addScaledVector(vec, distance);
 }
+
 
 rigidbody.prototype.right = function(distance){
     var vec = new THREE.Vector3();
