@@ -624,7 +624,7 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
     //var this_axis = axis.clone();
    
     if(axis.dot(direction) < 0.0){
-        axis.negate();
+       axis.negate();
     }
 
     var thisEdge = false;
@@ -644,7 +644,7 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
            // right.debug_points[i].position.copy(right_face.v[i])
         }
 
-        right_best_edge = this.best_edge(right.get_faces(rv), axis);
+        //right_best_edge = this.best_edge(right.get_faces(rv), axis);
     }
 
     if(!thisEdge){
@@ -652,17 +652,33 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
             //
         }
 
-        this_best_edge = this.best_edge(this.get_faces(v), axis.clone().negate());
+        //this_best_edge = this.best_edge(this.get_faces(v), axis.clone().negate());
     }
 
     if(!thisEdge && !rightEdge){
-        var points = hodgman_sutherland(this_best_edge, right_best_edge, axis);
+        
+        var this_faces = this.get_faces(v);
+        var right_faces = right.get_faces(rv);
 
-        if(points != null){
-            for(var i = 0; i < points.length; i++){
-                if(points[i] != null) this.debug_points[i].position.copy(points[i]);
+        var this_best_edges = [];
+        var right_best_edges = [];
+
+        for(var i = 0; i < this_faces.length; i++){
+            var e0 = this.best_edge_per_face(this_faces[i], axis);
+            var e1 = right.best_edge_per_face(right_faces[i], axis);
+
+            var points = hodgman_sutherland(e0, e1, axis);
+            //var points2 = hodgman_sutherland(e1, e0, axis);
+
+            //if(points2 != null) points = points.concat(points2);
+
+            if(points != null){
+                for(var j = 0; j < points.length; j++){
+                    if(points[j] != null) this.debug_points[j + i].position.copy(points[j]);
+                }
             }
         }
+
     }
 
     return {result: true, axis: axis, gap: overlap};
@@ -703,6 +719,40 @@ aabb.prototype.best_edge = function(o, n){
         return new edge(v, v0, v, o[face_index]);
     } else {
         return new edge(v, v, v1, o[face_index]);
+    }
+}
+
+aabb.prototype.best_edge_per_face = function(face, n){
+
+    var max = -Infinity;
+    var vert_index = null;
+
+    //find best edge from faces and verts
+    for(var i = 0; i < face.v.length; i++){
+            var projection = n.dot(face.v[i]);
+
+            if(projection > max){
+                max = projection;
+                vert_index = i;
+            }
+    }
+
+    var v_length = face.v.length;
+    var v_i_next = (vert_index + 1) % v_length;
+    var v_1_prev = (vert_index - 1 < 0) ? v_length - 1 : vert_index - 1;
+
+    var v = face.v[vert_index];
+
+    var v1 = face.v[v_i_next];
+    var v0 = face.v[v_1_prev];
+
+    var l = v.clone().sub(v1).normalize();
+    var r = v.clone().sub(v0).normalize();
+
+    if(r.dot(n) <= l.dot(n)){
+        return new edge(v, v0, v, face);
+    } else {
+        return new edge(v, v, v1, face);
     }
 }
 
