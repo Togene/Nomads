@@ -1,16 +1,17 @@
-function hodgman_sutherland(e1, e2, n){
-    var ref, inc;
-    var flip = false;
+function hodgman_sutherland(e1, e2, n, flip){
+    var ref = e1; 
+    var inc = e2;
+    var flip = flip;
 
-    if(Math.abs(e1.dot(n)) <= Math.abs(e2.dot(n))){
-        ref = e1;
-        inc = e2;
-    } else {
-        ref = e2;
-        inc = e1;
-    
-        flip = true;
-    }
+    //if(Math.abs(e1.dot(n)) <= Math.abs(e2.dot(n))){
+    //    ref = e1;
+    //    inc = e2;
+    //} else {
+    //    ref = e2;
+    //    inc = e1;
+    //
+    //    flip = true;
+    //}
 
     var refv = ref.get_vector();
     var o1 = refv.dot(ref.v0);

@@ -6,7 +6,7 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false, n
     
     this.debug_points = [];
     //6 faces
-    for(var i = 0; i < 36; i++){
+    for(var i = 0; i < 64; i++){
         //------------------------ CONTACT POINTS DEBUG ----------------//
         var geometry = new THREE.BoxGeometry( .05, .05, .05 );
         var material = new THREE.MeshBasicMaterial( {color: 0x00FF00} );
@@ -466,10 +466,10 @@ aabb.prototype.get_axes = function(v){
     var axes = [3];
 
     //x axis
-    axes[0] = v[0].clone().sub(v[1]).perp().normalize();
+    axes[0] = v[1].clone().sub(v[0]).perp().normalize();
 
     //y axis
-    axes[1] = v[0].clone().sub(v[4]).perp().normalize();
+    axes[1] = v[4].clone().sub(v[0]).perp().normalize();
 
     //z axis
     axes[2] = v[0].clone().sub(v[3]).perp().normalize();
@@ -563,8 +563,10 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
     
     var direction = p0.clone().sub(p1).normalize();
 
-    var this_faces = this.get_faces(v);
-    var right_faces = right.get_faces(rv);
+    var this_axis_overlap = [];
+    var right_axis_overlap = [];
+
+    var me = false;
 
     for(var i = 0; i < a.length; i++){
         var proj_1 = this.project(a[i], v);
@@ -576,10 +578,13 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
 
             var o = proj_1.get_overlap(proj_2);
 
+            this_axis_overlap.push({axis: a[i], o:o});
+
             if(o < overlap){
                 //set to axis
                 overlap = o;
                 axis = a[i];
+                me = true;
             }
         }
     }
@@ -594,10 +599,13 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
 
             var o = proj_1.get_overlap(proj_2);
 
+            right_axis_overlap.push({axis: ra[i], o:o});
+
             if(o < overlap){
                 //set to axis
                 overlap = o;
                 axis = ra[i];
+                me = false;
             }
         }
     }
@@ -627,10 +635,49 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
        axis.negate();
     }
 
+    var dot_test = Infinity;
+    var best_axis = new THREE.Vector3();
+    var best_overlap = 0;
+    if(me){
+        for(var i = 0; i < this_axis_overlap.length; i++){
+            var dot = this_axis_overlap[i].axis.clone().negate().dot(direction.clone().normalize());
+
+            if(dot <= dot_test){
+                dot_test = dot;
+                best_axis = this_axis_overlap[i].axis;
+                best_overlap = this_axis_overlap[i].o;
+            }
+        }
+    } else {
+        for(var i = 0; i < right_axis_overlap.length; i++ ){
+            var dot = right_axis_overlap[i].axis.clone().negate().dot(direction.clone().normalize());
+
+            if(dot <= dot_test){
+                dot_test = dot;
+                best_axis = right_axis_overlap[i].axis;
+                best_overlap = right_axis_overlap[i].o;
+            }
+        }
+    }
+
+    console.log(best_axis);
+
+    //this.generate_contact_points(v, rv, axis, right);
+
+    return {result: true, axis: best_axis, gap: best_overlap};
+}
+
+aabb.prototype.generate_contact_points = function(v, rv, axis, right){
+
+    var this_faces = this.get_faces(v);
+    var right_faces = right.get_faces(rv);
+
     var thisEdge = false;
     var rightEdge = false;
 
+    //get the 2 side planes
     var right_face = this.get_face(right_faces, axis);
+    
     var this_face = this.get_face(this_faces, axis.clone().negate());
 
     var this_best_edge = null;
@@ -639,49 +686,48 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
     if(right_face == null){rightEdge = true;}
     if(this_face == null){thisEdge = true}
 
-    if(!rightEdge){
-        for(var i = 0; i < right_face.v.length; i++){
-           // right.debug_points[i].position.copy(right_face.v[i])
-        }
-
-        //right_best_edge = this.best_edge(right.get_faces(rv), axis);
-    }
-
-    if(!thisEdge){
-        for(var i = 0; i < this_face.v.length; i++){
-            //
-        }
-
-        //this_best_edge = this.best_edge(this.get_faces(v), axis.clone().negate());
-    }
-
     if(!thisEdge && !rightEdge){
         
         var this_faces = this.get_faces(v);
+        
         var right_faces = right.get_faces(rv);
 
-        var this_best_edges = [];
-        var right_best_edges = [];
+        var points = []
 
-        for(var i = 0; i < this_faces.length; i++){
-            var e0 = this.best_edge_per_face(this_faces[i], axis);
-            var e1 = right.best_edge_per_face(right_faces[i], axis);
+        for(var i = 0; i < this_face.v.length; i++){
+            for(var j = 0; j < right_face.v.length; j++){
 
-            var points = hodgman_sutherland(e0, e1, axis);
-            //var points2 = hodgman_sutherland(e1, e0, axis);
+                var i_loop = (i + 1) % this_face.v.length;
+                var j_loop = (j + 1) % right_face.v.length;
 
-            //if(points2 != null) points = points.concat(points2);
+                var this_v = this_face.v[i];
+                var right_v = right_face.v[j];
 
-            if(points != null){
-                for(var j = 0; j < points.length; j++){
-                    if(points[j] != null) this.debug_points[j + i].position.copy(points[j]);
-                }
+                var e0 = new edge(this_v, this_v, this_face.v[i_loop], this_face);
+                var e1 = new edge(right_v, right_v, right_face.v[j_loop], right_face);
+
+                points = points.concat(hodgman_sutherland(e0, e1, axis, false));
+                //points = points.concat(hodgman_sutherland(e0, e1, axis, false));
             }
         }
+        //var e0 = this.best_edge_per_face(this_face, axis);
+        //var e1 = right.best_edge_per_face(right_face, axis);
 
+        
+        //var points2 = hodgman_sutherland(e1, e0, axis);
+
+        //if(points2 != null) points = points.concat(points2);
+
+        if(points != null){
+            for(var j = 0; j < points.length; j++){
+                if(points[j] != null){
+                    this.debug_points[j].position.copy(points[j]);
+                } else {
+                    this.debug_points[j].position.copy(new THREE.Vector3());
+                } 
+            }
+        }
     }
-
-    return {result: true, axis: axis, gap: overlap};
 }
 
 aabb.prototype.best_edge = function(o, n){

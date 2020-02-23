@@ -170,9 +170,13 @@ function sat_response(e, l, r, lb, rb, near, delta){
 
     if(sat.result){
 
-        //e.transform.position.x += sat.axis.x * sat.gap;
-        //e.transform.position.z += sat.axis.z * sat.gap;
-        //e.transform.position.y += sat.axis.y * sat.gap;
+        e.transform.position.x += sat.axis.x * sat.gap;
+        e.transform.position.z += sat.axis.z * sat.gap;
+        e.transform.position.y += sat.axis.y * sat.gap;
+
+        if(Math.abs(sat.axis.y) == 1 && e.name == "player"){
+            canJump = true;
+        }
 
         if(lb != undefined){lb.null_velocity();}
         if(rb != undefined){rb.null_velocity();}
