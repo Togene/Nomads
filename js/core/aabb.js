@@ -376,16 +376,22 @@ aabb.prototype.get_faces = function(v){
 
     return this.face_helper([
         //-y +y faces
-        {v : [v[0], v[1], v[2], v[3]], n : v[3].clone().sub(v[1]).normalize().cross(v[0].clone().sub(v[1]).normalize()).normalize()},
-        {v : [v[4], v[5], v[6], v[7]], n : v[6].clone().sub(v[4]).normalize().cross(v[5].clone().sub(v[4]).normalize()).normalize()},
+        {v : [v[0], v[1], v[2], v[3]], n : v[3].clone().sub(v[1]).normalize().cross(v[0].clone().sub(v[1]).normalize()).normalize()
+        , c: v[0].clone().add(v[2]).multiplyScalar(0.5)},
+        {v : [v[4], v[5], v[6], v[7]], n : v[6].clone().sub(v[4]).normalize().cross(v[5].clone().sub(v[4]).normalize()).normalize()
+        , c: v[4].clone().add(v[6]).multiplyScalar(0.5)},
 
         //-x +x faces
-        {v : [v[1], v[2], v[6], v[5]], n : v[6].clone().sub(v[1]).normalize().cross(v[2].clone().sub(v[1]).normalize()).normalize()},
-        {v : [v[0], v[4], v[7], v[3]], n : v[4].clone().sub(v[3]).normalize().cross(v[0].clone().sub(v[3]).normalize()).normalize()},
+        {v : [v[1], v[2], v[6], v[5]], n : v[6].clone().sub(v[1]).normalize().cross(v[2].clone().sub(v[1]).normalize()).normalize()
+        , c: v[1].clone().add(v[6]).multiplyScalar(0.5)},
+        {v : [v[0], v[4], v[7], v[3]], n : v[4].clone().sub(v[3]).normalize().cross(v[0].clone().sub(v[3]).normalize()).normalize()
+        , c: v[0].clone().add(v[7]).multiplyScalar(0.5)},
 
          //-z +z faces
-        {v : [v[1], v[0], v[4], v[5]], n : v[5].clone().sub(v[0]).normalize().cross(v[1].clone().sub(v[0]).normalize()).normalize()},
-        {v : [v[3], v[2], v[6], v[7]], n : v[2].clone().sub(v[3]).normalize().cross(v[6].clone().sub(v[3]).normalize()).normalize()},
+        {v : [v[1], v[0], v[4], v[5]], n : v[5].clone().sub(v[0]).normalize().cross(v[1].clone().sub(v[0]).normalize()).normalize()
+        , c: v[0].clone().add(v[5]).multiplyScalar(0.5)},
+        {v : [v[3], v[2], v[6], v[7]], n : v[2].clone().sub(v[3]).normalize().cross(v[6].clone().sub(v[3]).normalize()).normalize()
+        , c: v[3].clone().add(v[6]).multiplyScalar(0.5)},
     ])
 }
 
@@ -472,7 +478,7 @@ aabb.prototype.get_axes = function(v){
     axes[1] = v[4].clone().sub(v[0]).perp().normalize();
 
     //z axis
-    axes[2] = v[0].clone().sub(v[3]).perp().normalize();
+    axes[2] = v[3].clone().sub(v[0]).perp().normalize();
 
     return axes;
 }
@@ -489,7 +495,11 @@ aabb.prototype.get_edge_axes = function(e0, e1) {
             var axis = new THREE.Vector3().crossVectors(edge_0, edge_1).normalize();
             //console.log(axis);
            if(axis.length() != 0){
-                edge_axes.push(axis);
+                edge_axes.push(
+                    {
+                        n: axis
+                    }
+                );
            }
         }
     }
@@ -599,7 +609,7 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
 
             var o = proj_1.get_overlap(proj_2);
 
-            right_axis_overlap.push({axis: ra[i], o:o});
+            this_axis_overlap.push({axis: ra[i], o:o});
 
             if(o < overlap){
                 //set to axis
@@ -611,20 +621,23 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
     }
 
     for(var i = 0; i < edge_axes.length; i++){
-        var proj_1 = this.project(edge_axes[i], v);
-        var proj_2 = right.project(edge_axes[i], rv);
+        var proj_1 = this.project(edge_axes[i].n, v);
+        var proj_2 = right.project(edge_axes[i].n, rv);
 
         if(!proj_1.overlap(proj_2)) {
             return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
         } else {
 
             var o = proj_1.get_overlap(proj_2);
+            
+            this_axis_overlap.push({axis: edge_axes[i], o:o});
 
             if(o < overlap){
                 //set to axis
                 overlap = o;
-                axis = edge_axes[i];
+                axis = edge_axes[i].n;
                 isEdge = true;
+                me = true;
             }
         }
     }
@@ -635,28 +648,45 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
        axis.negate();
     }
 
+    var this_faces = this.get_faces(v);
+    var right_faces = right.get_faces(rv);
+
+    this_face = this.get_face(this_faces, axis.clone().negate());
+    right_face = right.get_face(right_faces, axis);
+    
+    var test_face = null;
+    if(me && this_face != null){
+        this.debug_points[0].position.copy(this_face.c);
+        test_face = this_face;
+    } else if(!me && right_face != null) {
+        this.debug_points[0].position.copy(right_face.c);
+        test_face = right_face;
+    }
+
     var dot_test = Infinity;
     var best_axis = new THREE.Vector3();
     var best_overlap = 0;
-    if(me){
-        for(var i = 0; i < this_axis_overlap.length; i++){
-            var dot = this_axis_overlap[i].axis.clone().negate().dot(direction.clone().normalize());
 
-            if(dot <= dot_test){
+    for(var i = 0; i < this_axis_overlap.length; i++){
+
+        var face = this.get_face(this_faces, this_axis_overlap[i].axis);
+
+        if(face == null || face == undefined){
+            face = right.get_face(right_faces, this_axis_overlap[i].axis)
+        } 
+
+        if(face != null){
+            var to_direction = p1.clone().sub(face.c).negate().normalize();
+            var dot = this_axis_overlap[i].axis.clone().negate().dot(to_direction);
+    
+            if(dot < dot_test){
                 dot_test = dot;
                 best_axis = this_axis_overlap[i].axis;
                 best_overlap = this_axis_overlap[i].o;
             }
-        }
-    } else {
-        for(var i = 0; i < right_axis_overlap.length; i++ ){
-            var dot = right_axis_overlap[i].axis.clone().negate().dot(direction.clone().normalize());
-
-            if(dot <= dot_test){
-                dot_test = dot;
-                best_axis = right_axis_overlap[i].axis;
-                best_overlap = right_axis_overlap[i].o;
-            }
+        } else {
+            best_axis = axis;
+            overlap = overlap;
         }
     }
 

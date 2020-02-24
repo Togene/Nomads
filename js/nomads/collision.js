@@ -164,8 +164,6 @@ function narrow_collision_check(near, e, delta){
 }
 
 function sat_response(e, l, r, lb, rb, near, delta){
-
-
     sat = l.intersect_sat_aabb(r);
 
     if(sat.result){
@@ -174,7 +172,7 @@ function sat_response(e, l, r, lb, rb, near, delta){
         e.transform.position.z += sat.axis.z * sat.gap;
         e.transform.position.y += sat.axis.y * sat.gap;
 
-        if(Math.abs(sat.axis.y) == 1 && e.name == "player"){
+        if(sat.axis.y >= 0.55 && e.name == "player"){
             canJump = true;
         }
 
