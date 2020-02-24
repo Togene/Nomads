@@ -497,7 +497,9 @@ aabb.prototype.get_edge_axes = function(e0, e1) {
            if(axis.length() != 0){
                 edge_axes.push(
                     {
-                        n: axis
+                        n: axis,
+                        e0: edge_0,
+                        e1: edge_1,
                     }
                 );
            }
@@ -573,7 +575,7 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
     
     var direction = p0.clone().sub(p1).normalize();
 
-    var this_axis_overlap = [];
+    var axis_overlap = [];
     var right_axis_overlap = [];
 
     var me = false;
@@ -588,7 +590,12 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
 
             var o = proj_1.get_overlap(proj_2);
 
-            this_axis_overlap.push({axis: a[i], o:o});
+            axis_overlap.push(
+                {
+                    face: true,
+                    axis: a[i], 
+                    o:o
+                });
 
             if(o < overlap){
                 //set to axis
@@ -609,7 +616,12 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
 
             var o = proj_1.get_overlap(proj_2);
 
-            this_axis_overlap.push({axis: ra[i], o:o});
+            axis_overlap.push(
+                {
+                    face: true,
+                    axis: ra[i], 
+                    o:o
+                });
 
             if(o < overlap){
                 //set to axis
@@ -630,7 +642,13 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
 
             var o = proj_1.get_overlap(proj_2);
             
-            this_axis_overlap.push({axis: edge_axes[i], o:o});
+            axis_overlap.push({
+                face : false,
+                axis: edge_axes[i].n, 
+                o:o,
+                e0: edge_axes[i].e0,
+                e1: edge_axes[i].e1,
+            });
 
             if(o < overlap){
                 //set to axis
@@ -667,26 +685,51 @@ aabb.prototype.intersect_sat_aabb = function(right, direction_to_old){
     var best_axis = new THREE.Vector3();
     var best_overlap = 0;
 
-    for(var i = 0; i < this_axis_overlap.length; i++){
+    for(var i = 0; i < axis_overlap.length; i++){
 
-        var face = this.get_face(this_faces, this_axis_overlap[i].axis);
+        if(axis_overlap[i].face){
+            var face = this.get_face(this_faces, axis_overlap[i].axis);
 
-        if(face == null || face == undefined){
-            face = right.get_face(right_faces, this_axis_overlap[i].axis)
-        } 
+            if(face == null || face == undefined){
+                face = right.get_face(right_faces, axis_overlap[i].axis)
+            } 
 
-        if(face != null){
             var to_direction = p1.clone().sub(face.c).negate().normalize();
-            var dot = this_axis_overlap[i].axis.clone().negate().dot(to_direction);
+            var dot = axis_overlap[i].axis.clone().negate().dot(to_direction);
     
             if(dot < dot_test){
                 dot_test = dot;
-                best_axis = this_axis_overlap[i].axis;
-                best_overlap = this_axis_overlap[i].o;
+                best_axis = axis_overlap[i].axis;
+                best_overlap = axis_overlap[i].o;
             }
         } else {
+            var this_face = this.get_face(this_faces, axis_overlap[i].axis);
+            var right_face = this.get_face(right_faces, axis_overlap[i].axis);
+
+            if(this_face != null){
+                console.log("this is face");
+            } else{
+                console.log("this is edge");
+            } 
+            
+            if(right_face != null){
+                console.log("right is face");
+            } else {
+                console.log("right is edge");
+            }
+
             best_axis = axis;
-            overlap = overlap;
+            best_overlap = overlap;
+
+            //var to_direction = p1.clone().sub(face.c).negate().normalize();
+            //var dot = axis_overlap[i].axis.clone().negate().dot(to_direction);
+            //
+            //if(dot < dot_test){
+            //    dot_test = dot;
+            //    best_axis = axis_overlap[i].axis;
+            //    best_overlap = axis_overlap[i].o;
+            //}
+
         }
     }
 
