@@ -287,4 +287,8 @@ quaternion.prototype.to_euler = function(){
     return new THREE.Vector3(((roll)), ((pitch)), ((yaw)));
 }
 
+quaternion.prototype.clone = function(){
+    return new quaternion(this.x, this.y, this.z, this.w);
+}
+
 quaternion.prototype.name = "quaternion";

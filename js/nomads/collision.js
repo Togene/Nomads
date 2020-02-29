@@ -164,24 +164,74 @@ function narrow_collision_check(near, e, delta){
 }
 
 function sat_response(e, l, r, lb, rb, near, delta){
-    sat = l.intersect_sat_aabb(r);
+    
+    
+    //initial test?
+    var sat_init = l.intersect_sat_aabb(r, null);
 
-    if(sat.result){
+    if(sat_init.result){
+            
+        var e_pos =  e.transform.position.clone();
+        var prevois_step = lb.reverse_step(e_pos.clone(), delta);
+        var step_delta = e_pos.clone().sub(prevois_step);
 
-        e.transform.position.x += sat.axis.x * sat.gap;
-        e.transform.position.z += sat.axis.z * sat.gap;
-        e.transform.position.y += sat.axis.y * sat.gap;
+        //debug_direction(e.transform.position.clone(), prevois_step.clone());
 
-        if(sat.axis.y >= 0.55 && e.name == "player"){
-            canJump = true;
+        var sat = null;
+
+        if(step_delta.length() > .25){
+            console.log("high velocity!");
+
+            var dir = prevois_step.clone().sub(e_pos).normalize().negate();
+            var sat = l.intersect_sat_aabb(r, dir);
+        } else {
+            console.log("low velocity!");
+            var sat = sat_init;//l.intersect_sat_aabb(r, null);
         }
 
-        if(lb != undefined){lb.null_velocity();}
-        if(rb != undefined){rb.null_velocity();}
 
-        }
+        if(sat.result){
+            e.transform.position.x += sat.axis.x * sat.gap;
+            e.transform.position.z += sat.axis.z * sat.gap;
+            e.transform.position.y += sat.axis.y * sat.gap;
+    
+    
+            if(sat.axis.y >= 0.55 && e.name == "player"){
+                canJump = true;
+            }
+    
+           if(lb != undefined){lb.null_velocity();}
+           if(rb != undefined){rb.null_velocity();}
+    }
+    }
+
+
 
     return false;
+}
+
+function debug_direction (f, t){
+
+    var d = f.clone().sub(t);
+    var dir = t.clone().sub(f).normalize();
+
+    if(d.length() > 0.3){
+        var material = new THREE.LineBasicMaterial({
+            color: 0x0000ff
+        });
+        
+        var geometry = new THREE.Geometry();
+        geometry.vertices.push(
+            new THREE.Vector3().copy(f),
+            new THREE.Vector3().copy(t),
+        );
+        
+        var line = new THREE.Line( geometry, material );
+        scene.add( line );
+
+        var normal_arrow = new THREE.ArrowHelper( dir, f, .25, 0x00FF00 );
+        scene.add( normal_arrow );
+    }
 }
 
 function sweep_response(e, l, r, lb, rb, near, delt){

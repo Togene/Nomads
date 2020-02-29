@@ -49,7 +49,7 @@ rigidbody.prototype.update = function(delta){
         //that way it can check collision in advance
         //this.update_aabb_position(delta);
         //col.set_projection(new THREE.Vector3(1.1, 1.1, 1.1));
-        this.step(delta)
+        this.step(delta);
 
         this.new_parent_position = this.parent.transform.position.clone();
         //------------------ Capture New Position ------------------ 
@@ -94,23 +94,21 @@ rigidbody.prototype.step = function(delta){
 }
 
 //grab a vector with velocity's added
-rigidbody.prototype.get_step = function(delta){
-    var vec = new THREE.Vector3();
-
+rigidbody.prototype.get_step = function(vec, delta){
     this.add_forward(vec, -(this.velocity.z * delta));
     this.add_right(vec, -(this.velocity.x * delta));
     vec.y += (this.velocity.y * delta); 
-
-    //console.log(vec);
-    
     return vec;
 }
 
 //grab a vector with velocity's added
 rigidbody.prototype.reverse_step = function(vec, delta){
+
     this.add_forward(vec, (this.velocity.z * delta));
     this.add_right(vec, (this.velocity.x * delta));
     vec.y -= (this.velocity.y * delta); 
+
+    return vec;
 }
 
 rigidbody.prototype.add_forward = function(v, distance){

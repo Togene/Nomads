@@ -131,9 +131,9 @@ transform.prototype.set_position = function(p){
 
 transform.prototype.clone = function() {
     return new transform(
-        this.position,
-        this.scale,
-        this.rotation
+        this.position.clone(),
+        this.scale.clone(),
+        this.rotation.clone(),
     )
 }
 
