@@ -117,54 +117,88 @@ function broad_collision_check(delta){
 
 //! Fix Intersection bug before trying to work with RigidBody
 function narrow_collision_check(near, e, delta){
+
     if(e != undefined){
         var l = e.get_component("aabb");
         var lb = e.get_component("rigidbody");
         var lr = e.get_component("ray");
 
         l.set_colliding(false);
-        //console.log(near.length);
-        for(var i = 0; i < near.length; i++) {
-           
-            if (near[i].o == e){continue;}
-
-            var r = near[i].o.get_component("aabb");
-            var rb = near[i].o.get_component("rigidbody");
-            r.set_colliding(false);
-            var delt = near[i].o.transform.position.clone().sub(e.transform.position);
-            delt.y = 0;
-
-                        
-            //if(lr.length != undefined){
-            //    for(var j = 0; j < lr.length; j++){
-            //        collision_ray_response(l, r, lr[j], lb, near[i].o);
-            //    }
-            //} else { 
-            //    collision_ray_response(l, r, lr, lb, near[i].o);
-            //}
-
-
-            if(sat_response(e, l, r, lb, rb, near[i].o, delta)){};
-
-            //TODO: check for 90/180/270 dagree's as not roated
-           //if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
-           //    //Sat for OOB, 
-           //    
-           //   
-
-           //} else {
-           //    //Swept for AABB
-           //    if(sat_response(e, l, r, lb, rb, near[i].o)){};
-           //    //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
-           //} 
-      
-            r.set_colliding(false);
-        }
     }
+
+    for(var j = 0; j < near.length; j++) {
+        
+        if (near[j].o == e){continue;}
+
+        var rs = near[j].o.get_component("sphere");
+
+        if(rs != null){
+            // rs.set_colliding(false); 
+
+            if(sat_sphere_response(e, l, rs)){
+                rs.set_colliding(true); 
+                colliding = true;
+                break;
+            } 
+            rs.set_colliding(false); 
+        }
+        
+    }   
+
+    for(var i = 0; i < near.length; i++) {
+        
+        if (near[i].o == e){continue;}
+
+        var r = near[i].o.get_component("aabb");
+        var rb = near[i].o.get_component("rigidbody");
+        
+        r.set_colliding(false);
+
+        var delt = near[i].o.transform.position.clone().sub(e.transform.position);
+        delt.y = 0;
+
+                    
+        //if(lr.length != undefined){
+        //    for(var j = 0; j < lr.length; j++){
+        //        collision_ray_response(l, r, lr[j], lb, near[i].o);
+        //    }
+        //} else { 
+        //    collision_ray_response(l, r, lr, lb, near[i].o);
+        //}
+        
+
+        if(sat_response(e, l, r, lb, rb, near[i].o, delta)){
+            colliding = true;
+        };
+        
+
+        //TODO: check for 90/180/270 dagree's as not roated
+        //if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
+        //    //Sat for OOB, 
+        //    
+        //   
+
+        //} else {
+        //    //Swept for AABB
+        //    if(sat_response(e, l, r, lb, rb, near[i].o)){};
+        //    //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
+        //} 
+    
+    }
+
+
+}
+
+function sat_sphere_response(e, l, r){
+    
+    var sat_init = l.intersect_sat_aabb_sphere(r);
+
+    if(sat_init.result){return true;} 
+
+    return false;
 }
 
 function sat_response(e, l, r, lb, rb, near, delta){
-    
     
     //initial test?
     var overlaps = [];
@@ -184,16 +218,13 @@ function sat_response(e, l, r, lb, rb, near, delta){
            // console.log("high velocity!");
             var dir = prevois_step.clone().sub(e_pos).normalize().negate();
             sat = l.intersect_sat_aabb(r, dir, false, overlaps);
-            debug_direction(e_pos, prevois_step, cutoff);
-
+            //debug_direction(e_pos, prevois_step, cutoff);
         } else {
            // console.log("low velocity!");
             sat = sat_init;//l.intersect_sat_aabb(r, null);
         }
 
-
         if(sat.result){
-
 
             e.transform.position.x += sat.axis.x * sat.gap * 1.001;
             e.transform.position.z += sat.axis.z * sat.gap * 1.001;
@@ -208,10 +239,13 @@ function sat_response(e, l, r, lb, rb, near, delta){
         
             if(lb != undefined){lb.null_velocity();}
             if(rb != undefined){rb.null_velocity();}
+
+            return true;
         }
     }
 
-
+    l.set_colliding(false);
+    r.set_colliding(false);
 
     return false;
 }

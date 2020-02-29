@@ -210,26 +210,26 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 					
 					if(r_d == 255) {	
 
-						//var axis = new THREE.Vector3();
-						//var up = new THREE.Vector3(0, 1, 0);;
-//
-						//if (curface.normal.y == 1 || curface.normal.y == -1) {
-						//	axis = new THREE.Vector3(1, 0, 0);
-						//} else {
-						//	axis = new THREE.Vector3().crossVectors(up, curface.normal);
-						//}
-						////determine the amount to rotate
-						//var radians = Math.acos(curface.normal.dot(up));
-//
-						//var npc = npc_create(curface.centre);
-//
-						//npc.transform.position = new THREE.Vector3(
-						//	curface.centre.x + curface.normal.x * npc.transform.scale.x/2,
-						//	curface.centre.y + curface.normal.y * npc.transform.scale.y/2,
-						//	curface.centre.z + curface.normal.z * npc.transform.scale.z/2,
-						//);
-//
-						//npc.transform.rotation = new quaternion(0,0,0,0, axis, radians);
+						var axis = new THREE.Vector3();
+						var up = new THREE.Vector3(0, 1, 0);;
+						
+						if (curface.normal.y == 1 || curface.normal.y == -1) {
+							axis = new THREE.Vector3(1, 0, 0);
+						} else {
+							axis = new THREE.Vector3().crossVectors(up, curface.normal);
+						}
+						//determine the amount to rotate
+						var radians = Math.acos(curface.normal.dot(up));
+						
+						var npc = npc_create(curface.centre);
+						
+						npc.transform.position = new THREE.Vector3(
+							curface.centre.x + curface.normal.x * npc.transform.scale.x/2,
+							curface.centre.y + curface.normal.y * npc.transform.scale.y/2,
+							curface.centre.z + curface.normal.z * npc.transform.scale.z/2,
+						);
+						
+						npc.transform.rotation = new quaternion(0,0,0,0, axis, radians);
 					}
 
 					if(b_d == 255) {	

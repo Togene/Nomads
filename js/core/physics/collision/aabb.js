@@ -116,7 +116,7 @@ aabb.prototype.update = function(delta){
         }
     }
 
-    this.decube.set_active(true);
+   // this.decube.set_active(true);
 
     //if(this.colliding && this.decube != null){
     //    this.decube.set_active(true);
@@ -522,20 +522,31 @@ aabb.prototype.get_edge_axes = function(e0, e1) {
     return edge_axes;
 }
 
-aabb.prototype.project = function(n, v){
+aabb.prototype.project = function(n, v, sphere = false){
 
-    var min = n.dot(v[0]);
-    var max = min;
+    var min = Infinity;
+    var max = Infinity;
 
-    for(var i = 1; i < v.length; i++){
+    if(!sphere){
 
-        var p = n.dot(v[i]);
-        if(p < min){
-            min = p;
-        } else if(p > max){
-            max = p;
+        min = n.dot(v[0]);
+        max = min;
+
+        for(var i = 1; i < v.length; i++){
+
+            var p = n.dot(v[i]);
+            if(p < min){
+                min = p;
+            } else if(p > max){
+                max = p;
+            }
         }
+    } else {
+        var p = v.c.dot(n);
+        min = p - v.r;
+        max = p + v.r;
     }
+
 
     return new projection(min, max);
 }
@@ -679,8 +690,7 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, overlaps){
         var best_overlap = 0;
         var best_dot = Infinity;
     
-
-            console.log("doing impact check!");
+            //console.log("doing impact check!");
     
             for(var i = 0; i < overlaps.length; i++){
                 var dot = overlaps[i].axis.dot(dir);
@@ -692,10 +702,56 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, overlaps){
                 }
             }
             
-        console.log(best_axis);
+        //console.log(best_axis);
 
         return {result: true, axis: best_axis, gap: best_overlap};
     }
+}
+
+aabb.prototype.intersect_sat_aabb_sphere = function(right){
+    
+        var overlap = Infinity;
+        var axis = new THREE.Vector3();
+
+        var v = this.get_verts(); // grab vertices
+        var a = this.get_axes(v); // normal axes (faces)
+        var e = this.edges(v); // get edges
+
+        var p0 = this.parent.transform.position.clone();
+        var p1 = right.parent.transform.position.clone();
+        
+        var direction = p0.clone().sub(p1).normalize();
+
+        var nearest = this.get_closest_vert(v, p1);
+        
+        var d = nearest.clone().sub(p1).normalize();
+
+        a.push(d)
+        
+        for(var i = 0; i < a.length; i++){
+            var proj_1 = this.project(a[i], v);
+            var proj_2 = this.project(a[i], {c: p1, r: right.radius}, true);
+
+            if(!proj_1.overlap(proj_2)) {
+                return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
+            } else {
+
+                var o = proj_1.get_overlap(proj_2);
+                
+                if(o < overlap){
+                    //set to axis
+                    overlap = o;
+                    axis = a[i];
+                    me = true;
+                }
+            }
+        }
+
+        if(axis.dot(direction) < 0.0){
+            axis.negate();
+        }
+
+        return {result: true, axis: axis, gap: overlap};
 }
 
 aabb.prototype.generate_contact_points = function(v, rv, axis, right){

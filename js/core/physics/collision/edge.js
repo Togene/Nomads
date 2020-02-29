@@ -46,3 +46,5 @@ edge.prototype.debug_normal = function(c){
    // this.normal_arrow.position.copy(this.get_centre());
    // this.normal_arrow.setDirection(this.get_normal(c));
 }
+
+edge.prototype.name = "edge";

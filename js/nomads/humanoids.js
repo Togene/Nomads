@@ -25,6 +25,8 @@ function npc_create(){
     );
 
     npc.add_component(new aabb(npc.transform, .5, .5, .5, true, 0x00FF00, true));
+    npc.add_component(new sphere(npc.transform, 1, true));
+
     npc.add_component(new rigidbody(1, false));
     npc.add_component(npc_decomposer);
     npc.add_component(new ray(npc.transform.position, new THREE.Vector3(0, -1, 0)));

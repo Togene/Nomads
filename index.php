@@ -25,19 +25,22 @@
 			<script src = "js/core/matrix.js"></script>
 			<script src = "js/core/quaternion.js"></script>
 			<script src = "js/core/transform.js"></script>
-			<script src = "js/core/edge.js"></script>
-			<script src = "js/core/sutherland_hodgman.js"></script>
-			<script src = "js/core/projection.js"></script>
+
+			<script src = "js/core/physics/rigidbody.js"></script>
+			<script src = "js/core/physics/collision/edge.js"></script>
+			<script src = "js/core/physics/collision/sphere.js"></script>
+			<script src = "js/core/physics/collision/sutherland_hodgman.js"></script>
+			<script src = "js/core/physics/collision/projection.js"></script>
+			<script src = "js/core/physics/collision/ray.js"></script>
+			<script src = "js/core/physics/collision/sweep.js"></script>
+			<script src = "js/core/physics/collision/hit.js"></script>
+			<script src = "js/core/physics/collision/aabb.js"></script>
+
 			<script src = "js/core/decomposer.js"></script>
 			<script src = "js/core/decube.js"></script>
 			<script src = "js/core/gameobject.js"></script>
 			<script src = "js/core/quadtree.js"></script>
-			<script src = "js/core/ray.js"></script>
-			<script src = "js/core/sweep.js"></script>
-			<script src = "js/core/hit.js"></script>
-			<script src = "js/core/aabb.js"></script>
-			<script src = "js/core/rigidbody.js"></script>
-
+	
 			<script src = "js/nomads/world/tile_generator.js"></script>
 			<script src = "js/nomads/world/world.js"></script>
 
@@ -62,8 +65,6 @@
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/nomads/sky.js"></script>
-
-
 
 		<div id="blocker">
 			<div id="instructions">
