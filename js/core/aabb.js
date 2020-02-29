@@ -431,17 +431,18 @@ aabb.prototype.edges = function(v, c){
 
     return [
         new edge(v[0], v[0], v[1], new THREE.Vector3()), //0, 1
-        new edge(v[1], v[1], v[2], new THREE.Vector3()), //2, 3
-        new edge(v[2], v[2], v[3], new THREE.Vector3()), //4, 5
-        new edge(v[3], v[3], v[0], new THREE.Vector3()), //6, 7
-        new edge(v[4], v[4], v[5], new THREE.Vector3()), //8, 9
-        new edge(v[5], v[5], v[6], new THREE.Vector3()), //10, 11
-        new edge(v[6], v[6], v[7], new THREE.Vector3()), //12, 13
-        new edge(v[7], v[7], v[4], new THREE.Vector3()), //14, 15
-        new edge(v[3], v[3], v[7], new THREE.Vector3()), //16, 17
-        new edge(v[2], v[2], v[6], new THREE.Vector3()), //18, 19
-        new edge(v[1], v[1], v[5], new THREE.Vector3()), //20, 21
+        //new edge(v[1], v[1], v[2], new THREE.Vector3()), //2, 3
+        //new edge(v[2], v[2], v[3], new THREE.Vector3()), //4, 5
+        //new edge(v[3], v[3], v[0], new THREE.Vector3()), //6, 7
+        //new edge(v[4], v[4], v[5], new THREE.Vector3()), //8, 9
+        //new edge(v[5], v[5], v[6], new THREE.Vector3()), //10, 11
+        //new edge(v[6], v[6], v[7], new THREE.Vector3()), //12, 13
+        //new edge(v[7], v[7], v[4], new THREE.Vector3()), //14, 15
+        //new edge(v[3], v[3], v[7], new THREE.Vector3()), //16, 17
+        //new edge(v[2], v[2], v[6], new THREE.Vector3()), //18, 19
+        //new edge(v[1], v[1], v[5], new THREE.Vector3()), //20, 21
         new edge(v[0], v[0], v[4], new THREE.Vector3()), //22, 23
+        new edge(v[0], v[0], v[3], new THREE.Vector3()), //22, 23
     ]
 }
 
@@ -567,123 +568,134 @@ aabb.prototype.get_face_centre = function(v){
 
 //for SAT intersecting 
 //!
-aabb.prototype.intersect_sat_aabb = function(right, dir){
- 
-    var overlap = Infinity;
-    var axis = new THREE.Vector3();
-
-    var v = this.get_verts(); // grab vertices
-    var a = this.get_axes(v); // normal axes (faces)
-    var e = this.edges(v); // get edges
-    var f = this.get_faces(v);
-
-    var rv = right.get_verts(); // right verts
-    var ra = right.get_axes(rv); // right normal axes (faces)
-    var re = right.edges(rv);
-    var rf = right.get_faces(rv);
-
-    var edge_axes = this.get_edge_axes(e, re);
-
-    var p0 = this.parent.transform.position.clone();
-    var p1 = right.parent.transform.position.clone();
+aabb.prototype.intersect_sat_aabb = function(right, dir, init, overlaps){
     
-    var direction = p0.clone().sub(p1).normalize();
 
-    var me = false;
+    if(init) {
+      
+        var overlap = Infinity;
+        var axis = new THREE.Vector3();
 
-    var overlaps = [];
+        var v = this.get_verts(); // grab vertices
+        var a = this.get_axes(v); // normal axes (faces)
+        var e = this.edges(v); // get edges
+        //var f = this.get_faces(v);
 
-    for(var o = 0; o < re.length; o++){
-      //  e[o].debug_normal(p1);
-    }
+        var rv = right.get_verts(); // right verts
+        var ra = right.get_axes(rv); // right normal axes (faces)
+        var re = right.edges(rv);
+    // var rf = right.get_faces(rv);
 
-    for(var i = 0; i < a.length; i++){
-        var proj_1 = this.project(a[i], v);
-        var proj_2 = right.project(a[i], rv);
+        var edge_axes = this.get_edge_axes(e, re);
 
-        if(!proj_1.overlap(proj_2)) {
-            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
-        } else {
+        var p0 = this.parent.transform.position.clone();
+        var p1 = right.parent.transform.position.clone();
+        
+        var direction = p0.clone().sub(p1).normalize();
 
-            var o = proj_1.get_overlap(proj_2);
-            
-            overlaps.push({axis:a[i], o:o});
+        var me = false;
 
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = a[i];
-                me = true;
+        
+
+        for(var o = 0; o < re.length; o++){
+        //  e[o].debug_normal(p1);
+        }
+
+        for(var i = 0; i < a.length; i++){
+            var proj_1 = this.project(a[i], v);
+            var proj_2 = right.project(a[i], rv);
+
+            if(!proj_1.overlap(proj_2)) {
+                return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
+            } else {
+
+                var o = proj_1.get_overlap(proj_2);
+                
+                overlaps.push({axis:a[i], o:o});
+
+                if(o < overlap){
+                    //set to axis
+                    overlap = o;
+                    axis = a[i];
+                    me = true;
+                }
             }
         }
-    }
 
-    for(var i = 0; i < ra.length; i++){
-        var proj_1 = this.project(ra[i], v);
-        var proj_2 = right.project(ra[i], rv);
+        for(var i = 0; i < ra.length; i++){
+            var proj_1 = this.project(ra[i], v);
+            var proj_2 = right.project(ra[i], rv);
 
-        if(!proj_1.overlap(proj_2)) {
-            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
-        } else {
+            if(!proj_1.overlap(proj_2)) {
+                return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
+            } else {
 
-            var o = proj_1.get_overlap(proj_2);
+                var o = proj_1.get_overlap(proj_2);
 
-            overlaps.push({axis:ra[i], o:o});
+                overlaps.push({axis:ra[i], o:o});
 
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = ra[i];
-                me = false;
+                if(o < overlap){
+                    //set to axis
+                    overlap = o;
+                    axis = ra[i];
+                    me = false;
+                }
             }
         }
-    }
 
-    for(var i = 0; i < edge_axes.length; i++){
-        var proj_1 = this.project(edge_axes[i].n, v);
-        var proj_2 = right.project(edge_axes[i].n, rv);
+       
 
-        if(!proj_1.overlap(proj_2)) {
-            return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
-        } else {
+        for(var i = 0; i < edge_axes.length; i++){
+            var proj_1 = this.project(edge_axes[i].n, v);
+            var proj_2 = right.project(edge_axes[i].n, rv);
 
-            var o = proj_1.get_overlap(proj_2);
-            
-            overlaps.push({axis:edge_axes[i].n, o:o});
+            if(!proj_1.overlap(proj_2)) {
+                return {result: false, axis: new THREE.Vector3(0,0,0), gap: 0};
+            } else {
 
-            if(o < overlap){
-                //set to axis
-                overlap = o;
-                axis = edge_axes[i].n;
-                isEdge = true;
-                me = true;
+                var o = proj_1.get_overlap(proj_2);
+                
+                overlaps.push({axis:edge_axes[i].n, o:o});
+
+                if(o < overlap){
+                    //set to axis
+                    overlap = o;
+                    axis = edge_axes[i].n;
+                    isEdge = true;
+                    me = true;
+                }
             }
         }
-    }
 
-    if(axis.dot(direction) < 0.0){
-       axis.negate();
-    }
+        if(axis.dot(direction) < 0.0){
+            axis.negate();
+        }
+
+        return {result: true, axis: axis, gap: overlap};
+    } else {
+   
+
+        var best_axis = null;
+        var best_overlap = 0;
+        var best_dot = Infinity;
     
-    var best_axis = axis;
-    var best_overlap = overlap;
-    var best_dot = Infinity;
 
-    if(dir != null){
-        console.log("doing impact check!");
-
-        for(var i = 0; i < overlaps.length; i++){
-            var dot = overlaps[i].axis.dot(dir);
-
-            if(dot < best_dot){
-                best_dot = dot;
-                best_axis = overlaps[i].axis;
-                best_overlap = overlaps[i].o;
+            console.log("doing impact check!");
+    
+            for(var i = 0; i < overlaps.length; i++){
+                var dot = overlaps[i].axis.dot(dir);
+    
+                if(dot < best_dot){
+                    best_dot = dot;
+                    best_axis = overlaps[i].axis;
+                    best_overlap = overlaps[i].o;
+                }
             }
-        }
-    }
+            
+        console.log(best_axis);
 
-    return {result: true, axis: best_axis, gap: best_overlap};
+        return {result: true, axis: best_axis, gap: best_overlap};
+    }
 }
 
 aabb.prototype.generate_contact_points = function(v, rv, axis, right){
@@ -765,7 +777,6 @@ aabb.prototype.best_face= function(o, n){
     }
     return o[face_index];
 }
-
 
 aabb.prototype.best_edge = function(o, n){
 

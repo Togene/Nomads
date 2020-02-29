@@ -114,6 +114,7 @@ function movement(delta){
     if(controls !== undefined && player != null){
         if ( controls.isLocked === true ) {
             var player_body = player.get_component("rigidbody");
+            var player_col = player.get_component("aabb");
 
             direction.z = Number( moveForward ) - Number( moveBackward );
             direction.x = Number( moveRight ) - Number( moveLeft );
@@ -122,11 +123,11 @@ function movement(delta){
             if(shift) { speed_mult = 2.1;} else { speed_mult = 1;}
 
             if ((moveForward || moveBackward)){
-               player_body.velocity.z -= direction.z * (step * speed_mult);
+               if(!player_col.colliding) player_body.velocity.z -= direction.z * (step * speed_mult);
             } 
         
             if ((moveLeft || moveRight)){
-               player_body.velocity.x -= direction.x * (step * speed_mult);
+                if(!player_col.colliding) player_body.velocity.x -= direction.x * (step * speed_mult);
             }
 
             if(space){

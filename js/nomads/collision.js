@@ -167,8 +167,9 @@ function sat_response(e, l, r, lb, rb, near, delta){
     
     
     //initial test?
-    var sat_init = l.intersect_sat_aabb(r, null);
-
+    var overlaps = [];
+    var sat_init = l.intersect_sat_aabb(r, null, true, overlaps);
+    
     if(sat_init.result){
             
         var e_pos =  e.transform.position.clone();
@@ -178,31 +179,36 @@ function sat_response(e, l, r, lb, rb, near, delta){
         //debug_direction(e.transform.position.clone(), prevois_step.clone());
 
         var sat = null;
-
-        if(step_delta.length() > .25){
-            console.log("high velocity!");
-
+        var cutoff = 0.17;
+        if(step_delta.length() > cutoff){
+           // console.log("high velocity!");
             var dir = prevois_step.clone().sub(e_pos).normalize().negate();
-            var sat = l.intersect_sat_aabb(r, dir);
+            sat = l.intersect_sat_aabb(r, dir, false, overlaps);
+            debug_direction(e_pos, prevois_step, cutoff);
+
         } else {
-            console.log("low velocity!");
-            var sat = sat_init;//l.intersect_sat_aabb(r, null);
+           // console.log("low velocity!");
+            sat = sat_init;//l.intersect_sat_aabb(r, null);
         }
 
 
         if(sat.result){
-            e.transform.position.x += sat.axis.x * sat.gap;
-            e.transform.position.z += sat.axis.z * sat.gap;
-            e.transform.position.y += sat.axis.y * sat.gap;
-    
-    
-            if(sat.axis.y >= 0.55 && e.name == "player"){
+
+
+            e.transform.position.x += sat.axis.x * sat.gap * 1.001;
+            e.transform.position.z += sat.axis.z * sat.gap * 1.001;
+            e.transform.position.y += sat.axis.y * sat.gap * 1.001;
+
+            if( sat.axis.y >= 0.55 && e.name == "player"){
                 canJump = true;
+            } else {
+                l.set_colliding(true);
+                r.set_colliding(true);
             }
-    
-           if(lb != undefined){lb.null_velocity();}
-           if(rb != undefined){rb.null_velocity();}
-    }
+        
+            if(lb != undefined){lb.null_velocity();}
+            if(rb != undefined){rb.null_velocity();}
+        }
     }
 
 
@@ -210,12 +216,12 @@ function sat_response(e, l, r, lb, rb, near, delta){
     return false;
 }
 
-function debug_direction (f, t){
+function debug_direction (f, t, cutoff){
 
     var d = f.clone().sub(t);
     var dir = t.clone().sub(f).normalize();
 
-    if(d.length() > 0.3){
+    if(d.length() > cutoff){
         var material = new THREE.LineBasicMaterial({
             color: 0x0000ff
         });

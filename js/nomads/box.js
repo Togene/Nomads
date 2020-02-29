@@ -3,8 +3,6 @@ var boxes = [];
 function box_create(p, q){
     var shader = get_data("instance_shader");
     
-    shader.extra.trans = true;
-    
     var buffer = create_buffer();
     var attributes = [];
 
