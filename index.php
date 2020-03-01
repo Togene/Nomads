@@ -50,6 +50,9 @@
 			<script src = "js/nomads/world/generator_utilities/map_generator.js"></script>
 			<script src = "js/nomads/world/generator_utilities/noise_from_texture.js"></script>
 			<script src = "js/nomads/world/generator_utilities/regions.js"></script>
+						
+			<script src = "js/nomads/components/brain.js"></script>
+			<script src = "js/nomads/components/interaction.js"></script>
 
 			<script src = "js/nomads/yard_stick.js"></script>
 			<script src = "js/nomads/box.js"></script>
@@ -62,6 +65,8 @@
 			<script src = "js/nomads/collision.js"></script>
 			<script src = "js/nomads/physics.js"></script>
 			<script src = "js/nomads/controller.js"></script>
+
+
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/nomads/sky.js"></script>

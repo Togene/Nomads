@@ -1,11 +1,11 @@
-function quaternion(x, y, z, w, axis = null, angle = null, rot = null){
-    
+function quaternion(x, y, z, w, axis = null, angle = null, rot = null, debug = false){
     this.x = x;
     this.y = y;
     this.z = z;
     this.w = w;
 
     if(axis != null && angle != null){
+        if(debug) console.log("reached here?");
         var sinHalfAngle = Math.sin(angle/2);
         var cosHalfAngle = Math.cos(angle/2);
 
@@ -15,59 +15,63 @@ function quaternion(x, y, z, w, axis = null, angle = null, rot = null){
         this.w = cosHalfAngle;
 
     } else if (rot != null){
+        if(debug) console.log("reached matrix?", this.x);
+        this.constructor_matrix(rot);
+    }
+}
 
-        var trace = rot.get(0, 0) + rot.get(1, 1) + rot.get(2, 2);
-     
-        if(trace > 0){
-           
-           var s = 0.5 / Math.sqrt(trace + 1.0);
-           this.w = 0.25 / s;
-           this.x = (rot.get(1, 2) - rot.get(2, 1)) * s;
-           this.y = (rot.get(2, 0) - rot.get(0, 2)) * s;
-           this.z = (rot.get(0, 1) - rot.get(1, 0)) * s;
+quaternion.prototype.constructor_matrix = function(rot){
+            
+            var trace = rot.get(0, 0) + rot.get(1, 1) + rot.get(2, 2);
 
-        } else {
-
-            if(rot.get(0,0) > rot.get(1, 1) && rot.get(0, 0) > rot.get(2, 2)){
-
-                var s = 2.0 * Math.sqrt(1.0 + rot.get(0, 0) - rot.get(1, 1) - rot.get(2, 2));
-
-                this.w = (rot.get(1, 2) - rot.get(2, 1)) / s;
-                this.x = 0.25 * s;
-                this.y = (rot.get(1, 0) + rot.get(0, 1)) / s;
-                this.z = (rot.get(2, 0) + rot.get(0, 2)) / s;
-
-            } else if(rot.get(1, 1) > rot.get(2, 2)){
-                
-                var s = 2.0 * Math.sqrt(1.0 + rot.get(1, 1) - rot.get(0, 0) - rot.get(2,2));
-
-                this.w = (rot.get(2, 0) - rot.get(0, 2)) / s;
-                this.x = (rot.get(1, 0) + rot.get(0, 1)) / s;
-                this.y = 0.25 * s;
-                this.z = (rot.get(2, 1) + rot.get(1, 2)) / s;
+            if(trace > 0){
+               
+               var s = 0.5 / Math.sqrt(trace + 1.0);
+               this.w = 0.25 / s;
+               this.x = (rot.get(1, 2) - rot.get(2, 1)) * s;
+               this.y = (rot.get(2, 0) - rot.get(0, 2)) * s;
+               this.z = (rot.get(0, 1) - rot.get(1, 0)) * s;
+    
             } else {
 
-                var s = 2.0 * Math.sqrt(1.0 + rot.get(2, 2) - rot.get(0, 0) - rot.get(1, 1));
-
-                this.w = (rot.get(0, 1) - rot.get(1, 0)) / s;
-                this.x = (rot.get(2, 0) + rot.get(0, 2)) / s;
-                this.y = (rot.get(1, 2) + rot.get(2, 1)) / s;
-                this.z = 0.25 * s;
+                if(rot.get(0,0) > rot.get(1, 1) && rot.get(0, 0) > rot.get(2, 2)){
+    
+                    var s = 2.0 * Math.sqrt(1.0 + rot.get(0, 0) - rot.get(1, 1) - rot.get(2, 2));
+    
+                    this.w = (rot.get(1, 2) - rot.get(2, 1)) / s;
+                    this.x = 0.25 * s;
+                    this.y = (rot.get(1, 0) + rot.get(0, 1)) / s;
+                    this.z = (rot.get(2, 0) + rot.get(0, 2)) / s;
+    
+                } else if(rot.get(1, 1) > rot.get(2, 2)){
+                    
+                    var s = 2.0 * Math.sqrt(1.0 + rot.get(1, 1) - rot.get(0, 0) - rot.get(2,2));
+    
+                    this.w = (rot.get(2, 0) - rot.get(0, 2)) / s;
+                    this.x = (rot.get(1, 0) + rot.get(0, 1)) / s;
+                    this.y = 0.25 * s;
+                    this.z = (rot.get(2, 1) + rot.get(1, 2)) / s;
+                } else {
+                    
+                    var s = 2.0 * Math.sqrt(1.0 + rot.get(2, 2) - rot.get(0, 0) - rot.get(1, 1));
+    
+                    this.w = (rot.get(0, 1) - rot.get(1, 0)) / s;
+                    this.x = (rot.get(2, 0) + rot.get(0, 2)) / s;
+                    this.y = (rot.get(1, 2) + rot.get(2, 1)) / s;
+                    this.z = 0.25 * s;
+                }
             }
-        }
-
-        var length = Math.sqrt(
-            this.x * this.x + 
-            this.y * this.y + 
-            this.z * this.z + 
-            this.w * this.w);
-
-         this.x /= length;
-         this.y /= length;
-         this.z /= length;
-         this.w /= length;
-    }
-
+    
+            var length = Math.sqrt(
+                this.x * this.x + 
+                this.y * this.y + 
+                this.z * this.z + 
+                this.w * this.w);
+    
+             this.x /= length;
+             this.y /= length;
+             this.z /= length;
+             this.w /= length;
 }
 
 quaternion.prototype.length = function(){
@@ -88,8 +92,8 @@ quaternion.prototype.conjugate = function(){
     return new quaternion(-this.x, -this.y, -this.z, this.w);
 }
 
-quaternion.prototype.scale = function(r){
-    return new quaternion(x * r, y * r, z * r, w * r);
+quaternion.prototype.s_mul = function(r){
+    return new quaternion(this.x * r, this.y * r, this.z * r, this.w * r);
 }
 
 quaternion.prototype.q_mul = function(r){
@@ -159,25 +163,20 @@ quaternion.prototype.dot = function(r){
 
 quaternion.prototype.nlerp = function(dest, lerp, shortest){
 
-    var corrected_dest = dest;
+    var corrected_dest = dest.clone();
 
     if(shortest && this.dot(dest) < 0){
         corrected_dest = new quaternion(-dest.x, -dest.y, -dest.z, -dest.w);
     }
 
-    corrected_dest.sub(this);
-    corrected_dest.mul(lerp);
-    corrected_dest.add(this);
-    corrected_dest.normalized();
-
-    return corrected_dest;
+    return corrected_dest.sub(this).s_mul(lerp).add(this).normalized();
 }
 
 quaternion.prototype.slerp = function(dest, lerp, shortest){
     var EPSILON = 1e3;
 
     var cos = this.dot(dest);
-    var corrected_dest = dest;
+    var corrected_dest = dest.clone();
 
     if(shortest && cos < 0){
         cos = -cos;
@@ -195,12 +194,8 @@ quaternion.prototype.slerp = function(dest, lerp, shortest){
     var src_factor = Math.sin((1.0 - lerp) * angle) * inv_sin;
     var dest_factor = Math.sin((lerp) * angle) * inv_sin;
 
-    var m = this;
-    m.scale(src_factor);
-    m.add(corrected_dest);
-    m.scale(dest_factor);
-
-    return m;
+    var new_rot = this.clone();
+    return new_rot.s_mul(src_factor).add(corrected_dest).s_mul(dest_factor);
 }
 
 quaternion.prototype.get_forward = function(){

@@ -44,12 +44,12 @@
 			if(animationSwitch == 1.0){
 			
 				float angle = (atan(viewDirection.y, viewDirection.x)) * (180.0 / PI)  - rotation.y;
-				float offset = (PI / 4.0) * (180.0 / PI);
+				float offset = (PI / 4.0) * (180.0 / PI) ;
 
-				float dagrees = AbsoluteAngle(angle + offset);
+				float dagrees = AbsoluteAngle(angle + offset) ;
 
 				//normaledAngle = (normaledAngle * 2) - 1;
-				float normalizedAngle = dagrees / 360.0;
+				float normalizedAngle = (dagrees) / 360.0;
 
 				float index = ceil(mod(normalizedAngle * 4.0, 4.0) - 1.0);
 
@@ -74,7 +74,7 @@
 			if (tex.a < 1.0) 
 			discard;
 			
-			gl_FragColor = (tex * vec4(colorPass, 0.5));
+			gl_FragColor = (tex * vec4(colorPass, 1));
 
 			if(fog_pass == 1.0)
 			{

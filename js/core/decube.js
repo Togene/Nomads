@@ -3,7 +3,7 @@ function decube(c, min, max, w, d, h){
     this.min = min;
     this.max = max;
     
-    this.active = false;
+    this.active = true;
 
     this.dimensions = new THREE.Vector3(w, h, d);
 
@@ -100,21 +100,24 @@ decube.prototype.update_points = function(min, max, projection){
 
     if(this.active){
         if(this.t != undefined){
+            this.t.scale = new THREE.Vector3(1,1,1);
+
             //max and min from aabb, transformed already
             if(min != undefined && max != undefined){
                 var p0 = (new THREE.Vector3(
-                    min.x,
-                    min.y,
-                    min.z
+                    -this.dimensions.x,
+                    -this.dimensions.y,
+                    -this.dimensions.z
                 ));
-    
+                p0.applyMatrix4 (this.t.get_transformation().toMatrix4());
+
                 var p7 = (new THREE.Vector3(
-                    max.x,
-                    max.y,
-                    max.z
+                    this.dimensions.x,
+                    this.dimensions.y,
+                    this.dimensions.z
                 ));
-    
-                this.t.scale = new THREE.Vector3(1,1,1);
+                    
+                p7.applyMatrix4 (this.t.get_transformation().toMatrix4());
     
                 var p1 = new THREE.Vector3(
                     this.dimensions.x,

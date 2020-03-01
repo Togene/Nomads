@@ -137,7 +137,6 @@ function narrow_collision_check(near, e, delta){
 
             if(sat_sphere_response(e, l, rs)){
                 rs.set_colliding(true); 
-                colliding = true;
                 break;
             } 
             rs.set_colliding(false); 
@@ -168,7 +167,6 @@ function narrow_collision_check(near, e, delta){
         
 
         if(sat_response(e, l, r, lb, rb, near[i].o, delta)){
-            colliding = true;
         };
         
 
