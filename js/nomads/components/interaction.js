@@ -13,17 +13,16 @@ function interaction(trigger){
 interaction.prototype.update = function(delta){
     if(this.trigger.colliding){
         console.log("Hey There! my name is " + this.parent.name);
-    }
-    //this.parent.transform.rotation.y += .01;
-    var new_rot = this.parent.transform.get_look_direction(
-        player.transform.position, 
-        new THREE.Vector3(0, 1, 0), true);
-    
-    this.parent.transform.rotation = this.parent.transform.rotation.slerp(new_rot, delta*5, true)
-    
-    this.look_arrow.position.copy(this.parent.transform.position);
 
-    this.look_arrow.setDirection(this.parent.transform.get_transformed_rotation().get_forward());
+        this.parent.transform.look_at(
+            new THREE.Vector3(player.transform.position.x, this.parent.transform.scale.y, player.transform.position.z), 
+            new THREE.Vector3(0, 1, 0), true);
+
+            this.look_arrow.position.copy(this.parent.transform.position);
+
+        this.look_arrow.setDirection(this.parent.transform.get_transformed_rotation().get_forward());
+    }
+
 }
 
 interaction.prototype.set_parent = function(p){

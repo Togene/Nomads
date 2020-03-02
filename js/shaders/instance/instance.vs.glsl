@@ -42,6 +42,36 @@
 		attribute vec4 m2;
 		attribute vec4 m3;
 
+		varying vec3 forward;
+
+		vec4 q_mul(vec4 ql, vec4 qr){
+			float _w = (ql.w * qr.w) - (ql.x * qr.x) - (ql.y * qr.y) - (ql.z * qr.z);
+       		float _x = (ql.x * qr.w) + (ql.w * qr.x) + (ql.y * qr.z) - (ql.z * qr.y);
+       		float _y = (ql.y * qr.w) + (ql.w * qr.y) + (ql.z * qr.x) - (ql.x * qr.z);
+        	float _z = (ql.z * qr.w) + (ql.w * qr.z) + (ql.x * qr.y) - (ql.y * qr.x);
+			return vec4(_x, _y, _z, _w);
+		}
+
+		vec4 v_mul(vec4 ql, vec3 v){
+			float _w = (-ql.x * v.x) - (ql.y * v.y) - (ql.z * v.z);
+			float _x = ( ql.w * v.x) + (ql.y * v.z) - (ql.z * v.y);
+			float _y = ( ql.w * v.y) + (ql.z * v.x) - (ql.x * v.z);
+			float _z = ( ql.w * v.z) + (ql.x * v.y) - (ql.y * v.x);
+			return vec4(_x, _y, _z, _w);
+		}
+
+		vec4 conjugate(vec4 q){
+			return vec4(-q.x, -q.y, -q.z, q.w);
+		}
+
+		vec3 rotate(vec3 v, vec4 q){
+			vec4 conj = conjugate(q);
+			
+			vec4 w = q_mul(v_mul(q, v), conj);
+
+			return vec3(w.x, w.y, w.z);
+		}
+
 		// http://www.geeks3d.com/20141201/how-to-rotate-a-vertex-by-a-quaternion-in-glsl/
 		vec3 applyQuaternionToVector( vec4 q, vec3 v ){
 			return v + 2.0 * cross( q.xyz, cross( q.xyz, v ) + q.w * v );
@@ -63,6 +93,7 @@
 		void main() {
 			
 			rotation = orientation;
+			forward = normalize(rotate(vec3(0, 0, 1), rotation));
 
 			vec4 finalPosition = vec4(0);
 			mat4 transform_matrix = mat4(m0, m1, m2, m3);

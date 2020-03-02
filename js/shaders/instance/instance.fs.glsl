@@ -22,7 +22,8 @@
 		varying vec4 posWorld;
 
 		varying vec4 rotation;
-		
+		varying vec3 forward;
+
 		const float PI = 3.1415926535897932384626433832795;
 
 		float AbsoluteAngle(float angle) {
@@ -42,11 +43,12 @@
 			vec2 uvIndex = vec2(1.0);
 
 			if(animationSwitch == 1.0){
-			
-				float angle = (atan(viewDirection.y, viewDirection.x)) * (180.0 / PI)  - rotation.y;
-				float offset = (PI / 4.0) * (180.0 / PI) ;
+				
+				float angle = (atan(viewDirection.y, viewDirection.x) - atan(forward.z, forward.x)) * (180.0 / PI);
 
-				float dagrees = AbsoluteAngle(angle + offset) ;
+				float offset = (PI / 4.0) * (180.0 / PI) ;
+				// 
+				float dagrees = AbsoluteAngle(angle - (offset * 3.0)) ;
 
 				//normaledAngle = (normaledAngle * 2) - 1;
 				float normalizedAngle = (dagrees) / 360.0;

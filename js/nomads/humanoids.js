@@ -26,7 +26,7 @@ function npc_create(){
 
     npc.add_component(new aabb(npc.transform, .5, .5, .5, true, 0x00FF00, true));
 
-    var trigger_zone = new sphere(npc.transform, 1, true);
+    var trigger_zone = new sphere(npc.transform, 1.5, true);
     npc.add_component(trigger_zone);
     npc.add_component(new interaction(trigger_zone));
 

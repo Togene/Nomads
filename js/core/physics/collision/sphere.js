@@ -16,6 +16,7 @@ function sphere(transform, r, trigger){
     this.sphere_debug.position.copy(this.centre);
     this.sphere_debug.material.wireframe = true;
     this.sphere_debug.material.transparent = true;
+    this.sphere_debug.visible = false;
     console.log("huh?");
 
     scene.add( this.sphere_debug );
