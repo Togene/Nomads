@@ -141,7 +141,6 @@ function narrow_collision_check(near, e, delta){
             } 
             rs.set_colliding(false); 
         }
-        
     }   
 
     for(var i = 0; i < near.length; i++) {

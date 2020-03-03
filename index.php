@@ -26,6 +26,8 @@
 			<script src = "js/core/quaternion.js"></script>
 			<script src = "js/core/transform.js"></script>
 
+			<script src = "js/core/GUI/text.js"></script>
+
 			<script src = "js/core/physics/rigidbody.js"></script>
 			<script src = "js/core/physics/collision/edge.js"></script>
 			<script src = "js/core/physics/collision/sphere.js"></script>

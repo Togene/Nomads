@@ -3,7 +3,7 @@ function decube(c, min, max, w, d, h){
     this.min = min;
     this.max = max;
     
-    this.active = false;
+    this.active = true;
 
     this.dimensions = new THREE.Vector3(w, h, d);
 
