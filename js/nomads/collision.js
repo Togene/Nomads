@@ -130,15 +130,17 @@ function narrow_collision_check(near, e, delta){
         
         if (near[j].o == e){continue;}
 
-        var rs = near[j].o.get_component("sphere");
+        var rs = e.get_component("sphere");
 
         if(rs != null){
-            // rs.set_colliding(false); 
-
-            if(sat_sphere_response(e, l, rs)){
-                rs.set_colliding(true); 
-                break;
-            } 
+            if( near[j].o.name == "player"){
+                // rs.set_colliding(false); 
+                if(sat_sphere_response(e, l, rs)){
+                    rs.set_colliding(true); 
+                    break;
+                }
+            }
+            
             rs.set_colliding(false); 
         }
     }   
@@ -165,21 +167,19 @@ function narrow_collision_check(near, e, delta){
         //}
         
 
-        if(sat_response(e, l, r, lb, rb, near[i].o, delta)){
-        };
-        
+   
+        if(sat_response(e, l, r, lb, rb, near[i].o, delta)){};
 
         //TODO: check for 90/180/270 dagree's as not roated
-        //if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
-        //    //Sat for OOB, 
-        //    
-        //   
-
-        //} else {
-        //    //Swept for AABB
-        //    if(sat_response(e, l, r, lb, rb, near[i].o)){};
-        //    //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
-        //} 
+        if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
+            //Sat for OOB, 
+            
+           
+        } else {
+            //Swept for AABB
+            //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
+            //if(sweep_response(e, l, r, lb, rb, near[i].o, delt)){};
+        } 
     
     }
 
@@ -276,20 +276,17 @@ function sweep_response(e, l, r, lb, rb, near, delt){
     var sweep = l.intersect_sweep_aabb(r, delt);
                     
     if(sweep.hit != null){ 
-        return true;
-    } else {
-        return false;
-    }
-                   
-      //     l.set_colliding(true);
-      //     r.set_colliding(true);
-      //     
-      //     if(lb != undefined) lb.null_velocity();
-      //     if(rb != undefined) rb.null_velocity();
-    //
-      //     collision_sweep_response(sweep, e, r);
-//
-      //     //return;
+        l.set_colliding(true);
+        r.set_colliding(true);
+            //     
+        if(lb != undefined) lb.null_velocity();
+        if(rb != undefined) rb.null_velocity();
+        collision_sweep_response(sweep, e, r);
+        return true;  
+    } 
+    
+    
+    return false;               
 }
 
 function collision_ray_response(l, r, lr, lb, r_o){
