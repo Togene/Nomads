@@ -4,6 +4,8 @@ var godmode = false;
 var bugs = [] //* anything currently stuck to this body
 var min_vel = 0.5;
 
+const GRAVITY = 6.8;
+const GRAVITY_ACC = 10;
 
 function rigidbody(mass, isKin){
     this.mass = mass;
@@ -21,6 +23,7 @@ function rigidbody(mass, isKin){
     this.new_parent_position = new THREE.Vector3();
     this.parent = null;
     this.colliding = false;
+    this.grounded = false;
 }
 
 rigidbody.prototype.set_parent = function(p){
@@ -62,7 +65,7 @@ rigidbody.prototype.update = function(delta){
             this.velocity.y = 0;
             this.parent.transform.position.y = 10;
         } else {
-            this.velocity.y -= 6.8 * (10.0) * delta; // 100.0 = mass
+            if(!this.grounded) this.velocity.y -= (GRAVITY * GRAVITY_ACC) * delta; // 100.0 = mass
         }
 
         //*-------------------- Caps -----------------------
@@ -70,8 +73,8 @@ rigidbody.prototype.update = function(delta){
         //*-------------------- Caps -----------------------
 }
 
-rigidbody.prototype.get_step_y = function(){
-    return 9.8 * (20.0);
+rigidbody.prototype.get_step_y = function(delta){
+    return (GRAVITY * GRAVITY_ACC) * delta;
 }
 
 rigidbody.prototype.cap = function(delta){
@@ -224,9 +227,10 @@ rigidbody.prototype.ground = function(y, isplayer){
     }
 }
 
-//TODO: UPDATE COLLISION RESPONSE FOR KINETICS
-// *gadda be looking at swept/sweeping AABB :(
-// *
+rigidbody.prototype.set_grounded = function(bool){
+    this.grounded = bool;
+}
+
 rigidbody.prototype.flip_velocity = function(normal, delta){
 
    // console.log("poop", normal, vec_test);
@@ -244,19 +248,11 @@ rigidbody.prototype.flip_velocity = function(normal, delta){
     //this.velocity.y *= -(1);
 }
 
-
 //good for water/climbing
-rigidbody.prototype.null_velocity = function(){
+rigidbody.prototype.null_velocity = function(delta){
     this.velocity.z -= this.velocity.z;
     this.velocity.x -= this.velocity.x;
     this.velocity.y -= this.velocity.y;
-    //if(Math.abs(this.velocity.z) < 1){
-    //    this.velocity.z -= get_step_z();
-    //}
-//
-    //if(Math.abs(this.velocity.x) < 1){
-    //    this.velocity.x -= get_step_x();
-    //}
 }
 
 //push transform without velocity

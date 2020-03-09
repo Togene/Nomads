@@ -1,17 +1,14 @@
 function hodgman_sutherland(e1, e2, n, flip){
-    var ref = e1; 
-    var inc = e2;
-    var flip = flip;
-
-    //if(Math.abs(e1.dot(n)) <= Math.abs(e2.dot(n))){
-    //    ref = e1;
-    //    inc = e2;
-    //} else {
-    //    ref = e2;
-    //    inc = e1;
-    //
-    //    flip = true;
-    //}
+    if(Math.abs(e1.dot(n)) <= Math.abs(e2.dot(n))){
+        ref = e1;
+        inc = e2;
+        //flip = true;
+    } else {
+        ref = e2;
+        inc = e1;
+    
+        flip = true;
+    }
 
     var refv = ref.get_vector();
     var o1 = refv.dot(ref.v0);
@@ -23,7 +20,7 @@ function hodgman_sutherland(e1, e2, n, flip){
     var cp = clip(cp[0], cp[1], refv.clone().negate(), -o2);
     if(cp.length < 2) return;
 
-    var ref_norm = ref.normal();
+    var ref_norm = ref.get_centre().clone().sub(ref.face_normal()).normalize();
 
     if(flip) ref_norm.negate();
 

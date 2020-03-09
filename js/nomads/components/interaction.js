@@ -26,13 +26,13 @@ interaction.prototype.update = function(delta){
         this.parent.transform.look_at(
             new THREE.Vector3(
                 player.transform.position.x, 
-                this.parent.transform.scale.y, 
+                this.parent.transform.position.y + this.parent.transform.scale.y/2, 
                 player.transform.position.z), 
             new THREE.Vector3(0, 1, 0), true);
 
             this.look_arrow.position.copy(this.parent.transform.position);
 
-        this.look_arrow.setDirection(this.parent.transform.get_transformed_rotation().get_forward());
+        this.look_arrow.setDirection(this.parent.transform.rotation.get_forward());
     } else {
         this.dailogue.visible = false;
     }

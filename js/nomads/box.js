@@ -2,7 +2,8 @@ var boxes = [];
 
 function box_create(p, q){
     var shader = get_data("instance_shader");
-    
+    shader.extra.trans = true;
+
     var buffer = create_buffer();
     var attributes = [];
 
@@ -37,7 +38,7 @@ function box_create(p, q){
     create_box_face(90, new THREE.Vector3(1,0,0),
      new THREE.Vector3(0,half_y, 0), box, buffer, attributes);
 
-    box.add_component(new aabb(box.transform, 2.5, 2.5, 2.5, true, 0xFFFFFF, true));
+    box.add_component(new aabb(box.transform, .5, .5, .5, true, 0xFFFFFF, true));
     
     CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 5, false, false);
     boxes.push(box);

@@ -183,7 +183,7 @@ function narrow_collision_check(near, e, delta){
     
     }
 
-
+    lb.set_grounded(false);
 }
 
 function sat_sphere_response(e, l, r){
@@ -198,53 +198,85 @@ function sat_sphere_response(e, l, r){
 function sat_response(e, l, r, lb, rb, near, delta){
     
     //initial test?
-    var overlaps = [];
-    var sat_init = l.intersect_sat_aabb(r, null, true, overlaps);
+    var e_pos =  e.transform.position.clone();
+    var prevois_step = lb.reverse_step(e_pos.clone(), delta);
+    var step_delta = e_pos.clone().sub(prevois_step);
     
-    if(sat_init.result){
-            
-        var e_pos =  e.transform.position.clone();
-        var prevois_step = lb.reverse_step(e_pos.clone(), delta);
-        var step_delta = e_pos.clone().sub(prevois_step);
+    //step_delta.y -= lb.get_step_y(delta)/2;
 
-        //debug_direction(e.transform.position.clone(), prevois_step.clone());
+    var overlaps = [];
+    var sat_init = l.intersect_sat_aabb(r, null, true, step_delta.clone(), overlaps);
 
-        var sat = null;
-        var cutoff = 0.17;
-        if(step_delta.length() > cutoff){
-           // console.log("high velocity!");
-            var dir = prevois_step.clone().sub(e_pos).normalize().negate();
-            sat = l.intersect_sat_aabb(r, dir, false, overlaps);
-            //debug_direction(e_pos, prevois_step, cutoff);
+    if(sat_init.result) {
+        //l.set_colliding(true);
+        //r.set_colliding(true);
+
+        if( sat_init.axis.y >= 0.55 && e.name == "player"){
+            canJump = true;
+            lb.set_grounded(true);
+            if(rb != null) rb.set_grounded(true);
         } else {
-           // console.log("low velocity!");
-            sat = sat_init;//l.intersect_sat_aabb(r, null);
+       
         }
+    
+        if(lb != undefined){lb.null_velocity(delta);}
+        if(rb != undefined){rb.null_velocity(delta);}
 
-        if(sat.result){
+        //return true;
+    } 
 
-            e.transform.position.x += sat.axis.x * sat.gap * 1.001;
-            e.transform.position.z += sat.axis.z * sat.gap * 1.001;
-            e.transform.position.y += sat.axis.y * sat.gap * 1.001;
+    //initial test?
+    var e_pos =  e.transform.position.clone();
+    var prevois_step = lb.reverse_step(e_pos.clone(), delta);
+    var step_delta = e_pos.clone().sub(prevois_step);
 
-            if( sat.axis.y >= 0.55 && e.name == "player"){
-                canJump = true;
-            } else {
-                l.set_colliding(true);
-                r.set_colliding(true);
-            }
-        
-            if(lb != undefined){lb.null_velocity();}
-            if(rb != undefined){rb.null_velocity();}
-
-            return true;
-        }
+    var overlaps = [];
+    var sat_init = l.intersect_sat_aabb(r, null, true, null, null);
+    
+    if(sat_init.result) {
+        e.transform.position.x += sat_init.axis.x * sat_init.gap * 1;
+        e.transform.position.z += sat_init.axis.z * sat_init.gap * 1;
+        e.transform.position.y += sat_init.axis.y * sat_init.gap * 1;
     }
 
     l.set_colliding(false);
     r.set_colliding(false);
 
     return false;
+
+  
+}
+
+function sat_most_parrallel(l, r, sat, init, p_step, p, overlaps){
+    var dir = p_step.clone().sub(p).normalize().negate();
+    var sat = l.intersect_sat_aabb(r, dir, false, overlaps);
+
+    var x = 0;
+    var next_axis = sat.axis;
+    var next_gap = sat.o;
+
+    while(next_axis.equals(sat.axis)){
+        x++;
+        next_axis = sat.list[x].a;
+        next_gap = sat.list[x].o;
+    }
+
+    //console.log("sat", sat.axis, 
+    //            "init", sat_init.axis, 
+    //            "next", next_axis);
+
+    //console.log(next_axis.dot(sat_init.axis));
+
+    if(next_axis.equals(init.axis)){
+        return init;
+    } else if(next_axis.dot(init.axis) < 1){
+        console.log("sat", sat.axis, 
+                "init", init.axis, 
+                "next", next_axis);
+
+    } 
+
+    return sat;
 }
 
 function debug_direction (f, t, cutoff){
