@@ -65,8 +65,12 @@ rigidbody.prototype.update = function(delta){
             this.velocity.y = 0;
             this.parent.transform.position.y = 10;
         } else {
-            if(!this.grounded) this.velocity.y -= (GRAVITY * GRAVITY_ACC) * delta; // 100.0 = mass
-        }
+            if(!this.grounded){
+                this.velocity.y -= (GRAVITY * GRAVITY_ACC) * delta;
+            } else {
+                this.velocity.y = 0;
+            }
+        }   
 
         //*-------------------- Caps -----------------------
         this.cap(delta);
@@ -252,7 +256,7 @@ rigidbody.prototype.flip_velocity = function(normal, delta){
 rigidbody.prototype.null_velocity = function(delta){
     this.velocity.z -= this.velocity.z;
     this.velocity.x -= this.velocity.x;
-    this.velocity.y -= this.velocity.y;
+    this.velocity.y -= (this.velocity.y);
 }
 
 //push transform without velocity

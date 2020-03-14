@@ -166,13 +166,11 @@ function narrow_collision_check(near, e, delta){
         //    collision_ray_response(l, r, lr, lb, near[i].o);
         //}
         
-
-   
         if(sat_response(e, l, r, lb, rb, near[i].o, delta)){};
 
         //TODO: check for 90/180/270 dagree's as not roated
         if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
-            //Sat for OOB, 
+            //stable_sat for OOB, 
             
            
         } else {
@@ -183,100 +181,101 @@ function narrow_collision_check(near, e, delta){
     
     }
 
-    lb.set_grounded(false);
+    
 }
 
 function sat_sphere_response(e, l, r){
     
-    var sat_init = l.intersect_sat_aabb_sphere(r);
+    var stable_sat_init = l.intersect_sat_aabb_sphere(r);
 
-    if(sat_init.result){return true;} 
+    if(stable_sat_init.result){return true;} 
 
     return false;
 }
 
 function sat_response(e, l, r, lb, rb, near, delta){
     
-    //initial test?
-    var e_pos =  e.transform.position.clone();
-    var prevois_step = lb.reverse_step(e_pos.clone(), delta);
-    var step_delta = e_pos.clone().sub(prevois_step);
+    var prev_step = lb.reverse_step(e.transform.position.clone(), delta);
+    var step_delta = e.transform.position.clone().sub(prev_step);
+    var e_pos = e.transform.position.clone();
     
-    //step_delta.y -= lb.get_step_y(delta)/2;
+    var step_direction = step_delta.clone().normalize();
 
-    var overlaps = [];
-    var sat_init = l.intersect_sat_aabb(r, null, true, step_delta.clone(), overlaps);
+    //step delta length is always above 0.18 due to gravity
+    if(step_delta.length() > 0.2){
 
-    if(sat_init.result) {
-        //l.set_colliding(true);
-        //r.set_colliding(true);
 
-        if( sat_init.axis.y >= 0.55 && e.name == "player"){
-            canJump = true;
-            lb.set_grounded(true);
+        var sat_impact_check = l.intersect_sat_aabb(r, null, true, null, null);
+
+        if(sat_impact_check.result){
+
+            if(lb != null) lb.set_grounded(true);
             if(rb != null) rb.set_grounded(true);
-        } else {
-       
+    
+            if(lb != undefined){lb.null_velocity(delta);}
+            if(rb != undefined){rb.null_velocity(delta);}
+
+            var small_step_delta = new THREE.Vector3(0.01, 0.01, 0.01).multiply(step_direction);
+            var small_step = new THREE.Vector3();
+
+            var k = 0;
+      
+            while(k < 1000){
+                small_step.sub(small_step_delta);
+                
+                if(!l.intersect_sat_aabb(r, null, true, small_step, null).result){
+                    console.log("exit found");
+                    break;
+                };
+                
+                k++;
+            }
+
+            console.log(small_step);
+            console.log(step_delta);
+            e.transform.position.add(small_step);
+
+            console.log(k);
+            console.log("%cdoing high impact", 'color: #ff5500');
+            console.log(sat_impact_check.axis);
+
+
         }
-    
-        if(lb != undefined){lb.null_velocity(delta);}
-        if(rb != undefined){rb.null_velocity(delta);}
-
-        //return true;
-    } 
-
-    //initial test?
-    var e_pos =  e.transform.position.clone();
-    var prevois_step = lb.reverse_step(e_pos.clone(), delta);
-    var step_delta = e_pos.clone().sub(prevois_step);
-
-    var overlaps = [];
-    var sat_init = l.intersect_sat_aabb(r, null, true, null, null);
-    
-    if(sat_init.result) {
-        e.transform.position.x += sat_init.axis.x * sat_init.gap * 1;
-        e.transform.position.z += sat_init.axis.z * sat_init.gap * 1;
-        e.transform.position.y += sat_init.axis.y * sat_init.gap * 1;
+    } else {
+        //normal sat with no delta change
+        normal_sat_response(l, r, e, near, lb, rb, delta);
     }
+
+
 
     l.set_colliding(false);
     r.set_colliding(false);
 
+    if(lb != null) lb.set_grounded(false);
+    if(rb != null) rb.set_grounded(false);
     return false;
-
-  
 }
 
-function sat_most_parrallel(l, r, sat, init, p_step, p, overlaps){
-    var dir = p_step.clone().sub(p).normalize().negate();
-    var sat = l.intersect_sat_aabb(r, dir, false, overlaps);
+function normal_sat_response(l, r, e, near, lb, rb, delta) {
+    var sat = l.intersect_sat_aabb(r, null, true, null, null);
 
-    var x = 0;
-    var next_axis = sat.axis;
-    var next_gap = sat.o;
+    if(sat.result) {
+        e.transform.position.x += sat.axis.x * sat.gap * 1;
+        e.transform.position.z += sat.axis.z * sat.gap * 1;
+        e.transform.position.y += sat.axis.y * sat.gap * 1;
 
-    while(next_axis.equals(sat.axis)){
-        x++;
-        next_axis = sat.list[x].a;
-        next_gap = sat.list[x].o;
+        if(sat.axis.y >= 0.55 && e.name == "player"){
+            if(lb != null) lb.set_grounded(true);
+            if(rb != null) rb.set_grounded(true);
+            canJump = true;
+        }
+
+        l.set_colliding(true);
+        r.set_colliding(true);
+
+        if(lb != undefined){lb.null_velocity(delta);}
+        if(rb != undefined){rb.null_velocity(delta);}
     }
-
-    //console.log("sat", sat.axis, 
-    //            "init", sat_init.axis, 
-    //            "next", next_axis);
-
-    //console.log(next_axis.dot(sat_init.axis));
-
-    if(next_axis.equals(init.axis)){
-        return init;
-    } else if(next_axis.dot(init.axis) < 1){
-        console.log("sat", sat.axis, 
-                "init", init.axis, 
-                "next", next_axis);
-
-    } 
-
-    return sat;
 }
 
 function debug_direction (f, t, cutoff){

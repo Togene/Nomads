@@ -250,7 +250,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 						s.transform.rotation = new quaternion(0,0,0,0, axis, radians);
 						
 						s.transform.rotation = s.transform.rotation.q_mul(
-							new quaternion(0,0,0,0, new THREE.Vector3(1, 0, 0), Math.PI/4)
+							new quaternion(0,0,0,0, new THREE.Vector3(0, 1, 0), Math.PI/4)
 						)
 						// * s.transform.scale.y/2
 						s.transform.position = new THREE.Vector3(
