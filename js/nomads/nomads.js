@@ -83,20 +83,21 @@ function game_update(delta){
 
     var num_frames = 1;
     for(var i = 0; i < num_frames; i++){
+
         collision_update(delta/num_frames);
-
-
         movement(delta/num_frames);
         physics_update(delta/num_frames);
-
+     
         player_update(delta/num_frames);
 
+         
+        for(var j = 0; j < Scene.length; j++){
+            Scene[j].update(delta/num_frames);
+        }
+
     }
 
- 
-    for(var j = 0; j < Scene.length; j++){
-        Scene[j].update(delta/num_frames);
-    }
+
     shader_update(delta);
     world_update(delta);
     

@@ -180,8 +180,6 @@ function narrow_collision_check(near, e, delta){
         } 
     
     }
-
-    
 }
 
 function sat_sphere_response(e, l, r){
@@ -194,56 +192,55 @@ function sat_sphere_response(e, l, r){
 }
 
 function sat_response(e, l, r, lb, rb, near, delta){
-    
-    var prev_step = lb.reverse_step(e.transform.position.clone(), delta);
-    var step_delta = e.transform.position.clone().sub(prev_step);
-    var e_pos = e.transform.position.clone();
-    
-    var step_direction = step_delta.clone().normalize();
 
-    //step delta length is always above 0.18 due to gravity
-    if(step_delta.length() > 0.2){
+    var step = lb.get_step(new THREE.Vector3(), delta);
+    var tiny_step = new THREE.Vector3(0.01, 0.01, 0.01).multiply(step.clone().normalize());
+    var step_total = new THREE.Vector3();
+    var k = 0;
 
-
-        var sat_impact_check = l.intersect_sat_aabb(r, null, true, null, null);
-
-        if(sat_impact_check.result){
-
-            if(lb != null) lb.set_grounded(true);
-            if(rb != null) rb.set_grounded(true);
-    
-            if(lb != undefined){lb.null_velocity(delta);}
-            if(rb != undefined){rb.null_velocity(delta);}
-
-            var small_step_delta = new THREE.Vector3(0.01, 0.01, 0.01).multiply(step_direction);
-            var small_step = new THREE.Vector3();
-
-            var k = 0;
-      
-            while(k < 1000){
-                small_step.sub(small_step_delta);
-                
-                if(!l.intersect_sat_aabb(r, null, true, small_step, null).result){
-                    console.log("exit found");
-                    break;
-                };
-                
-                k++;
-            }
-
-            console.log(small_step);
-            console.log(step_delta);
-            e.transform.position.add(small_step);
-
-            console.log(k);
-            console.log("%cdoing high impact", 'color: #ff5500');
-            console.log(sat_impact_check.axis);
-
-
-        }
+    if(step.length() < 0.2){
+        //console.log("%c no point doing discreate shit", 'color: #00ff00');
+        general_sat(e, l, r, lb, rb, near, delta)
     } else {
-        //normal sat with no delta change
-        normal_sat_response(l, r, e, near, lb, rb, delta);
+        while(k < 100){
+            step_total.add(tiny_step);
+    
+            var sat = l.intersect_sat_aabb(r, null, true, step_total, null);
+            if(sat.result){
+  
+                if(lb != undefined){lb.null_velocity(delta, true);}
+                if(rb != undefined){rb.null_velocity(delta, true);}
+
+                l.set_colliding(true);
+                r.set_colliding(true);
+
+                if(sat.axis.y >= 0.55 && e.name == "player"){
+                    canJump = true;
+                   
+                    //if(lb != null) lb.set_grounded(true);
+                    //if(rb != null) rb.set_grounded(true);
+
+                } else {
+         
+                }
+                
+                e.transform.position.add(step_total);
+
+                e.transform.position.x += sat.axis.x * sat.gap * 1;
+                e.transform.position.z += sat.axis.z * sat.gap * 1;
+                e.transform.position.y += sat.axis.y * sat.gap * 1;
+                
+                //console.log("found collision at ", k);
+                return true; 
+                break;
+               
+            }
+            if(step_total.length() >= step.length()){
+                //console.log("%csteps ended at ", 'color: #bada55', k); 
+                break;
+            }
+            k++;
+        }
     }
 
 
@@ -256,7 +253,7 @@ function sat_response(e, l, r, lb, rb, near, delta){
     return false;
 }
 
-function normal_sat_response(l, r, e, near, lb, rb, delta) {
+function general_sat(e, l, r, lb, rb, near, delta){
     var sat = l.intersect_sat_aabb(r, null, true, null, null);
 
     if(sat.result) {

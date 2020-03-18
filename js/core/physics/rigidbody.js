@@ -253,10 +253,14 @@ rigidbody.prototype.flip_velocity = function(normal, delta){
 }
 
 //good for water/climbing
-rigidbody.prototype.null_velocity = function(delta){
+rigidbody.prototype.null_velocity = function(delta, null_y){
     this.velocity.z -= this.velocity.z;
     this.velocity.x -= this.velocity.x;
-    this.velocity.y -= (this.velocity.y);
+    this.null_y(delta);
+}
+
+rigidbody.prototype.null_y = function(delta){
+    this.velocity.y = 0;
 }
 
 //push transform without velocity
