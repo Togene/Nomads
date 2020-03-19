@@ -227,7 +227,6 @@ rigidbody.prototype.ground = function(y, isplayer){
         if(isplayer) {
             canJump = true;
         }
-   
     }
 }
 

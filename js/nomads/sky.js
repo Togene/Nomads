@@ -39,7 +39,6 @@ function update_sky(delta){
     time += delta; 
     current_time = (time % cycle_length);
 
-    ////get current sky color
     var raw_sky_index = normalize(0, cycle_length, current_time) * sky_colors.length;
 
     sky_index = Math.floor(raw_sky_index);

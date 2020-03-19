@@ -77,7 +77,7 @@ function game_bootstrap(data){
     normal update is where inner game stuff will take place
 */
 function game_update(delta){
-    game_time += delta * game_speed;
+    game_time += (delta * game_speed);
 
    
 

@@ -208,18 +208,16 @@ function sat_response(e, l, r, lb, rb, near, delta){
             var sat = l.intersect_sat_aabb(r, null, true, step_total, null);
             if(sat.result){
   
-                if(lb != undefined){lb.null_velocity(delta, true);}
-                if(rb != undefined){rb.null_velocity(delta, true);}
+                if(lb != undefined){lb.null_velocity(delta, false);}
+                if(rb != undefined){rb.null_velocity(delta, false);}
 
-                l.set_colliding(true);
-                r.set_colliding(true);
+     
 
                 if(sat.axis.y >= 0.55 && e.name == "player"){
                     canJump = true;
-                   
-                    //if(lb != null) lb.set_grounded(true);
-                    //if(rb != null) rb.set_grounded(true);
 
+                    if(lb != null) lb.set_grounded(true);
+                    if(rb != null) rb.set_grounded(true);
                 } else {
          
                 }
@@ -232,6 +230,10 @@ function sat_response(e, l, r, lb, rb, near, delta){
                 
                 //console.log("found collision at ", k);
                 return true; 
+
+                l.set_colliding(true);
+                r.set_colliding(true);
+
                 break;
                
             }

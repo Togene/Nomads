@@ -57,7 +57,9 @@
 
 				uvTime = time;
 				float randx = clamp(random(framePass), 0.0, framePass.x);
-				float timeOffsetX = ceil(mod(time*2.0, (framePass.x))-1.0)/spritesheetsizePass.x;
+
+				//TODO: Fix timeoffset glitching issue caused by time
+				float timeOffsetX = 0.0;//(ceil(mod(mod(time, 1000.0), (framePass.x))-1.0)/spritesheetsizePass.x);
 				
 				float yUvOffset = vUv.y;
 
@@ -76,7 +78,7 @@
 			if (tex.a < 1.0) 
 			discard;
 			
-			gl_FragColor = (tex * vec4(colorPass, 0.5));
+			gl_FragColor = (tex * vec4(colorPass, 1.0));
 
 			if(fog_pass == 1.0)
 			{

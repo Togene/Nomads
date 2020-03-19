@@ -53,8 +53,8 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false, n
     this.non_active_color = hex;
     this.active_color = 0x0000FF;
 
-    this.decube = new decube(this.centre, this.min, this.max, this.w, this.d, this.h);
-    this.decube.update(this.min, this.max, transform, 1);
+    this.decube = new decube();
+    this.decube.update(this.get_verts());
 };
 
 aabb.prototype.set_projection = function(v){
@@ -112,7 +112,7 @@ aabb.prototype.update = function(delta){
         
     if(this.decube != null){
         if( this.parent != null){
-            this.decube.update(this.min, this.max, this.parent.transform, this.projection, delta);
+            this.decube.update(this.get_verts());
         }
     }
 
@@ -288,19 +288,27 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 
 //grabs the aabb's transformed verts
 aabb.prototype.get_verts = function(offset){
-    var vertices = [];
-    var step = new THREE.Vector3();
+
+    if(this.parent == null){
+        return [
+            new THREE.Vector3(),
+            new THREE.Vector3(),
+            new THREE.Vector3(),
+            new THREE.Vector3(),
+            new THREE.Vector3(),
+            new THREE.Vector3(),
+            new THREE.Vector3(),
+            new THREE.Vector3(),
+        ]
+    }
 
     var transform_clone = this.parent.transform.clone();
     
     if(offset != null){
-        //console.log("not null");
         transform_clone.position.add(offset);
     }
     
     transform_clone.scale = new THREE.Vector3(1,1,1);
-
-
 
     var m = transform_clone.get_transformation().toMatrix4();
 
@@ -334,16 +342,17 @@ aabb.prototype.get_verts = function(offset){
 
     //at this point the velocity should already be added
     //so we need to substract and
-    vertices.push(vert_0);
-    vertices.push(vert_1);
-    vertices.push(vert_2);
-    vertices.push(vert_3);
-    vertices.push(vert_4);
-    vertices.push(vert_5);
-    vertices.push(vert_6);
-    vertices.push(vert_7);
+    return [
+        vert_0,
+        vert_1,
+        vert_2,
+        vert_3,
+        vert_4,
+        vert_5,
+        vert_6,
+        vert_7,
 
-    return vertices;
+    ];
 }
 
 aabb.prototype.face_helper = function(f){
@@ -651,8 +660,6 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps)
                 }
             }
         }
-
-       
 
         for(var i = 0; i < edge_axes.length; i++){
             var proj_1 = this.project(edge_axes[i].n, v);
