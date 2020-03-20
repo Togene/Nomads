@@ -3,10 +3,10 @@ function decube(verts){
     this.active = true;
 
     this.line_mat = new THREE.MeshBasicMaterial( {color: 0xffffff} );
-
+    this.line_mat2 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
     var v = new THREE.Vector3();
     
-    this.line01 = new THREE.Line(this.create_line(v, v), this.line_mat);
+    this.line01 = new THREE.Line(this.create_line(v, v), this.line_mat2);
     this.line12 = new THREE.Line(this.create_line(v, v), this.line_mat);
     this.line23 = new THREE.Line(this.create_line(v, v), this.line_mat);
     this.line30 = new THREE.Line(this.create_line(v, v), this.line_mat);

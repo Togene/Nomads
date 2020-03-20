@@ -21,6 +21,9 @@
 			<script src = "js/core/color_utilities.js"></script>
 			<script src = "js/core/instance_geometry.js"></script>
 			
+			<script src = "js/core/animation/animation.js"></script>
+			<script src = "js/core/animation/animator.js"></script>
+
 			<script src = "js/core/vector3_extensions.js"></script>
 			<script src = "js/core/matrix.js"></script>
 			<script src = "js/core/quaternion.js"></script>

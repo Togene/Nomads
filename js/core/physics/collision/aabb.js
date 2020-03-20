@@ -309,6 +309,7 @@ aabb.prototype.get_verts = function(offset){
     }
     
     transform_clone.scale = new THREE.Vector3(1,1,1);
+    
 
     var m = transform_clone.get_transformation().toMatrix4();
 
@@ -342,6 +343,22 @@ aabb.prototype.get_verts = function(offset){
 
     //at this point the velocity should already be added
     //so we need to substract and
+
+          /*
+        v7 ------ v6
+        |          |
+        |          |
+        |          |
+        v4 ------ v5
+
+
+        v3 ------ v2
+        |          |
+        |          |
+        |          |
+        v0 ------ v1
+    */
+   
     return [
         vert_0,
         vert_1,

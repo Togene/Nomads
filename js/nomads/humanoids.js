@@ -33,7 +33,8 @@ function npc_create(){
     npc.add_component(new rigidbody(1, false));
     npc.add_component(npc_decomposer);
     npc.add_component(new ray(npc.transform.position, new THREE.Vector3(0, -1, 0)));
-        
+    npc.add_component(new animator([new animation("idle", 0, 1)], "/something?"))
+
     PopulateBuffer(
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, 0), 

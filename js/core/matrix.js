@@ -87,7 +87,7 @@ matrix.prototype.init_rotation_fu = function(forward, up){
     
     var f = forward.normalize();
     var r = up.normalize();
-    r.cross(f);
+    r = r.clone().cross(f);
     
     var u = f.clone().cross(r);
 

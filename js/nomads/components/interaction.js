@@ -31,9 +31,7 @@ interaction.prototype.update = function(delta){
             this.parent.transform.position.y, 
             player.transform.position.z);
 
-        //    e.negate();
-
-        this.parent.transform.look_at( e, new THREE.Vector3(0, 1, 0), true);
+        this.parent.transform.look_at(e, new THREE.Vector3(0, 1, 0), true);
 
         this.look_arrow.position.copy(this.parent.transform.position);
 
