@@ -6,6 +6,7 @@ var DONE = false;
 
 var async_time = 0;
 var elapsed_time = 0;
+var map_index = 0;
 
 /*used to grab all outside resources for the game since all resources
 are async and require some to be compiled*/
@@ -37,6 +38,13 @@ function antlion_fall(i, data){
                 raw_resources[i].data.detail,
                 antlion_fall, 
                 i - 1);
+        } else if(raw_resources[i].type == "m"){
+            map_texture_loader(
+                raw_resources[i].name, 
+                map_index++, 
+                raw_resources[i].data.url, 
+                antlion_fall, 
+                i - 1);
         }
         return;
     }
@@ -56,6 +64,13 @@ function antlion_fall(i, data){
             raw_resources[i].data.color, 
             raw_resources[i].data.height, 
             raw_resources[i].data.detail,
+            antlion_fall, 
+            i - 1);
+    } else if(raw_resources[i].type == "m"){
+        map_texture_loader(
+            raw_resources[i].name, 
+            map_index++,
+            raw_resources[i].data.url, 
             antlion_fall, 
             i - 1);
     }
@@ -129,6 +144,18 @@ function texture_loader(name, urlc, urlh, urld, onLoad, i, onProgress, onError){
     });
 }
 
+function map_texture_loader(name, index, url, onLoad, i, onProgress, onError){
+    
+    texture = new THREE.TextureLoader().load(url, function () {
+
+        texture.magFilter = THREE.NearestFilter;
+        texture.minFilter = THREE.NearestFilter;
+
+       
+        onLoad(i, {name:name, index:index, map: texture}, onProgress, onError)
+    });
+}
+
 //Yummy Yum Yum
 function text_parse(glsl, shadow_text, dither_text) {
     var text = glsl.replace("AddShadow", shadow_text);
@@ -137,8 +164,23 @@ function text_parse(glsl, shadow_text, dither_text) {
     return text;
 }
 
-function get_data(name){
-    for(var i = 0; i < compiled_data.length; i++){
-        if(compiled_data[i].name == name){return compiled_data[i];}
+function get_data(key){
+
+    if(typeof key === 'string'){
+        //console.log(key);
+
+        for(var i = 0; i < compiled_data.length; i++){
+            if(compiled_data[i].name == key){return compiled_data[i];}
+        }
+
+    } else if(typeof key === 'number'){
+       // console.log(key);
+
+        for(var i = 0; i < compiled_data.length; i++){
+
+            if(compiled_data[i].index != null){
+                    if(compiled_data[i].index == key){return compiled_data[i];}
+            }
+        }
     }
 }

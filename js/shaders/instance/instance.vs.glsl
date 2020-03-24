@@ -128,30 +128,36 @@
 
 			if(type == 0.0){
 				//---------------------------------------------------Normal/3D Sprite ---------------------------------------------------
-				/* Sprites Face The Camera*/
+				/* Sprites Face The Camera in Y Axis*/
 
 				mat4 modelview = viewMatrix * transform_matrix;
-//
+
 				modelview[0][0] = 1.0;
 				modelview[0][1] = 0.0;
 				modelview[0][2] = 0.0;
-//
+
 				//modelview[1][0] = 0.0;
 				//modelview[1][1] = 1.0;
 				//modelview[1][2] = 0.0;
-//
+
 				modelview[2][0] = 0.0;
 				modelview[2][1] = 0.0;
 				modelview[2][2] = 1.0;
-//
-				vec4 mvPosition =  modelview * vec4((position + translation) * scale,  1.0 );
-//
+
+				vec4 mvPosition =  modelview * vec4(((position  * scale) + translation) ,  1.0 );
+				
 				finalPosition = projectionMatrix * mvPosition;
 
 				//REMMMEBER THAT POSITION IS THE POSITION OF THE ENTIRE OBJECT!
 				//ALL HUMNIONDS/TREES/CRABS ARE UNDER A SINGLE OBJECT SO U NEED POSITION + TRANSLATION
 
 				//---------------------------------------------------Normal/3D Sprite ---------------------------------------------------
+			} else if (type == 3.0){
+			/* Sprites Face The Camera*/
+				vec4 mvPosition =  viewMatrix * transform_matrix * vec4(translation ,  1.0 );
+				mvPosition.xyz += (position  * scale);
+				finalPosition = projectionMatrix * mvPosition;
+
 			} else if (type == 1.0){
 				//---------------------------------------------------Solid Sprite ---------------------------------------------------
 				/* Sprites Dont Face The Camera*/

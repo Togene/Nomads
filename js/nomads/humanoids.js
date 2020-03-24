@@ -53,6 +53,8 @@ function npc_create(){
     true, 
     true);
 
+
+
     return npc;
 }
 

@@ -12,7 +12,7 @@ var landUniform =
     customColor: { type: "i", value: new THREE.Vector4(.48, .89, .90, 1) }
 };
 
-const MapFileurl =[
+const MapFileurl = [
     'img/sprite_sheets/critters.png',
     'img/sprite_sheets/trees.png',
     'img/sprite_sheets/sky.png',
@@ -37,6 +37,10 @@ function tile_resource(c, h, d){
     this.color = c;
     this.height = h;
     this.detail = d;
+};
+
+function map_resource(url){
+    this.url = url;
 };
 
 // { name:"Water_Tile",type: 'island_textures', color_file: 'img/World/water_tile.png', height_file: 'img/World/water_level_color.png', detail_file: 'img/World/Crab_Island_detail.png'},
@@ -95,4 +99,16 @@ const raw_resources = [
             'img/tile/sea_floor.png', 
             'img/tile/sea_floor_detail.png',
         )),
+    new raw_resource(
+        "critters", 'm', new map_resource('img/tile/sea_floor_color.png')),
+    new raw_resource(
+        "trees", 'm', new map_resource('img/sprite_sheets/trees.png')),
+    new raw_resource(
+        "sky", 'm', new map_resource('img/sprite_sheets/sky.png')),
+    new raw_resource(
+        "structures", 'm', new map_resource('img/sprite_sheets/structures.png')),
+    new raw_resource(
+        "lithies", 'm', new map_resource('img/sprite_sheets/lithies.png')),
+    new raw_resource(
+        "debug", 'm', new map_resource('img/sprite_sheets/debug.png')),
 ];
