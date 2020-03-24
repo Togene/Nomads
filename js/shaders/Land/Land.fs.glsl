@@ -84,7 +84,7 @@ uniform vec3 SunLightPosition;
 
 			//lightFactor =  directionalLights[0].color * nDotL; 
 
-			gl_FragColor = tex; //* vec4(lightFactor, 0.65);// * light;
+			gl_FragColor = vec4(tex.xyz, 0.5); //* vec4(lightFactor, 0.65);// * light;
 
 
 			#ifdef USE_FOG

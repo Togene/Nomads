@@ -60,6 +60,24 @@
 			return vec4(_x, _y, _z, _w);
 		}
 
+		mat4 transpose(mat4 mat){
+			vec4 i0 = mat[0];
+			vec4 i1 = mat[1];
+			vec4 i2 = mat[2];
+			vec4 i3 = mat[3];
+
+			return mat4(
+				vec4(i0.x, i1.x, i2.x, i3.x),
+				vec4(i0.y, i1.y, i2.y, i3.y),
+				vec4(i0.z, i1.z, i2.z, i3.z),
+				vec4(i0.w, i1.w, i2.w, i3.w)
+			);
+		}
+
+		//void get_rotation(mat4 mat, vec3 in yaw, vec3 in pitch, vec3 in roll){
+		//	if(mat[0][0] == 1.0)
+		//}
+
 		vec4 conjugate(vec4 q){
 			return vec4(-q.x, -q.y, -q.z, q.w);
 		}
@@ -98,13 +116,42 @@
 			vec4 finalPosition = vec4(0);
 			mat4 transform_matrix = mat4(m0, m1, m2, m3);
 
+			mat4 view_matrix_transpose = transpose(viewMatrix);
+			mat4 S2 = view_matrix_transpose * viewMatrix;	
+
+			
+			//viewdirection
+			posWorld = transform_matrix * vec4((translation),1.0);
+			viewDirection = normalize((posWorld.xz - cameraPosition.xz));	
+		
+			//---------------------------------------------------------
+
 			if(type == 0.0){
-				//---------------------------------------------------Normal Sprite ---------------------------------------------------
+				//---------------------------------------------------Normal/3D Sprite ---------------------------------------------------
 				/* Sprites Face The Camera*/
-				vec4 mvPosition = viewMatrix * transform_matrix * vec4( translation * 1.0, 1.0 );
-				mvPosition.xyz += (position * scale);
+
+				mat4 modelview = viewMatrix * transform_matrix;
+//
+				modelview[0][0] = 1.0;
+				modelview[0][1] = 0.0;
+				modelview[0][2] = 0.0;
+//
+				//modelview[1][0] = 0.0;
+				//modelview[1][1] = 1.0;
+				//modelview[1][2] = 0.0;
+//
+				modelview[2][0] = 0.0;
+				modelview[2][1] = 0.0;
+				modelview[2][2] = 1.0;
+//
+				vec4 mvPosition =  modelview * vec4((position + translation) * scale,  1.0 );
+//
 				finalPosition = projectionMatrix * mvPosition;
-				//---------------------------------------------------Normal Sprite ---------------------------------------------------
+
+				//REMMMEBER THAT POSITION IS THE POSITION OF THE ENTIRE OBJECT!
+				//ALL HUMNIONDS/TREES/CRABS ARE UNDER A SINGLE OBJECT SO U NEED POSITION + TRANSLATION
+
+				//---------------------------------------------------Normal/3D Sprite ---------------------------------------------------
 			} else if (type == 1.0){
 				//---------------------------------------------------Solid Sprite ---------------------------------------------------
 				/* Sprites Dont Face The Camera*/
@@ -115,11 +162,7 @@
 			}
 
 			vUv = vec2((uv.x/spriteSheetX) + (uvoffset.x), (uv.y/spriteSheetY) + (uvoffset.y));
-			
-			//viewdirection
-			posWorld = transform_matrix * vec4((translation),1.0);
-			viewDirection = normalize((posWorld.xz - cameraPosition.xz));	
-			//---------------------------------------------------------
+
 
 			colorPass = col.rgb;
 			framePass = animationFrame;
