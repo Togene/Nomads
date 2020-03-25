@@ -152,7 +152,7 @@ function narrow_collision_check(near, e, delta){
         var r = near[i].o.get_component("aabb");
         var rb = near[i].o.get_component("rigidbody");
         
-        r.set_colliding(false);
+       // r.set_colliding(false);
 
         var delt = near[i].o.transform.position.clone().sub(e.transform.position);
         delt.y = 0;
@@ -166,7 +166,11 @@ function narrow_collision_check(near, e, delta){
         //    collision_ray_response(l, r, lr, lb, near[i].o);
         //}
         
-        if(sat_response(e, l, r, lb, rb, near[i].o, delta)){return;};
+        if(sat_response(e, l, r, lb, rb, near[i].o, delta)){
+              l.set_colliding(true);
+              r.set_colliding(true);
+              break;
+        };
 
         //TODO: check for 90/180/270 dagree's as not roated
         if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
@@ -198,9 +202,30 @@ function sat_response(e, l, r, lb, rb, near, delta){
     var step_total = new THREE.Vector3();
     var k = 0;
 
-    if(step.length() < 0.2){
+    if(step.length() < 0.1){
         //console.log("%c no point doing discreate shit", 'color: #00ff00');
-        general_sat(e, l, r, lb, rb, near, delta)
+        var sat = l.intersect_sat_aabb(r, null, true, null, null);
+
+        if(sat.result) {
+            e.transform.position.x += sat.axis.x * sat.gap * 1.1;
+            e.transform.position.z += sat.axis.z * sat.gap * 1.1;
+            e.transform.position.y += sat.axis.y * sat.gap * 1.1;
+    
+            if(sat.axis.y >= 0.55 && e.name == "player"){
+                if(lb != null) lb.set_grounded(true);
+                if(rb != null) rb.set_grounded(true);
+                canJump = true;
+            }
+    
+            //l.set_colliding(true);
+            //r.set_colliding(true);
+    
+            if(lb != undefined){lb.null_velocity(delta);}
+            if(rb != undefined){rb.null_velocity(delta);}
+    
+            return true;
+        }
+        
     } else {
         while(k < 100){
             step_total.add(tiny_step);
@@ -210,7 +235,9 @@ function sat_response(e, l, r, lb, rb, near, delta){
   
                 if(lb != undefined){lb.null_velocity(delta, false);}
                 if(rb != undefined){rb.null_velocity(delta, false);}
-
+                
+                //l.set_colliding(true);
+                //r.set_colliding(true);
      
 
                 if(sat.axis.y >= 0.55 && e.name == "player"){
@@ -228,8 +255,7 @@ function sat_response(e, l, r, lb, rb, near, delta){
                 e.transform.position.z += sat.axis.z * sat.gap * 1;
                 e.transform.position.y += sat.axis.y * sat.gap * 1;
                 
-                l.set_colliding(true);
-                r.set_colliding(true);
+        
                 //console.log("found collision at ", k);
                 return true; 
             }
@@ -244,8 +270,8 @@ function sat_response(e, l, r, lb, rb, near, delta){
 
 
 
-    l.set_colliding(false);
-    r.set_colliding(false);
+    //l.set_colliding(false);
+    //r.set_colliding(false);
 
     if(lb != null) lb.set_grounded(false);
     if(rb != null) rb.set_grounded(false);
@@ -271,7 +297,11 @@ function general_sat(e, l, r, lb, rb, near, delta){
 
         if(lb != undefined){lb.null_velocity(delta);}
         if(rb != undefined){rb.null_velocity(delta);}
+
+        return true;
     }
+
+    return false;
 }
 
 function debug_direction (f, t, cutoff){

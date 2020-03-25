@@ -61,6 +61,8 @@
 				float index = ceil(mod(normalizedAngle * 4.0, 4.0) - 1.0);
 
 				//TODO: Fix timeoffset glitching issue caused by time
+				float animation_length = ceil(animation_end_pass - animation_start_pass );
+
 				float timeOffsetX = (ceil(mod(time, (animation_end_pass)-1.0))/spritesheetsizePass.x);
 				
 				float yUvOffset = vUv.y;

@@ -127,11 +127,11 @@ function fauna_update(delta){
         for(var i = 0; i < test_crabs.length; i++){
 
             var collider = test_crabs[i].get_component("aabb");
-            
-            //test_crabs[i].get_component("animator").set_animation(1);
+            console.log(collider.colliding);
+            //
 
             if(collider.colliding) {
-                console.log("eh?");
+                test_crabs[i].get_component("animator").set_animation(1);
             } 
         }
     }

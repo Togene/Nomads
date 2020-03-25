@@ -78,7 +78,7 @@ function game_bootstrap(data){
 function game_update(delta){
     game_time += (delta * game_speed);
 
-   
+ 
 
     var num_frames = 1;
     for(var i = 0; i < num_frames; i++){
@@ -86,7 +86,7 @@ function game_update(delta){
         collision_update(delta/num_frames);
         movement(delta/num_frames);
         physics_update(delta/num_frames);
-     
+        update(delta);
         player_update(delta/num_frames);
 
          
@@ -100,8 +100,6 @@ function game_update(delta){
     shader_update(delta);
     world_update(delta);
     
-    update(delta);
-
  
     update_sky(delta);
 }
