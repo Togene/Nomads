@@ -6,7 +6,13 @@ function create_buffer(){
         scales: [],
         colors: [],
         uvoffsets: [],
-        animationFrame: [],
+
+        //-----------------------------------
+            animationFrame: [],
+            animation_start: [],
+            animation_end: [],
+        //----------------------------------
+
         type: [],
         fog: [],
         normals: [],
@@ -18,7 +24,7 @@ function create_buffer(){
     };
 }
 
-function PopulateBuffer(position, orient, scale, buffer, renderer){
+function PopulateBuffer(position, orient, scale, buffer, renderer, animation){
 
     buffer.scales.push(scale.x, scale.y, scale.z);
 
@@ -41,6 +47,14 @@ function PopulateBuffer(position, orient, scale, buffer, renderer){
     buffer.uvoffsets.push(uvs.x, uvs.y);
 
     buffer.animationFrame.push(renderer.animationFrames.x, renderer.animationFrames.y);
+
+    if(animation != null){
+        buffer.animation_start.push(animation.start);
+        buffer.animation_end.push(animation.end);
+    } else {
+        buffer.animation_start.push(0);
+        buffer.animation_end.push(0);
+    }
 
     buffer.type.push(renderer.type);
 
@@ -88,7 +102,12 @@ function CreateInstance(id, world, buffer, attributes, spritesheetsize, shader, 
     var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.colors), 3);
     var uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.uvoffsets), 2);
     var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.scales), 3);
+
     var animationFrameAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animationFrame), 2);
+
+    var animation_startAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_start), 1);
+    var animation_endAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_end), 1);
+
     var typeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.type), 1);
     var fogAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.fog), 1);
     var normalsAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.normals), 3);
@@ -103,6 +122,10 @@ function CreateInstance(id, world, buffer, attributes, spritesheetsize, shader, 
     geometry.setAttribute('uvoffset', uvOffsetAttribute);
     geometry.setAttribute('scale', scaleAttribute);
     geometry.setAttribute('animationFrame', animationFrameAttribute);
+
+    geometry.setAttribute('animation_start', animation_startAttribute);
+    geometry.setAttribute('animation_end', animation_endAttribute);
+    
     geometry.setAttribute('type', typeAttribute);
     geometry.setAttribute('fog', fogAttribute);
     geometry.setAttribute('normal', normalsAttribute);
@@ -113,13 +136,15 @@ function CreateInstance(id, world, buffer, attributes, spritesheetsize, shader, 
     geometry.setAttribute('m3', m3Attribute);
 
     attributes.push(
-        m0Attribute,
-        m1Attribute,
-        m2Attribute,
-        m3Attribute,
-        colorAttribute,
-        typeAttribute,
-        orientationAttribute
+        m0Attribute,                    //0
+        m1Attribute,                    //1
+        m2Attribute,                    //2
+        m3Attribute,                    //3
+        colorAttribute,                 //4
+        typeAttribute,                  //5
+        orientationAttribute,           //6
+        animation_startAttribute,       //7
+        animation_endAttribute          //8
     );
 
     var texture = new THREE.TextureLoader().load(MapFileurl[urlindex]);

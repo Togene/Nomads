@@ -37,6 +37,9 @@ gameobject.prototype.update = function(delta){
 }
 
 gameobject.prototype.add_component = function(c){
+
+    if(c == null){console.error("no component was given!"); return;}
+
     this.components.push(c);
     c.set_parent(this);
 }

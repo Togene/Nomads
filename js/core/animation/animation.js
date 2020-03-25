@@ -1,3 +1,6 @@
+
+//start is where the animation starts on the x
+//end is basically the length/size of the animation
 function animation(name, start, end){
     this.name = name;
     this.start = start; //x index start

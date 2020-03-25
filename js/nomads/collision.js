@@ -166,7 +166,7 @@ function narrow_collision_check(near, e, delta){
         //    collision_ray_response(l, r, lr, lb, near[i].o);
         //}
         
-        if(sat_response(e, l, r, lb, rb, near[i].o, delta)){};
+        if(sat_response(e, l, r, lb, rb, near[i].o, delta)){return;};
 
         //TODO: check for 90/180/270 dagree's as not roated
         if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
@@ -228,15 +228,12 @@ function sat_response(e, l, r, lb, rb, near, delta){
                 e.transform.position.z += sat.axis.z * sat.gap * 1;
                 e.transform.position.y += sat.axis.y * sat.gap * 1;
                 
-                //console.log("found collision at ", k);
-                return true; 
-
                 l.set_colliding(true);
                 r.set_colliding(true);
-
-                break;
-               
+                //console.log("found collision at ", k);
+                return true; 
             }
+
             if(step_total.length() >= step.length()){
                 //console.log("%csteps ended at ", 'color: #bada55', k); 
                 break;

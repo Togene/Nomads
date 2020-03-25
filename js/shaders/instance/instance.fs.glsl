@@ -13,7 +13,7 @@
 
 		uniform float is3D;
 
-		varying vec2 framePass;
+		varying vec2 animationframePass;
 		varying vec2 uvoffsetPass;
 		varying vec2 spritesheetsizePass;
 
@@ -23,6 +23,9 @@
 
 		varying vec4 rotation;
 		varying vec3 forward;
+
+		varying float animation_start_pass;
+		varying float animation_end_pass;
 
 		const float PI = 3.1415926535897932384626433832795;
 
@@ -37,6 +40,8 @@
 									vec2(12.9898,78.233)))*
 					43758.5453123);
 		}
+		
+		//uv - animationframePass;
 
 		void main() {
 			float uvTime = 1.0;
@@ -55,19 +60,19 @@
 
 				float index = ceil(mod(normalizedAngle * 4.0, 4.0) - 1.0);
 
-				uvTime = time;
-				float randx = clamp(random(framePass), 0.0, framePass.x);
-
 				//TODO: Fix timeoffset glitching issue caused by time
-				float timeOffsetX = (ceil(mod(mod(time, 1000.0), (framePass.x))-1.0)/spritesheetsizePass.x);
+				float timeOffsetX = (ceil(mod(time, (animation_end_pass)-1.0))/spritesheetsizePass.x);
 				
 				float yUvOffset = vUv.y;
 
 				if(is3D == 1.0){
 					yUvOffset += (index - uvoffsetPass.y)/spritesheetsizePass.y;
 				}
-
-				uvIndex = vec2(vUv.x + (timeOffsetX - uvoffsetPass.x), yUvOffset);
+				//uvIndex = vec2(vUv.x + (timeOffsetX - uvoffsetPass.x), yUvOffset);
+				// - timeOffsetX
+				//timeOffsetX - 
+				float animation_start = animation_start_pass/spritesheetsizePass.x;
+				uvIndex = vec2(vUv.x + (animation_start + timeOffsetX), yUvOffset);
 				
 			} else {
 				uvIndex = vec2(vUv.x, vUv.y);

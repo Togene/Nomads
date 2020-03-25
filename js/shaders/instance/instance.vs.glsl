@@ -24,8 +24,14 @@
 		uniform float time;
 		uniform float animationSwitch;
 	
+		varying vec2 animationframePass;
 
-		varying vec2 framePass;
+		attribute float animation_start;
+		attribute float animation_end;
+
+		varying float animation_start_pass;
+		varying float animation_end_pass;
+
 		varying vec3 colorPass;
 		varying vec2 uvoffsetPass;
 		varying vec2 spritesheetsizePass;
@@ -171,10 +177,16 @@
 
 
 			colorPass = col.rgb;
-			framePass = animationFrame;
+
+			animationframePass = animationFrame;
 			uvoffsetPass = uvoffset;
+
 			spritesheetsizePass = vec2(spriteSheetX, spriteSheetY);	
-		
+
+
+			animation_start_pass = animation_start;
+			animation_end_pass = animation_end;
+
 			fog_pass = fog;
 			gl_Position = finalPosition;
 		}

@@ -29,6 +29,19 @@ decomposer.prototype.update = function(){
     }
 }    
 
+decomposer.prototype.set_animation = function(s, e){
+
+    var start_attribute = this.attributes_refrence[7];
+    var end_attribute = this.attributes_refrence[8];
+
+    start_attribute.setX  (this.buffer_idx, s);
+    start_attribute.needsUpdate = true;
+
+    end_attribute.setX  (this.buffer_idx, e);
+    end_attribute.needsUpdate = true;
+    
+}
+
 decomposer.prototype.attribute_debug = function(){
     var color_attribute = this.attributes_refrence[4];
     color_attribute.setXYZ(this.buffer_idx, 0,random_range(0, 1),0);
