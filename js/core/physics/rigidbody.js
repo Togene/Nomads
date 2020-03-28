@@ -68,7 +68,7 @@ rigidbody.prototype.update = function(delta){
             if(!this.grounded){
                 this.velocity.y -= (GRAVITY * GRAVITY_ACC) * delta;
             } else {
-                this.velocity.y = 0;
+                //this.velocity.y = 0;
             }
         }   
 

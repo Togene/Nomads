@@ -123,11 +123,11 @@ function movement(delta){
             if(shift) { speed_mult = 2.1;} else { speed_mult = 1;}
 
             if ((moveForward || moveBackward)){
-               if(!player_col.colliding) player_body.velocity.z -= direction.z * (step * speed_mult);
+               player_body.velocity.z -= direction.z * (step * speed_mult);
             } 
         
             if ((moveLeft || moveRight)){
-                if(!player_col.colliding) player_body.velocity.x -= direction.x * (step * speed_mult);
+                player_body.velocity.x -= direction.x * (step * speed_mult);
             }
 
             if(space){
