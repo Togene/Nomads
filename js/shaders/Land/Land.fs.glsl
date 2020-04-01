@@ -84,7 +84,11 @@ uniform vec3 SunLightPosition;
 
 			//lightFactor =  directionalLights[0].color * nDotL; 
 
+<<<<<<< HEAD
 			gl_FragColor = vec4(tex.xyz, 1.0); //* vec4(lightFactor, 0.65);// * light;
+=======
+			gl_FragColor = tex; //* vec4(lightFactor, 0.65);// * light;
+>>>>>>> parent of 0e472c6... Cyclinder Billboarding added
 
 
 			#ifdef USE_FOG
