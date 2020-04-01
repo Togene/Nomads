@@ -22,7 +22,6 @@ var game_time = 0;
 var game_speed = 2;
 
 function game_bootstrap(data){
-    
     game_resources = data;
     
     controller_init();
