@@ -216,12 +216,21 @@ rigidbody.prototype.add_force = function(f, d, delta){
 rigidbody.prototype.ground = function(y, isplayer){
 
     var diffrence = Math.abs(this.parent.transform.position.y - y);
+
+    var scale = this.parent.transform.scale;
+    var pos = this.parent.transform.position;
+
+    var diffrence = Math.abs(this.parent.transform.position.y - y);
+    var diffrence = Math.abs(this.parent.transform.position.y - y);
+
+
+
     var col = this.parent.get_component("aabb");
    
     //! .1 + collider size (which is 1)
-    if(diffrence < (col.h + .1)){
-
-        this.parent.transform.position.y = y + ( this.parent.transform.scale.y/2 + .01);
+    if(diffrence <= (col.h + (scale.y/2 - col.h) + 0.1)){
+        //y + (this.parent.transform.scale.y/2 + .1);
+        this.parent.transform.position.y = y + col.h + (scale.y/2 - col.h);
         this.velocity.y = 0;
 
         if(isplayer) {

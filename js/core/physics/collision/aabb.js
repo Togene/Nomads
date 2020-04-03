@@ -289,6 +289,10 @@ aabb.prototype.intersect_sweep_aabb = function(right, delta){
 //grabs the aabb's transformed verts
 aabb.prototype.get_verts = function(offset){
 
+    var h = this.h;
+    var w = this.w;
+    var d = this.d;
+
     if(this.parent == null){
         return [
             new THREE.Vector3(),
@@ -303,19 +307,23 @@ aabb.prototype.get_verts = function(offset){
     }
 
     var transform_clone = this.parent.transform.clone();
+
+    var diffrence =  h - transform_clone.scale.y/2;
+    transform_clone.position.y += diffrence;
     
     if(offset != null){
+
         transform_clone.position.add(offset);
     }
     
     transform_clone.scale = new THREE.Vector3(1,1,1);
     transform_clone.rotation = transform_clone.rotation.conjugate();
 
+    //y_s/2 + h = 0
+
     var m = transform_clone.get_transformation().toMatrix4();
 
-    var h = this.h;
-    var w = this.w;
-    var d = this.d;
+
 
     var vert_0 = new THREE.Vector3(-w, -h, -d);
     vert_0.applyMatrix4(m);
@@ -614,12 +622,12 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps)
         var v = this.get_verts(offset); // grab vertices
         var a = this.get_axes(v); // normal axes (faces)
         var e = this.edges(v); // get edges
-        var f = this.get_faces(v);
+        //var f = this.get_faces(v);
 
         var rv = right.get_verts(); // right verts
         var ra = right.get_axes(rv); // right normal axes (faces)
         var re = right.edges(rv);
-        var rf = right.get_faces(rv);
+        //var rf = right.get_faces(rv);
 
         var edge_axes = this.get_edge_axes(e, re);
 
@@ -629,8 +637,6 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps)
         var direction = p0.clone().sub(p1).normalize();
 
         var me = false;
-
-        
 
         for(var o = 0; o < re.length; o++){
         //  e[o].debug_normal(p1);
