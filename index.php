@@ -23,6 +23,7 @@
 			
 			<script src = "js/core/animation/animation.js"></script>
 			<script src = "js/core/animation/animator.js"></script>
+			<script src = "js/core/animation/animation_sequence.js"></script>
 
 			<script src = "js/core/vector3_extensions.js"></script>
 			<script src = "js/core/matrix.js"></script>

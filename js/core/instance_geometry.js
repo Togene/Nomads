@@ -50,7 +50,7 @@ function PopulateBuffer(position, orient, scale, buffer, renderer, animation){
 
     if(animation != null){
         buffer.animation_start.push(animation.start);
-        buffer.animation_end.push(animation.end);
+        buffer.animation_end.push(animation.length);
     } else {
         buffer.animation_start.push(0);
         buffer.animation_end.push(0);

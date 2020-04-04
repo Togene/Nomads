@@ -1,10 +1,10 @@
 
 //start is where the animation starts on the x
 //end is basically the length/size of the animation
-function animation(name, start, end){
+function animation(name, start, length){
     this.name = name;
     this.start = start; //x index start
-    this.end = end; //x indesx end
+    this.length = length; //length of the animation
 
     this.current_frame = start;
 }

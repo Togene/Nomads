@@ -33,8 +33,8 @@ function creature_create(){
 
     crab.add_component(anim =  new animator(
         [
-            new animation("walk", 0, 3), 
-            new animation("dead", 3, 0)
+            new animation_sequence("walk", [new animation("walk", 0, 3)]), 
+            new animation_sequence("death", [ new animation("dead_start", 3, 0), new animation("dead_end", 3, 0)])
         ], 
         crab_decomposer));
 
@@ -129,7 +129,7 @@ function fauna_update(delta){
             var collider = test_crabs[i].get_component("aabb");
 
             if(collider.colliding) {
-                test_crabs[i].get_component("animator").set_animation(1);
+                test_crabs[i].get_component("animator").set_animation_sequence(1);
             } 
         }
     }
