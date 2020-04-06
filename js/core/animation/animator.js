@@ -4,6 +4,8 @@ function animator(animations, decomposer){
     this.decomposer = decomposer;
 
     this.parent = null;
+    
+    this.current_sequence = this.animations_sequences[0];
     this.current_animation = this.animations_sequences[0].current_animation;
 
     console.log(this.current_animation);
@@ -24,16 +26,19 @@ animator.prototype.set_animation_sequence = function(num){
         console.error("exceeded animations length, max is: ", this.animations_sequences.length); 
         return; 
     } else {
-        this.current_animation = this.animations_sequences[num].current_animation;
-        
-        console.log(this.current_animation);
-
-        this.decomposer.set_animation(this.current_animation.start, this.current_animation.length);
+        if(this.animations_sequences[num].name == this.current_sequence.name){
+            console.error("already set to animation: ", this.current_sequence.name); 
+            return;
+        }
+        this.current_sequence = this.animations_sequences[num];
+        this.current_sequence.time_stamp(game_time);
     }
 }
 
 animator.prototype.update = function(delta){
-    this.current_animation.update(delta);
+    this.current_sequence.update(delta);
+    this.current_animation = this.current_sequence.current_animation;
+    this.decomposer.set_animation(this.current_animation.start, this.current_animation.length, this.current_sequence.current_frame);
 }
 
 animator.prototype.set_parent = function(p){

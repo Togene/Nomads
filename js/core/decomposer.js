@@ -29,17 +29,20 @@ decomposer.prototype.update = function(){
     }
 }    
 
-decomposer.prototype.set_animation = function(s, e){
+decomposer.prototype.set_animation = function(s, e, t){
 
     var start_attribute = this.attributes_refrence[7];
     var end_attribute = this.attributes_refrence[8];
+    var time_attribute = this.attributes_refrence[9];
 
     start_attribute.setX  (this.buffer_idx, s);
     start_attribute.needsUpdate = true;
 
     end_attribute.setX  (this.buffer_idx, e);
     end_attribute.needsUpdate = true;
-    
+
+    time_attribute.setX  (this.buffer_idx, t);
+    time_attribute.needsUpdate = true;
 }
 
 decomposer.prototype.attribute_debug = function(){

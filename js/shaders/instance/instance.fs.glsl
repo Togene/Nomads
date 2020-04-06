@@ -8,6 +8,7 @@
 		uniform float fogFar;
 
 		uniform float time;
+		varying float animation_time_pass;
 		uniform float animationSwitch;
 		varying float fog_pass;
 
@@ -63,7 +64,7 @@
 				//TODO: Fix timeoffset glitching issue caused by time
 				float animation_length = ceil(animation_end_pass - animation_start_pass );
 
-				float timeOffsetX = (ceil(mod(time, (animation_end_pass)-1.0))/spritesheetsizePass.x);
+				float timeOffsetX = (floor(mod(animation_time_pass, (animation_end_pass)))/spritesheetsizePass.x);
 				
 				float yUvOffset = vUv.y;
 

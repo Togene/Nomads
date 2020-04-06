@@ -33,8 +33,8 @@ function creature_create(){
 
     crab.add_component(anim =  new animator(
         [
-            new animation_sequence("walk", [new animation("walk", 0, 3)]), 
-            new animation_sequence("death", [ new animation("dead_start", 3, 0), new animation("dead_end", 3, 0)])
+            new animation_sequence("walk", [new animation("walk", 0, 3)], random_range(0,100), true), 
+            new animation_sequence("death", [ new animation("dead_start", 3, 3), new animation("dead_end", 6, 1)], 1, false)
         ], 
         crab_decomposer));
 
