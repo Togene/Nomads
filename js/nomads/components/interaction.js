@@ -21,7 +21,15 @@ function interaction(trigger){
 
 interaction.prototype.update = function(delta){
     if(this.trigger.colliding){
-        
+
+        var anim = this.parent.get_component("animator");
+
+        if(anim != null){
+            if(anim.get_current_index() != 1){
+                anim.set_animation_sequence(1);
+            }
+        }
+
         this.dailogue.visible = true;
         this.dailogue.position.copy(this.parent.transform.position);
         this.dailogue.position.y += .5;
@@ -33,11 +41,19 @@ interaction.prototype.update = function(delta){
 
         this.parent.transform.look_at(e, new THREE.Vector3(0, 1, 0), true);
 
-        this.look_arrow.position.copy(this.parent.transform.position);
+        //this.look_arrow.position.copy(this.parent.transform.position);
 
-        this.look_arrow.setDirection(this.parent.transform.rotation.get_forward());
+       // this.look_arrow.setDirection(this.parent.transform.rotation.get_forward());
     } else {
         this.dailogue.visible = false;
+
+        var anim = this.parent.get_component("animator");
+
+        if(anim != null){
+            if(anim.get_current_index() != 0){
+                anim.set_animation_sequence(0);
+            }
+        }
     }
 
 }

@@ -91,13 +91,13 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	var segment_height = height / gridY;
 
 
-	if (buffers != undefined) {
-		var TreeBuffer = buffers.tree;
-		var EnviBuffer = buffers.envi;
-		var structBuffer = buffers.strct;
-		var CreatureBuffer = buffers.crt;
-	}
-	var raySampler = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0);
+	//if (buffers != undefined) {
+	//	var TreeBuffer = buffers.tree;
+	//	var EnviBuffer = buffers.envi;
+	//	var structBuffer = buffers.strct;
+	//	var CreatureBuffer = buffers.crt;
+	//}
+	//var raySampler = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0);
 	// buffers
 
 	var indices = [];
@@ -174,8 +174,6 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			if (finalP_x <= 0.01) { finalP_x = - 100; }
 			if (finalP_y <= 0.01) { finalP_y = - 100; }
 			if (finalP_xy <= 0.01) { finalP_xy = - 100; }
-
-
 			//------------------------ Normal Height -------------------------
 
 			var obj_x = (x + Worldx + 1);
@@ -221,7 +219,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 						//determine the amount to rotate
 						var radians = Math.acos(curface.normal.dot(up));
 						
-						var npc = creature_create(curface.centre);
+						var npc = npc_create(curface.centre);
 						
 						npc.transform.position = new THREE.Vector3(
 							curface.centre.x + curface.normal.x * npc.transform.scale.x/2,

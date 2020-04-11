@@ -7,8 +7,7 @@ function animator(animations, decomposer){
     
     this.current_sequence = this.animations_sequences[0];
     this.current_animation = this.animations_sequences[0].current_animation;
-
-    console.log(this.current_animation);
+    this.curent_index = 0;
 }
 
 animator.prototype.get_current_animation = function(name){
@@ -21,6 +20,10 @@ animator.prototype.get_current_animation = function(name){
     console.error("no animation of that name exists");
 }
 
+animator.prototype.get_current_index = function(){
+    return this.curent_index;
+}
+
 animator.prototype.set_animation_sequence = function(num){
     if(num > this.animations_sequences.length) {
         console.error("exceeded animations length, max is: ", this.animations_sequences.length); 
@@ -30,6 +33,7 @@ animator.prototype.set_animation_sequence = function(num){
             console.error("already set to animation: ", this.current_sequence.name); 
             return;
         }
+        this.curent_index = num;
         this.current_sequence = this.animations_sequences[num];
         this.current_sequence.time_stamp(game_time);
     }

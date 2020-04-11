@@ -15,7 +15,7 @@ function broad_quad_tree_insert(o){
 
 function collision_update(delta){
     broad_collision_check(delta);
-    //player_collision_check(delta);
+    player_collision_check(delta);
     floor_collision_check(delta);
 
 }
@@ -87,7 +87,7 @@ function player_collision_check(delta){
         
         collision_tree.query(rangecheck, near, near_debug);
 
-        narrow_collision_check(near, player, delta);
+        sphere_collision_check(near, player, delta);
     }
 }
 
@@ -115,7 +115,30 @@ function broad_collision_check(delta){
     }
 }
 
-//! Fix Intersection bug before trying to work with RigidBody
+function sphere_collision_check(near, e, delta){
+    var l = e.get_component("aabb");
+    var lb = e.get_component("rigidbody");
+
+    l.set_colliding(false);
+
+    for(var j = 0; j < near.length; j++) {
+
+        if (e == near[j].o){continue;}
+
+        var rs = near[j].o.get_component("sphere");
+            
+        if(rs != null){
+        rs.set_colliding(false); 
+
+            if(sat_sphere_response(e, l, rs)){
+                rs.set_colliding(true); 
+                console.log("sphere colliding")
+                }
+
+        }
+    }   
+}
+
 function narrow_collision_check(near, e, delta){
 
     var l = e.get_component("aabb");
@@ -123,26 +146,8 @@ function narrow_collision_check(near, e, delta){
     var lr = e.get_component("ray");
 
     l.set_colliding(false);
-
-    //for(var j = 0; j < near.length; j++) {
-    //    
-    //    if (near[j].o == e){continue;}
-//
-    //    var rs = e.get_component("sphere");
-//
-    //    if(rs != null){
-    //        if( near[j].o.name == "player"){
-    //            // rs.set_colliding(false); 
-    //            if(sat_sphere_response(e, l, rs)){
-    //                rs.set_colliding(true); 
-    //                break;
-    //            }
-    //        }
-    //        
-    //        rs.set_colliding(false); 
-    //    }
-    //}   
-
+    
+    if(lb != null) lb.set_grounded(false);
     for(var i = 0; i < near.length; i++) {
         
         if (near[i].o == e){continue;}
@@ -151,23 +156,24 @@ function narrow_collision_check(near, e, delta){
         var rb = near[i].o.get_component("rigidbody");
         
         r.set_colliding(false);
+        if(rb != null) rb.set_grounded(false);
 
         var delt = near[i].o.transform.position.clone().sub(e.transform.position);
         delt.y = 0;
 
                     
-        //if(lr.length != undefined){
-        //    for(var j = 0; j < lr.length; j++){
-        //        collision_ray_response(l, r, lr[j], lb, near[i].o);
-        //    }
-        //} else { 
-        //    collision_ray_response(l, r, lr, lb, near[i].o);
-        //}
+        if(lr.length != undefined){
+            for(var j = 0; j < lr.length; j++){
+                collision_ray_response(l, r, lr[j], lb, near[i].o);
+            }
+        } else { 
+            collision_ray_response(l, r, lr, lb, near[i].o);
+        }
         
         if(sat_response(e, l, r, lb, rb, near[i].o, delta)){
             l.set_colliding(true);
             r.set_colliding(true);
-           return;
+           break;
         };
 
         //TODO: check for 90/180/270 dagree's as not roated
@@ -261,10 +267,6 @@ function sat_response(e, l, r, lb, rb, near, delta){
             k++;
         }
     }
-
-    if(lb != null) lb.set_grounded(false);
-    if(rb != null) rb.set_grounded(false);
-
     return false;
 }
 

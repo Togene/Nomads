@@ -24,6 +24,7 @@ var game_speed = 2;
 function game_bootstrap(data){
     game_resources = data;
     
+    mouse_ray_init();
     controller_init();
     player_init();
     sky_init();

@@ -26,14 +26,20 @@ function npc_create(){
 
     npc.add_component(new aabb(npc.transform, .5, .5, .5, true, 0x00FF00, true));
 
-    var trigger_zone = new sphere(npc.transform, 1.5, true);
+    var trigger_zone = new sphere(npc.transform, 1, true);
     npc.add_component(trigger_zone);
     npc.add_component(new interaction(trigger_zone));
 
     npc.add_component(new rigidbody(1, false));
     npc.add_component(npc_decomposer);
     npc.add_component(new ray(npc.transform.position, new THREE.Vector3(0, -1, 0)));
-    npc.add_component(new animator([new animation("idle", 0, 1)], "/something?"));
+
+    npc.add_component(anim =  new animator(
+        [
+            new animation_sequence("idle", [new animation("idle", 0, 4)], 8, true),
+            new animation_sequence("wave", [new animation("wave", 4, 2)], 8, true), 
+        ], 
+        npc_decomposer));
 
     PopulateBuffer(
         new THREE.Vector3(0, 0, 0),

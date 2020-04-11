@@ -23,6 +23,9 @@ function controller_gui_init(){
 
     var blocker = document.getElementById( 'blocker' );
     var instructions = document.getElementById( 'instructions' );
+
+    controls.unlock();
+
     instructions.addEventListener( 'click', function () {
         controls.lock();
     }, false );

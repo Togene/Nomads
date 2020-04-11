@@ -15,6 +15,8 @@
 			<script src = "data/dither.js"></script>
 			<script src = "data/resources.js"></script>
 
+			
+			<script src = "js/nomads/input/mouse_ray.js"></script>
 			<script src = "js/core/utilities.js"></script>
 			<script src = "js/core/antlion.js"></script>
 			<script src = "js/core/workers.js"></script>
@@ -76,7 +78,7 @@
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/nomads/sky.js"></script>
-
+		
 		<div id="blocker">
 			<div id="instructions">
 				<span style="font-size:36px">Click to play</span>

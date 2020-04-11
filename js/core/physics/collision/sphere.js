@@ -10,14 +10,13 @@ function sphere(transform, r, trigger){
     this.colliding = false;
     this.isTrigger = trigger;
 
-    var geometry = new THREE.SphereGeometry( r, 32, 32 );
+    var geometry = new THREE.SphereGeometry( r, 5, 5 );
     var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
     this.sphere_debug = new THREE.Mesh( geometry, material );
     this.sphere_debug.position.copy(this.centre);
     this.sphere_debug.material.wireframe = true;
     this.sphere_debug.material.transparent = true;
     this.sphere_debug.visible = false;
-    console.log("huh?");
 
     scene.add( this.sphere_debug );
 }

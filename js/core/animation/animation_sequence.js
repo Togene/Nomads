@@ -16,8 +16,9 @@ function animation_sequence(name, animations, speed = 1, loop = true){
 
     this.current_index = 0;
     this.game_time_stamp = game_time;
-    this.current_frame = 0;
+    
     this.frame_offset = randomRangeRound(0, this.current_animation.length);
+    this.current_frame = this.frame_offset;
     this.animation_speed = speed;
     //this.current_animation.current_frame = ;
 }
@@ -30,9 +31,7 @@ animation_sequence.prototype.time_stamp = function(time){
 
 animation_sequence.prototype.update = function(delta){
   
-    this.current_frame += (delta + (this.frame_offset * delta)) * this.animation_speed;//(game_time - this.game_time_stamp);
-    //console.log(this.current_frame);
-    //console.log(this.current_frame);
+    this.current_frame += (delta * this.animation_speed);
 
     if(!this.end){
         if(this.current_index == this.animations.length-1){

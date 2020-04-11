@@ -25,7 +25,7 @@ transform.prototype.hasChanged = function(){
 transform.prototype.get_transformation = function(){
     var t = new matrix().init_translation(this.position.x, this.position.y, this.position.z);
     
-    var euler = this.rotation.to_euler()
+    var euler = this.rotation.conjugate().to_euler();
 
     var r = new matrix().init_rotation((rad_to_dag(euler.x)), (rad_to_dag(euler.y)), (rad_to_dag(euler.z)));
     var s = new matrix().init_scale(this.scale.x, this.scale.y, this.scale.z);

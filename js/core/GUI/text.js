@@ -25,7 +25,7 @@ function create_dailogue(message, parameters ){
     
 	// get size data (height depends only on font size)
 	var metrics = context.measureText( message );
-	var textWidth = metrics.width;
+	var textWidth = 128;//metrics.width;
 	
 	// background color
 	context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","

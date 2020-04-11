@@ -1,6 +1,6 @@
 function decube(verts){
 
-    this.active = true;
+    this.active = false;
 
     this.line_mat = new THREE.MeshBasicMaterial( {color: 0xffffff} );
     this.line_mat2 = new THREE.MeshBasicMaterial( {color: 0xff0000} );

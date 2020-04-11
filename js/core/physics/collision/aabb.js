@@ -317,7 +317,7 @@ aabb.prototype.get_verts = function(offset){
     }
     
     transform_clone.scale = new THREE.Vector3(1,1,1);
-    transform_clone.rotation = transform_clone.rotation.conjugate();
+    //transform_clone.rotation = transform_clone.rotation.conjugate();
 
     //y_s/2 + h = 0
 
