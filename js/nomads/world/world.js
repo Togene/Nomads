@@ -22,6 +22,7 @@ function world_init() {
 
 function world_update(delta){
     world_occlusion();
+    world_index();
 }
 
 function World_Generate() {
@@ -173,6 +174,32 @@ function CreateTile(shader, height, color, detial_map, detial_test,
         }     
 
     return landMassChunk;
+}
+
+function world_index(){
+    if(player != undefined){
+        var x = player.transform.position.x || 0;
+        var z = player.transform.position.z || 0;
+
+
+        var raycaster = new THREE.Raycaster(new THREE.Vector3(
+            x,
+            0,
+            z), 
+            new THREE.Vector3(0, 1, 0), 0, 5);
+    
+        var intersections = raycaster.intersectObjects(WORLD_COLLISION_ARRAY);
+    
+        var onObject = intersections.length > 0;
+        
+        var lb = e.get_component("rigidbody");
+
+        if(intersections[0] !== undefined){
+            
+        }
+
+    }
+
 }
 
 function world_occlusion(){

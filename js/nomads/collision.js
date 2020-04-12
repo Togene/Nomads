@@ -133,7 +133,7 @@ function sphere_collision_check(near, e, delta){
             if(sat_sphere_response(e, l, rs)){
                 rs.set_colliding(true); 
                 console.log("sphere colliding")
-                }
+            }
 
         }
     }   
