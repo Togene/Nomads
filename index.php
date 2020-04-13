@@ -16,7 +16,9 @@
 			<script src = "data/resources.js"></script>
 
 			
-			<script src = "js/nomads/input/mouse_ray.js"></script>
+			
+	
+
 			<script src = "js/core/utilities.js"></script>
 			<script src = "js/core/antlion.js"></script>
 			<script src = "js/core/workers.js"></script>
@@ -78,14 +80,16 @@
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/nomads/sky.js"></script>
+
+			<script src = "js/nomads/GUI/pause.js"></script>
+
+			<script src = "js/nomads/input/mouse.js"></script>
+			<script src = "js/nomads/input/keyboard.js"></script>
 		
 		<div id="blocker">
-			<div id="instructions">
-				<span style="font-size:36px">Click to play</span>
+			<div id="pause_screen">
+				<span style="font-size:36px">PAUSED</span>
 				<br /><br />
-				Move: WASD<br/>
-				Jump: SPACE<br/>
-				Look: MOUSE
 			</div>
 		</div>
 			<script src = "js/main.js"></script>
