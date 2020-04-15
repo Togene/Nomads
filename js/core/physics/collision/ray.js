@@ -1,6 +1,6 @@
 function ray(origin, direction){
-    this.origin = origin;
-    this.direction = direction;
+    this.origin = origin || new THREE.Vector3();
+    this.direction = direction || new THREE.Vector3();
     this.intersecting = false;
 }
 
@@ -19,6 +19,11 @@ ray.prototype.update = function(delta){
             this.origin.copy(p);
         }
     }
+}
+
+ray.prototype.set_from_camera = function(coords, camera) {
+    this.origin.setFromMatrixPosition(camera.matrixWorld);
+    this.direction.set(coords.x, coords.y * - 1, 0.5).unproject( camera ).sub( this.origin ).normalize();
 }
 
 ray.prototype.origin_set = function(o){ 

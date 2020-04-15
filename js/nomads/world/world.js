@@ -181,7 +181,7 @@ function world_index(){
         var x = player.transform.position.x || 0;
         var z = player.transform.position.z || 0;
 
-        console.log(x % TILE_GRID_SIZE);
+        //console.log(x % TILE_GRID_SIZE);
 
         //var raycaster = new THREE.Raycaster(new THREE.Vector3(
         //    x,

@@ -17,14 +17,7 @@ var lock = false;
 function controller_init(){
     controls = new THREE.PointerLockControls( camera, document.body );
     scene.add( controls.getObject() );
-
-    controller_gui_init();
 }
-
-function controller_gui_init(){
-    controls.unlock();
-}
-
 
 function get_step_x(){
     var step = speed;

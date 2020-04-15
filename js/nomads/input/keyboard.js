@@ -37,6 +37,7 @@ function onKeyDown( e ) {
             pause();
             break;
         case 27: // ESC
+            console.log("checking esc");
             break;
         case 69: // E
             edit_mode();
@@ -71,29 +72,48 @@ function onKeyUp( e ) {
         case 80:
             p = false;
             break;
+        case 27:
+            console.log("checking esc");
+            break;
     }
 };
 
 function edit_mode(){
-    edit = !edit;
-
-    if(edit && !paused){
-        override = true;
-        controls.unlock();
-        pause_hide();
-    } else {
-        override = false;
-        controls.lock();
+    if(!paused){
+        
+        if(controls.isLocked){
+            edit = true;
+            override = true;
+            document.exitPointerLock();
+        } else {
+            edit = false;
+            override = false;
+            controls.domElement.requestPointerLock();
+        }
     }
 }
 
 
 function pause(){
-    if(controls.isLocked){
+    pointer_lock_control();
+}
+
+function pointer_lock_control(){
+
+    if(edit){
+        edit = false;
+        override = false;
         paused = true;
+        
+        pause_show();
         controls.unlock();
     } else {
-        paused = false;
-        controls.lock();
+        if(controls.isLocked){
+            paused = true;
+            controls.unlock();
+        } else {
+            paused = false;
+            controls.lock();
+        }
     }
 }

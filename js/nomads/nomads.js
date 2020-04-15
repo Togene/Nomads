@@ -20,6 +20,7 @@ var cube2 = new THREE.Mesh(geometry, material2);
 var game_resources;
 var game_time = 0;
 var game_speed = 2;
+var physics_objects = [];
 
 function game_bootstrap(data){
     game_resources = data;
@@ -67,8 +68,11 @@ function game_bootstrap(data){
     
     for(var i = 0; i < Scene.length; i++){
         //Scene[i].information();
-        if(Scene[i].has_component("aabb"))
+        if(Scene[i].has_component("aabb")){
+            physics_objects.push(Scene[i]);
             broad_quad_tree_insert(Scene[i]);
+        }
+            
 
         if(Scene[i].has_component("rigidbody")){
             rigidbodies_insert(Scene[i].get_component("rigidbody"));
@@ -82,8 +86,6 @@ function game_bootstrap(data){
 */
 function game_update(delta){
     game_time += (delta * game_speed);
-
- 
 
     var num_frames = 1;
     for(var i = 0; i < num_frames; i++){
@@ -113,11 +115,12 @@ function update(delta){
    // newobject1.transform.rotation.y += .5;
     //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
    // cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
-
+    
     fauna_update(delta);
     flora_update(delta);
     humanoid_update(delta);
     box_update(delta);
+    mouse_update(delta);
 }
 
 
