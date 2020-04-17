@@ -4,18 +4,17 @@
 
 function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false, name = "nuzzing"){
     
-    this.debug_points = [];
-    //6 faces
-    for(var i = 0; i < 64; i++){
-        //------------------------ CONTACT POINTS DEBUG ----------------//
-        var geometry = new THREE.BoxGeometry( .05, .05, .05 );
-        var material = new THREE.MeshBasicMaterial( {color: 0x00FF00} );
-        var cp_0 = new THREE.Mesh( geometry, material );
-        scene.add(cp_0);
-        this.debug_points.push(cp_0);
-        //------------------------ CONTACT POINTS DEBUG ----------------//
-    }
-
+    //this.debug_points = [];
+    ////6 faces
+    //for(var i = 0; i < 64; i++){
+    //    //------------------------ CONTACT POINTS DEBUG ----------------//
+    //    var geometry = new THREE.BoxGeometry( .05, .05, .05 );
+    //    var material = new THREE.MeshBasicMaterial( {color: 0x00FF00} );
+    //    var cp_0 = new THREE.Mesh( geometry, material );
+    //    scene.add(cp_0);
+    //    this.debug_points.push(cp_0);
+    //    //------------------------ CONTACT POINTS DEBUG ----------------//
+    //}
 
     var transform_clone = transform.clone();
     transform_clone.scale = new THREE.Vector3(1,1,1);
@@ -87,6 +86,10 @@ aabb.prototype.set_parent = function(p){
 aabb.prototype.set_visule_color = function(hex){
     //this.visule.material.color = new THREE.Color(hex);
     this.decube.set_color(hex);
+}
+
+aabb.prototype.set_decube_active = function(b){
+    this.decube.set_active(b);
 }
 
 aabb.prototype.update = function(delta){

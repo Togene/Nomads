@@ -6,7 +6,7 @@ function decube(verts){
     this.line_mat2 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
     var v = new THREE.Vector3();
     
-    this.line01 = new THREE.Line(this.create_line(v, v), this.line_mat2);
+    this.line01 = new THREE.Line(this.create_line(v, v), this.line_mat);
     this.line12 = new THREE.Line(this.create_line(v, v), this.line_mat);
     this.line23 = new THREE.Line(this.create_line(v, v), this.line_mat);
     this.line30 = new THREE.Line(this.create_line(v, v), this.line_mat);
@@ -76,7 +76,7 @@ decube.prototype.set_color = function(hex){
 decube.prototype.update_points = function(v){
     
     this.line_mat.visible = this.active;
-    
+
     if(v == null){return;}
 
     if(this.active){

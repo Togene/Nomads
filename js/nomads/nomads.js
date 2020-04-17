@@ -100,7 +100,6 @@ function game_update(delta){
         for(var j = 0; j < Scene.length; j++){
             Scene[j].update(delta/num_frames);
         }
-
     }
 
 

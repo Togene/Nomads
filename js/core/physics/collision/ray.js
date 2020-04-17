@@ -23,7 +23,7 @@ ray.prototype.update = function(delta){
 
 ray.prototype.set_from_camera = function(coords, camera) {
     this.origin.setFromMatrixPosition(camera.matrixWorld);
-    this.direction.set(coords.x, coords.y * - 1, 0.5).unproject( camera ).sub( this.origin ).normalize();
+    this.direction.set(coords.x, coords.y, 0.5).unproject( camera ).sub( this.origin ).normalize();
 }
 
 ray.prototype.origin_set = function(o){ 
