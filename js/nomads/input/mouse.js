@@ -47,7 +47,16 @@ function mouse_down(e){
                     }
                     selected = hovered;
                     selected.get_component("aabb").set_visule_color(0xff0000);
+                    mouse_hit.x =  selected.transform.position.x;
+                    mouse_hit.y =  selected.transform.position.y;
+                    mouse_hit.z =  selected.transform.position.z;
+
                 } else {
+                    if(selected != null){
+                        selected.get_component("aabb").set_visule_color(0xffffff);
+                        selected.get_component("aabb").set_decube_active(false);
+                    }
+
                     selected = null;
                 }
                 
@@ -80,7 +89,9 @@ function mouse_up(e){
 
 function mouse_move(e){
     if(edit){
+
         mouse_hover_raycast(e);
+
         mouse_three_raycast(e);
     }
 }
@@ -92,7 +103,23 @@ function mouse_update(delta){
         if(mouse_first_b){
             selected.transform.position.x = grid_size * Math.ceil((mouse_hit.x-0.5)/grid_size);
             selected.transform.position.z = grid_size * Math.ceil((mouse_hit.z-0.5)/grid_size);
+
+            var ray = new THREE.Raycaster(selected.transform.position, new THREE.Vector3(0, -1, 0), 0 , 5);
+            var intersects = ray.intersectObjects(WORLD_COLLISION_ARRAY);
+
+            var y = 0;
+
+            if(intersects[0] != undefined){
+                y = intersects[0].point.y ;
+            } else {
+                y = selected.transform.position.y
+            }
+
+            selected.transform.position.y = y + selected.transform.scale.y/2 || mouse_hit.y + selected.transform.scale.y/2;
         }
+    } else if(selected != null & paused || selected != null & !edit){
+        selected.get_component("aabb").set_visule_color(0xffffff);
+        selected.get_component("aabb").set_decube_active(false);
     }
     
     //! fix this dont wana keep assigning
@@ -130,8 +157,9 @@ function mouse_hover_raycast(e){
     mouse_ray.set_from_camera(mouse, camera);
 
     for(var i = 0; i < physics_objects.length; i++){
+
         var aabb = physics_objects[i].get_component("aabb");
-        aabb.set
+
         if(aabb != undefined){
             if(aabb.parent.name == "player"){continue;}
 
@@ -140,10 +168,6 @@ function mouse_hover_raycast(e){
                 console.log(aabb.parent.name);
                 hovered = aabb.parent;
                 aabb.set_decube_active(true);
-
-                mouse_hit.x = aabb.parent.transform.position.x;
-                mouse_hit.y = aabb.parent.transform.position.y;
-                mouse_hit.z = aabb.parent.transform.position.z;
 
                 return;
             }

@@ -22,10 +22,10 @@ var game_time = 0;
 var game_speed = 2;
 var physics_objects = [];
 
+var pool = null;
+
 function game_bootstrap(data){
     game_resources = data;
-    
- 
 
     keyboard_init();
     mouse_init();

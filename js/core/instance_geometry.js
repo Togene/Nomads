@@ -83,7 +83,6 @@ function PopulateBuffer(position, orient, scale, buffer, renderer, animation){
     );
 
     buffer.index ++;
-
 }
 
 function UpdateAttribute(attributes){
