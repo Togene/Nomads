@@ -7,6 +7,8 @@ var DONE = false;
 var async_time = 0;
 var elapsed_time = 0;
 var map_index = 0;
+var pool;
+var manifest = [];
 
 /*used to grab all outside resources for the game since all resources
 are async and require some to be compiled*/
@@ -80,16 +82,50 @@ function antlion_fall(i, data){
 
 //push the last data, and flag for done;
 function antlion_done(i, data){
-    //console.log(data);
+    load('pool_data', 'json', antlion_pool_load);
+    load('object_manifest', 'json', antlion_manifest_load);
+
     compiled_data.push(data);
  
     elapsed_time = Date.now() - async_time;
 
     //start up init after data loaded
     game_bootstrap(compiled_data);
-  
 }
 
+function antlion_pool_load(data){
+    pool = JSON.parse(data);
+    console.log("loading successful.", pool);
+}
+
+
+function antlion_manifest_load(data){
+    manifest = JSON.parse(data);
+    console.log("loading successful.", manifest);
+    
+    if(manifest.length != 0){
+        for(var i = 0; i < manifest.length; i++){
+            box_create(manifest[i].position, null, false);
+        }
+    }
+}
+
+function antlion_reset_manifest(){
+    manifest = [];
+    console.log("manifest reset.", JSON.stringify(manifest));
+    remove('object_manifest', 'json');
+}
+
+function antlion_get_manifest(){
+    return manifest;
+}
+
+function antlion_add_to_manifest(data){
+    console.log(manifest);
+
+    manifest.push(data);
+    save(manifest, 'object_manifest', 'json');
+}
 
 // Credit to THeK3nger - https://gist.github.com/THeK3nger/300b6a62b923c913223fbd29c8b5ac73
 //Sorry to any soul that bare's witness to this Abomination....May the gods have mercy on me

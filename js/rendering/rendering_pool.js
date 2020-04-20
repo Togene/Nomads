@@ -1,6 +1,5 @@
 function rendering_pool(pool_size){
     this.pool_size = pool_size;
-    this.pool = [];
     this.index = 0;
     this.buffer = create_buffer();
     this.init();

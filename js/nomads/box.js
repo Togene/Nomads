@@ -1,6 +1,6 @@
 var boxes = [];
 
-function box_create(p, q){
+function box_create(p, q, save = true){
     var shader = get_data("instance_shader");
     shader.extra.trans = true;
 
@@ -10,7 +10,11 @@ function box_create(p, q){
     var box = new gameobject("box");
      
     box.transform.scale = new THREE.Vector3(1,1,1);
-    box.transform.position = new THREE.Vector3(0, 0, 0);
+    box.transform.position = new THREE.Vector3(
+        p.x,
+        p.y,
+        p.z
+    );
     box.transform.rotation = new quaternion(0,0,0,1);
     
     var half_x = box.transform.scale.x/2;
@@ -42,6 +46,14 @@ function box_create(p, q){
     
     CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 5, false, false);
     boxes.push(box);
+
+    if(save){
+        antlion_add_to_manifest(box.toJSON());
+    }
+
+    physics_objects.push(box);
+    broad_quad_tree_insert(box);
+
     return box;
 } 
 

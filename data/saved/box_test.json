@@ -1,0 +1,328 @@
+{
+	"name": "box",
+	"id": "-11.1813776493072511",
+	"position": {
+		"x": -1,
+		"y": 1.181377649307251,
+		"z": 1
+	},
+	"rotation": {
+		"x": 0,
+		"y": 0,
+		"z": 0,
+		"w": 1
+	},
+	"scale": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"parent": null,
+	"components": [
+		{
+			"name": "aabb"
+		}
+	],
+	"children": [
+		{
+			"name": "face",
+			"id": "00-0.5",
+			"position": {
+				"x": 0,
+				"y": 0,
+				"z": -0.5
+			},
+			"rotation": {
+				"x": 0,
+				"y": 0,
+				"z": 0,
+				"w": 1
+			},
+			"scale": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"parent": {
+				"name": "box"
+			},
+			"components": [
+				{
+					"name": "decomposer",
+					"ssIndex": [
+						{
+							"x": 0,
+							"y": 0.125
+						}
+					],
+					"animationFrames": {
+						"x": 1,
+						"y": 1
+					},
+					"colors": [
+						7890508
+					],
+					"centre_offset": {
+						"x": 0,
+						"y": 0,
+						"z": 0
+					},
+					"type": 1,
+					"fog": 0,
+					"buffer_idx": 0
+				}
+			],
+			"children": []
+		},
+		{
+			"name": "face",
+			"id": "000.5",
+			"position": {
+				"x": 0,
+				"y": 0,
+				"z": 0.5
+			},
+			"rotation": {
+				"x": 0,
+				"y": 0,
+				"z": 0,
+				"w": 1
+			},
+			"scale": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"parent": {
+				"name": "box"
+			},
+			"components": [
+				{
+					"name": "decomposer",
+					"ssIndex": [
+						{
+							"x": 0,
+							"y": 0.125
+						}
+					],
+					"animationFrames": {
+						"x": 1,
+						"y": 1
+					},
+					"colors": [
+						7890508
+					],
+					"centre_offset": {
+						"x": 0,
+						"y": 0,
+						"z": 0
+					},
+					"type": 1,
+					"fog": 0,
+					"buffer_idx": 1
+				}
+			],
+			"children": []
+		},
+		{
+			"name": "face",
+			"id": "-0.500",
+			"position": {
+				"x": -0.5,
+				"y": 0,
+				"z": 0
+			},
+			"rotation": {
+				"x": 0,
+				"y": 0.7071067811865475,
+				"z": 0,
+				"w": 0.7071067811865476
+			},
+			"scale": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"parent": {
+				"name": "box"
+			},
+			"components": [
+				{
+					"name": "decomposer",
+					"ssIndex": [
+						{
+							"x": 0,
+							"y": 0.125
+						}
+					],
+					"animationFrames": {
+						"x": 1,
+						"y": 1
+					},
+					"colors": [
+						7890508
+					],
+					"centre_offset": {
+						"x": 0,
+						"y": 0,
+						"z": 0
+					},
+					"type": 1,
+					"fog": 0,
+					"buffer_idx": 2
+				}
+			],
+			"children": []
+		},
+		{
+			"name": "face",
+			"id": "0.500",
+			"position": {
+				"x": 0.5,
+				"y": 0,
+				"z": 0
+			},
+			"rotation": {
+				"x": 0,
+				"y": 0.7071067811865475,
+				"z": 0,
+				"w": 0.7071067811865476
+			},
+			"scale": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"parent": {
+				"name": "box"
+			},
+			"components": [
+				{
+					"name": "decomposer",
+					"ssIndex": [
+						{
+							"x": 0,
+							"y": 0.125
+						}
+					],
+					"animationFrames": {
+						"x": 1,
+						"y": 1
+					},
+					"colors": [
+						7890508
+					],
+					"centre_offset": {
+						"x": 0,
+						"y": 0,
+						"z": 0
+					},
+					"type": 1,
+					"fog": 0,
+					"buffer_idx": 3
+				}
+			],
+			"children": []
+		},
+		{
+			"name": "face",
+			"id": "0-0.50",
+			"position": {
+				"x": 0,
+				"y": -0.5,
+				"z": 0
+			},
+			"rotation": {
+				"x": 0.7071067811865475,
+				"y": 0,
+				"z": 0,
+				"w": 0.7071067811865476
+			},
+			"scale": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"parent": {
+				"name": "box"
+			},
+			"components": [
+				{
+					"name": "decomposer",
+					"ssIndex": [
+						{
+							"x": 0,
+							"y": 0.125
+						}
+					],
+					"animationFrames": {
+						"x": 1,
+						"y": 1
+					},
+					"colors": [
+						7890508
+					],
+					"centre_offset": {
+						"x": 0,
+						"y": 0,
+						"z": 0
+					},
+					"type": 1,
+					"fog": 0,
+					"buffer_idx": 4
+				}
+			],
+			"children": []
+		},
+		{
+			"name": "face",
+			"id": "00.50",
+			"position": {
+				"x": 0,
+				"y": 0.5,
+				"z": 0
+			},
+			"rotation": {
+				"x": 0.7071067811865475,
+				"y": 0,
+				"z": 0,
+				"w": 0.7071067811865476
+			},
+			"scale": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"parent": {
+				"name": "box"
+			},
+			"components": [
+				{
+					"name": "decomposer",
+					"ssIndex": [
+						{
+							"x": 0,
+							"y": 0.125
+						}
+					],
+					"animationFrames": {
+						"x": 1,
+						"y": 1
+					},
+					"colors": [
+						7890508
+					],
+					"centre_offset": {
+						"x": 0,
+						"y": 0,
+						"z": 0
+					},
+					"type": 1,
+					"fog": 0,
+					"buffer_idx": 5
+				}
+			],
+			"children": []
+		}
+	]
+}

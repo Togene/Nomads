@@ -13,10 +13,15 @@ function gameobject(n = "default", child = [], comp = []){
 gameobject.prototype.add_child = function(o){
     if(o !== this){
         this.children.push(o);
+        o.set_parent(this);
         o.transform.set_parent(this.transform);
     } else {
         console.error("%c Cant Add Self!", 'background: #333; color: #bada55');
     }
+}
+
+gameobject.prototype.set_parent = function(p){
+    this.parent = p;
 }
 
 gameobject.prototype.update = function(delta){
@@ -71,6 +76,7 @@ gameobject.prototype.get_component = function(n){
     }
 }
 
+
 gameobject.prototype.has_component = function(n){
     
     if(typeof n !== "string"){
@@ -85,6 +91,47 @@ gameobject.prototype.has_component = function(n){
     }
 
     return false;
+}
+
+gameobject.prototype.components_toJSON = function(){
+    var l = [];
+
+    for(var i = 0; i < this.components.length; i++){
+        l.push(this.components[i].toJSON());
+    }
+
+    return l;
+}
+
+gameobject.prototype.children_toJSON = function(){
+    var l = [];
+
+    for(var i = 0; i < this.children.length; i++){
+        l.push(this.children[i].toJSON());
+    }
+
+    return l;
+}
+
+gameobject.prototype.toJSON = function(parent = false){
+
+    if(parent){
+        return{
+            name: this.name,
+        };
+    } else {
+        return{
+            name: this.name,
+            id: this.transform.position.x.toString() + this.transform.position.y.toString() + this.transform.position.z.toString(),
+            position: this.transform.position,
+            rotation: this.transform.rotation,
+            scale: this.transform.scale,
+            parent: (this.parent == null) ?  null : this.parent.toJSON(true),
+            components: this.components_toJSON(),
+            children: this.children_toJSON()
+        };
+    }
+
 }
 
 gameobject.prototype.name = "gameobject";

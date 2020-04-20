@@ -5,19 +5,11 @@ function shader_init(){
         
     console.log("%cLoading Pool", 'color: #DAA45C');
     
-        pool = new rendering_pool(5);
+    pool = new rendering_pool(5);
     
-        save(pool.buffer, 'pool_data', 'json');
-        while(load('pool_data', 'json', load_callback) != undefined);
-        console.log(pool_data);
+    //save(pool.buffer, 'pool_data', 'json');
 
     console.log("%cPool Done", 'color: #DAA45C');
-}
-
-function load_callback(data){
-    pool_data = data;
-    console.log(JSON.parse(data).translation);
-    return false;
 }
 
 function shader_update(delta){

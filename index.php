@@ -79,7 +79,7 @@
 			<script src = "js/rendering/rendering_pool.js"></script>
 			<script src = "js/nomads/sky.js"></script>
 
-			<script src = "js/nomads/GUI/pause.js"></script>
+			<script src = "js/nomads/gui/pause.js"></script>
 
 			<script src = "js/nomads/input/mouse.js"></script>
 			<script src = "js/nomads/input/keyboard.js"></script>

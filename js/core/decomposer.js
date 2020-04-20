@@ -121,4 +121,24 @@ decomposer.prototype.set_parent = function(p){
     this.parent = p;
 }
 
+decomposer.prototype.toJSON = function(){
+    return {
+        name: this.name,
+        ssIndex : this.ssIndex,
+        animationFrames : this.animationFrames,
+        colors : this.colors,
+        centre_offset: this.centre_offset,
+        
+        //this.transform = trans;
+        
+        //this.matrix = this.transform.get_transformation().toMatrix4();
+        type: this.type,
+        fog: this.fog,
+        buffer_idx: this.buffer_idx,
+
+        //this.attributes_refrence = attributes;
+        //this.parent = null; //for gameobject
+    }
+}
+
 decomposer.prototype.name = "decomposer";

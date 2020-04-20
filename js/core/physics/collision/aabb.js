@@ -1052,4 +1052,10 @@ aabb.prototype.ray_intersect = function(r){
     return {val : true, x: txmin, y: this.max.y, z: tzmin};
 }
 
+aabb.prototype.toJSON = function(){
+    return{
+        name: this.name
+    }
+}
+
 aabb.prototype.name = "aabb";

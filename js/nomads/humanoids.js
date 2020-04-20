@@ -1,6 +1,6 @@
 var test_npcs = [];
 
-function npc_create(){
+function npc_create(p, q){
     var npc_shader = get_data("instance_shader");
     var buffer = create_buffer();
     var attributes = [];
@@ -11,7 +11,11 @@ function npc_create(){
 
     npc.transform.rotation = new quaternion(0, 0, 0, 1 );
     npc.transform.scale = new THREE.Vector3(1,1,1);
-    npc.transform.position = new THREE.Vector3(0, 0, 0);
+    npc.transform.position = new THREE.Vector3(
+        p.x,
+        p.y + npc.transform.scale.y/2,
+        p.z
+    );
 
     var npc_decomposer = new decomposer(
         [ MapToSS(0, 0),],
@@ -59,7 +63,8 @@ function npc_create(){
     true, 
     true);
 
-
+    physics_objects.push(npc);
+    broad_quad_tree_insert(npc);
 
     return npc;
 }

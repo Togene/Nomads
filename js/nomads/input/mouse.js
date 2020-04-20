@@ -40,6 +40,8 @@ function mouse_down(e){
             if(edit){
                 mouse_first_b = true;
                 
+                place_object();
+
                 if(hovered != null){
                     if(selected != null && selected != hovered){
                         selected.get_component("aabb").set_visule_color(0xffffff);
@@ -47,14 +49,16 @@ function mouse_down(e){
                     }
                     selected = hovered;
                     selected.get_component("aabb").set_visule_color(0xff0000);
-                    mouse_hit.x =  selected.transform.position.x;
-                    mouse_hit.y =  selected.transform.position.y;
-                    mouse_hit.z =  selected.transform.position.z;
+                    mouse_hit.x = selected.transform.position.x;
+                    mouse_hit.y = selected.transform.position.y;
+                    mouse_hit.z = selected.transform.position.z;
 
                 } else {
                     if(selected != null){
                         selected.get_component("aabb").set_visule_color(0xffffff);
                         selected.get_component("aabb").set_decube_active(false);
+
+                        
                     }
 
                     selected = null;
@@ -97,6 +101,16 @@ function mouse_move(e){
 }
 
 var grid_size = (pixel * 2) * 16;
+
+function place_object(){
+
+    if(selected == null && hovered == null){
+        var x = grid_size * Math.ceil((Math.round(mouse_hit.x))/grid_size);
+        var z = grid_size * Math.ceil((Math.round(mouse_hit.z))/grid_size);
+    
+        box_create(new THREE.Vector3(x, mouse_hit.y + 0.5, z));
+    }
+}
 
 function mouse_update(delta){
     if(selected != null && edit){
