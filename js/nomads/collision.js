@@ -14,7 +14,7 @@ function broad_quad_tree_insert(o){
 }
 
 function collision_update(delta){
-    broad_collision_check(delta);
+    //broad_collision_check(delta);
     player_collision_check(delta);
     floor_collision_check(delta);
 
@@ -87,7 +87,7 @@ function player_collision_check(delta){
         
         collision_tree.query(rangecheck, near, near_debug);
 
-        sphere_collision_check(near, player, delta);
+        narrow_collision_check(near, player, delta);
     }
 }
 
@@ -143,7 +143,7 @@ function narrow_collision_check(near, e, delta){
 
     var l = e.get_component("aabb");
     var lb = e.get_component("rigidbody");
-    var lr = e.get_component("ray");
+    //var lr = e.get_component("ray");
 
     l.set_colliding(false);
     
@@ -162,13 +162,13 @@ function narrow_collision_check(near, e, delta){
         delt.y = 0;
 
                     
-        if(lr.length != undefined){
-            for(var j = 0; j < lr.length; j++){
-                collision_ray_response(l, r, lr[j], lb, near[i].o);
-            }
-        } else { 
-            collision_ray_response(l, r, lr, lb, near[i].o);
-        }
+        //if(lr.length != undefined){
+        //    for(var j = 0; j < lr.length; j++){
+        //        collision_ray_response(l, r, lr[j], lb, near[i].o);
+        //    }
+        //} else { 
+        //    collision_ray_response(l, r, lr, lb, near[i].o);
+        //}
         
         if(sat_response(e, l, r, lb, rb, near[i].o, delta)){
             l.set_colliding(true);
@@ -207,7 +207,7 @@ function sat_response(e, l, r, lb, rb, near, delta){
 
     if(step.length() < 0.2){
         //console.log("%c no point doing discreate shit", 'color: #00ff00');
-        var sat = l.intersect_sat_aabb(r, null, true, null, null);
+        var sat = l.intersect_sat_aabb(r, null);
 
         if(sat.result) {
             if(lb != undefined){lb.null_velocity(delta);}
@@ -233,7 +233,7 @@ function sat_response(e, l, r, lb, rb, near, delta){
         while(k < 100){
             step_total.add(tiny_step);
     
-            var sat = l.intersect_sat_aabb(r, null, true, step_total, null);
+            var sat = l.intersect_sat_aabb(r,step_total);
             if(sat.result){
   
                 if(lb != undefined){lb.null_velocity(delta, false);}
@@ -271,7 +271,7 @@ function sat_response(e, l, r, lb, rb, near, delta){
 }
 
 function general_sat(e, l, r, lb, rb, near, delta){
-    var sat = l.intersect_sat_aabb(r, null, true, null, null);
+    var sat = l.intersect_sat_aabb(r, null);
 
     if(sat.result) {
         e.transform.position.x += sat.axis.x * sat.gap * 1;

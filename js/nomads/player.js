@@ -7,10 +7,10 @@ function player_init(){
     player = new gameobject("player");
 
     player.transform.position = new THREE.Vector3(0, 10, 0);
-    player.transform.scale = new THREE.Vector3(1, 2, 1);
+    player.transform.scale = new THREE.Vector3(1, 1.45, 1);
     player.transform.rotation = new quaternion(0, 0, 0, 1);
 
-    player_box = new aabb(player.transform, 0.5, 1, 0.5, true, 0x00ffff, true, player.name);
+    player_box = new aabb(player.transform, 0.5, 1, 0.5, true, 0x00ffff, true);
 
     player.add_component(player_box);
     player.add_component(new rigidbody(180, false));

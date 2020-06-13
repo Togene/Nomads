@@ -243,7 +243,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 						//determine the amount to rotate
 						var radians = Math.acos(curface.normal.dot(up));
 
-						var s = box_create(curface.centre);
+						var s = house_create(curface.centre);
 			
 						s.transform.rotation = new quaternion(0,0,0,0, axis, radians);
 						

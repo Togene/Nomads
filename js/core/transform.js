@@ -18,7 +18,7 @@ transform.prototype.hasChanged = function(){
     if(!this.position.equals(this.old_position)){ return true;}
     if(!this.rotation.equals(this.old_rotation)){return true;}
     if(!this.scale.equals(this.old_scale)){return true;}
-
+    
     return false;
 }
 
@@ -47,8 +47,9 @@ transform.prototype.get_inverse_transformation = function(){
     return s.mul(r.mul(t.mul(p)));
 }
 
+//TODO hasChanged fix, bugged atm ---> && this.parent.hasChanged()
 transform.prototype.get_parent_matrix = function(){
-    if(this.parent != null && this.parent.hasChanged()){
+    if(this.parent != null){
         this.parent_matrix = (this.parent.get_transformation());
     } else {
         this.parent_matrix =  new matrix().init_identity();
@@ -118,6 +119,7 @@ transform.prototype.get_transformed_rotation = function(){
 transform.prototype.set_parent = function(t){
     if(t instanceof transform){
         this.parent = t;
+        this.parent_matrix = t.get_transformation();
     } else {
         console.error("Not Transform!");
     }
@@ -128,11 +130,16 @@ transform.prototype.set_position = function(p){
 }
 
 transform.prototype.clone = function() {
-    return new transform(
+    
+    var new_transform = new transform(
         this.position.clone(),
         this.scale.clone(),
         this.rotation.clone(),
-    )
+    );
+    
+    if(this.parent != null) new_transform.set_parent(this.parent);
+
+    return new_transform;
 }
 
 transform.prototype.has_rotated = function(){

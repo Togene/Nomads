@@ -100,14 +100,14 @@ function antlion_pool_load(data){
 
 
 function antlion_manifest_load(data){
-    manifest = JSON.parse(data);
-    console.log("loading successful.", manifest);
-    
-    if(manifest.length != 0){
-        for(var i = 0; i < manifest.length; i++){
-            box_create(manifest[i].position, null, false);
-        }
-    }
+   // manifest = JSON.parse(data);
+   // console.log("loading successful.", manifest);
+   // 
+   // if(manifest.length != 0){
+   //     for(var i = 0; i < manifest.length; i++){
+   //         box_create(manifest[i].position, null, false);
+   //     }
+   // }
 }
 
 function antlion_reset_manifest(){

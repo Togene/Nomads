@@ -2,24 +2,17 @@
 //suace : https://github.com/noonat/intersect/blob/master/src/intersect.ts
 
 
-function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false, name = "nuzzing"){
-    
-    //this.debug_points = [];
-    ////6 faces
-    //for(var i = 0; i < 64; i++){
-    //    //------------------------ CONTACT POINTS DEBUG ----------------//
-    //    var geometry = new THREE.BoxGeometry( .05, .05, .05 );
-    //    var material = new THREE.MeshBasicMaterial( {color: 0x00FF00} );
-    //    var cp_0 = new THREE.Mesh( geometry, material );
-    //    scene.add(cp_0);
-    //    this.debug_points.push(cp_0);
-    //    //------------------------ CONTACT POINTS DEBUG ----------------//
-    //}
+function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false){
 
-    var transform_clone = transform.clone();
-    transform_clone.scale = new THREE.Vector3(1,1,1);
-    
-    this.centre = transform.get_transformed_position().clone();
+    var transform_clone = transform;
+    //transform_clone.scale = new THREE.Vector3(1,1,1);
+
+    this.centre = new THREE.Vector3();
+
+    this.centre = new THREE.Vector3().copy(transform_clone.get_transformed_position());
+
+    console.log(transform_clone.scale);
+
     this.transformed_dimensions = new THREE.Vector3(w, h, d);
     this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
@@ -40,9 +33,6 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false, n
         this.d
     );
 
-    //how far the aabb will be projected into the future
-    this.projection = new THREE.Vector3(1,1,1);
-
     this.max.applyMatrix4(transform_clone.get_transformation().toMatrix4());
     this.min.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
@@ -56,9 +46,6 @@ function aabb(transform, w, h, d, debug = false, hex = 0x00FF00, fill = false, n
     this.decube.update(this.get_verts());
 };
 
-aabb.prototype.set_projection = function(v){
-    this.projection.copy(v);
-}
 
 aabb.prototype.min_max_set = function(t){
     this.min = new THREE.Vector3(
@@ -94,58 +81,22 @@ aabb.prototype.set_decube_active = function(b){
 
 aabb.prototype.update = function(delta){
 
-    if(!(this.centre.equals(this.parent.transform.get_transformed_position()))){
-     
-        this.centre.copy(this.parent.transform.get_transformed_position());
-
-        var transform_clone = this.parent.transform.clone();
-        transform_clone.scale = new THREE.Vector3(1,1,1);
+    if(this.parent != null){
+        if(!(this.centre.equals(this.parent.transform.get_transformed_position()))){
         
-        transform_clone.position = 
-            new THREE.Vector3(
-                transform_clone.position.x * this.projection.x,
-                transform_clone.position.y * this.projection.y,
-                transform_clone.position.z * this.projection.z
-            );
+            this.centre = new THREE.Vector3().copy(this.parent.transform.get_transformed_position());
+            
+            var transform_clone = this.parent.transform.clone();
+            transform_clone.scale = new THREE.Vector3(1,1,1);
+            
+            this.min_max_set(transform_clone);
+            this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
 
-        this.min_max_set(transform_clone);
-        this.transformed_dimensions.applyMatrix4(transform_clone.get_transformation().toMatrix4());
-
-    }
-        
-    if(this.decube != null){
-        if( this.parent != null){
+        }
+            
+        if(this.decube != null){
             this.decube.update(this.get_verts());
         }
-    }
-
-   // this.decube.set_active(true);
-
-    //if(this.colliding && this.decube != null){
-    //    this.decube.set_active(true);
-    //    this.set_visule_color(this.active_color);
-    //}
-    //
-    //if(!this.colliding && this.decube != null){
-    //    this.decube.set_active(false);
-    //    this.set_visule_color(this.non_active_color);
-    //}
-}
-
-aabb.prototype.direct_position_set = function(p){
-
-    if(p === undefined){
-        console.error("No Paramatre Given");
-    } else {
-        this.centre = p.clone();
-    }
-}
-
-aabb.prototype.direct_position_add = function(p){
-    if(p === undefined){
-        console.error("No Paramatre Given");
-    } else {
-        this.centre.add(p); 
     }
 }
 
@@ -296,6 +247,7 @@ aabb.prototype.get_verts = function(offset){
     var w = this.w;
     var d = this.d;
 
+
     if(this.parent == null){
         return [
             new THREE.Vector3(),
@@ -315,18 +267,16 @@ aabb.prototype.get_verts = function(offset){
     transform_clone.position.y += diffrence;
     
     if(offset != null){
-
         transform_clone.position.add(offset);
     }
     
     transform_clone.scale = new THREE.Vector3(1,1,1);
-    //transform_clone.rotation = transform_clone.rotation.conjugate();
+    transform_clone.rotation = transform_clone.rotation.conjugate();
 
     //y_s/2 + h = 0
 
     var m = transform_clone.get_transformation().toMatrix4();
-
-
+    //console.log(this.parent.name, transform_clone.position);
 
     var vert_0 = new THREE.Vector3(-w, -h, -d);
     vert_0.applyMatrix4(m);
@@ -351,6 +301,7 @@ aabb.prototype.get_verts = function(offset){
 
     var vert_7 = new THREE.Vector3(-w, h, d);
     vert_7.applyMatrix4(m);
+
 
     //at this point the velocity should already be added
     //so we need to substract and
@@ -467,16 +418,6 @@ aabb.prototype.edges = function(v, c){
 
     return [
         new edge(v[0], v[0], v[1], new THREE.Vector3()), //0, 1
-        //new edge(v[1], v[1], v[2], new THREE.Vector3()), //2, 3
-        //new edge(v[2], v[2], v[3], new THREE.Vector3()), //4, 5
-        //new edge(v[3], v[3], v[0], new THREE.Vector3()), //6, 7
-        //new edge(v[4], v[4], v[5], new THREE.Vector3()), //8, 9
-        //new edge(v[5], v[5], v[6], new THREE.Vector3()), //10, 11
-        //new edge(v[6], v[6], v[7], new THREE.Vector3()), //12, 13
-        //new edge(v[7], v[7], v[4], new THREE.Vector3()), //14, 15
-        //new edge(v[3], v[3], v[7], new THREE.Vector3()), //16, 17
-        //new edge(v[2], v[2], v[6], new THREE.Vector3()), //18, 19
-        //new edge(v[1], v[1], v[5], new THREE.Vector3()), //20, 21
         new edge(v[0], v[0], v[4], new THREE.Vector3()), //22, 23
         new edge(v[0], v[0], v[3], new THREE.Vector3()), //22, 23
     ]
@@ -615,35 +556,40 @@ aabb.prototype.get_face_centre = function(v){
 
 //for SAT intersecting 
 //!
-aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps){
-    
-    if(init) {
-      
+aabb.prototype.intersect_sat_aabb = function(right, offset){
+
         var overlap = Infinity;
         var axis = new THREE.Vector3();
 
         var v = this.get_verts(offset); // grab vertices
         var a = this.get_axes(v); // normal axes (faces)
         var e = this.edges(v); // get edges
-        //var f = this.get_faces(v);
 
         var rv = right.get_verts(); // right verts
         var ra = right.get_axes(rv); // right normal axes (faces)
         var re = right.edges(rv);
-        //var rf = right.get_faces(rv);
 
         var edge_axes = this.get_edge_axes(e, re);
 
-        var p0 = this.parent.transform.position.clone();
-        var p1 = right.parent.transform.position.clone();
+        var p0 = this.parent.transform.get_transformed_position().clone();
+        var p1 = right.parent.transform.get_transformed_position().clone();
         
         var direction = p0.clone().sub(p1).normalize();
 
-        var me = false;
-
-        for(var o = 0; o < re.length; o++){
+       // for(var o = 0; o < re.length; o++){
         //  e[o].debug_normal(p1);
-        }
+        //}
+
+        //if(right.parent.name == "grid"){
+        //    console.log("right: ", rv);
+        //}
+
+
+       // if(this.parent.name == "grid"){
+       //     console.log("left: ", v);
+      //  }
+
+
 
         for(var i = 0; i < a.length; i++){
             var proj_1 = this.project(a[i], v);
@@ -655,13 +601,10 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps)
 
                 var o = proj_1.get_overlap(proj_2);
                 
-                if(overlaps != null) overlaps.push({axis:a[i], o:o});
-
                 if(o < overlap){
                     //set to axis
                     overlap = o;
                     axis = a[i];
-                    me = true;
                 }
             }
         }
@@ -676,13 +619,10 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps)
 
                 var o = proj_1.get_overlap(proj_2);
 
-                if(overlaps != null) overlaps.push({axis:ra[i], o:o});
-
                 if(o < overlap){
                     //set to axis
                     overlap = o;
                     axis = ra[i];
-                    me = false;
                 }
             }
         }
@@ -697,14 +637,11 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps)
 
                 var o = proj_1.get_overlap(proj_2);
                 
-                if(overlaps != null) overlaps.push({axis:edge_axes[i].n, o:o});
-
                 if(o < overlap){
                     //set to axis
                     overlap = o;
                     axis = edge_axes[i].n;
                     isEdge = true;
-                    me = true;
                 }
             }
         }
@@ -714,32 +651,6 @@ aabb.prototype.intersect_sat_aabb = function(right, dir, init, offset, overlaps)
         }
 
         return {result: true, axis: axis, gap: overlap};
-    } else {
-   
-        var best_axis = null;
-        var best_overlap = 0;
-        var best_dot = Infinity;
-        console.log("doing impact check!");
-        var final = [];
-
-        for(var i = 0; i < overlaps.length; i++){
-            var dot = overlaps[i].axis.dot(dir);
-            
-            final.push({a:overlaps[i].axis, o:overlaps[i].o, d:dot});
-
-            if(dot < best_dot){
-                best_dot = dot;
-                best_axis = overlaps[i].axis;
-                best_overlap = overlaps[i].o;
-            }
-        }
-
-
-        final.sort(function(a, b){return a.d-b.d});
-        //console.log(final);
-
-        return {result: true, axis: best_axis, gap: best_overlap, list:final};
-    }
 }
 
 aabb.prototype.intersect_sat_aabb_sphere = function(right){
@@ -842,7 +753,7 @@ aabb.prototype.generate_contact_points = function(v, rv, axis, direction, right)
     }
 }
 
-aabb.prototype.best_face= function(o, n){
+aabb.prototype.best_face = function(o, n){
 
     var max = -Infinity;
     var face_index = null;
