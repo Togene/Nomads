@@ -50,8 +50,6 @@ rigidbody.prototype.update = function(delta){
 
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
-        //this.update_aabb_position(delta);
-        //col.set_projection(new THREE.Vector3(1.1, 1.1, 1.1));
         this.step(delta);
 
         this.new_parent_position = this.parent.transform.position.clone();
@@ -89,9 +87,6 @@ rigidbody.prototype.cap = function(delta){
     if(Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;}
     if(Math.abs(this.velocity.z) < 0.1){this.velocity.z = 0;}
     if(Math.abs(this.velocity.y) < 0.1){this.velocity.y = 0;}
-
-    //if(this.parent.name == "player")
-    //    console.log(this.velocity);
 }
 
 rigidbody.prototype.step = function(delta){

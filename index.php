@@ -41,7 +41,12 @@
 			<script src = "js/core/physics/collision/ray.js"></script>
 			<script src = "js/core/physics/collision/sweep.js"></script>
 			<script src = "js/core/physics/collision/hit.js"></script>
-			<script src = "js/core/physics/collision/aabb.js"></script>
+
+			<script src = "js/core/physics/collision/aabb/aabb.js"></script>
+			<script src = "js/core/physics/collision/aabb/aabb_ray_intersect.js"></script>
+			<script src = "js/core/physics/collision/aabb/aabb_legacy.js"></script>
+			<script src = "js/core/physics/collision/aabb/aabb_sat.js"></script>
+			<script src = "js/core/physics/collision/aabb/aabb_sweep.js"></script>
 
 			<script src = "js/core/decomposer.js"></script>
 			<script src = "js/core/decube.js"></script>

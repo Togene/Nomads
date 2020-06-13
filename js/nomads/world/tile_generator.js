@@ -90,16 +90,6 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	var segment_width = width / gridX;
 	var segment_height = height / gridY;
 
-
-	//if (buffers != undefined) {
-	//	var TreeBuffer = buffers.tree;
-	//	var EnviBuffer = buffers.envi;
-	//	var structBuffer = buffers.strct;
-	//	var CreatureBuffer = buffers.crt;
-	//}
-	//var raySampler = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0);
-	// buffers
-
 	var indices = [];
 	var vertices = [];
 	var normals = [];

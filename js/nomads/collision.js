@@ -16,64 +16,37 @@ function broad_quad_tree_insert(o){
 function collision_update(delta){
     //broad_collision_check(delta);
     player_collision_check(delta);
-    floor_collision_check(delta);
-
+    land_check(delta);
 }
 
-function floor_collision_check(delta){
+function land_check(delta){
     if(collision_tree != undefined && player != undefined) {
-        collision_tree.forEach(function(e){
-            //floor_narrow_check(e, delta);
-            land_check(e, delta);
-        });
-    }
-}
+            collision_tree.forEach(function(e){
 
-function land_check(e, delta){
+            if(WORLD_COLLISION_ARRAY != null || WORLD_COLLISION_ARRAY.length != 0){
+                var raycaster = new THREE.Raycaster(new THREE.Vector3(
+                    e.transform.position.x,
+                    0,
+                    e.transform.position.z), 
+                    new THREE.Vector3(0, 1, 0), 0, 5);
+            
+                var intersections = raycaster.intersectObjects(WORLD_COLLISION_ARRAY);
+            
+                //var onObject = intersections.length > 0;
+                
+                var lb = e.get_component("rigidbody");
 
-    if(WORLD_COLLISION_ARRAY != null || WORLD_COLLISION_ARRAY.length != 0){
-        var raycaster = new THREE.Raycaster(new THREE.Vector3(
-            e.transform.position.x,
-            0,
-            e.transform.position.z), 
-            new THREE.Vector3(0, 1, 0), 0, 5);
-    
-        var intersections = raycaster.intersectObjects(WORLD_COLLISION_ARRAY);
-    
-        var onObject = intersections.length > 0;
-        
-        var lb = e.get_component("rigidbody");
-
-        if(intersections[0] !== undefined){
-            if( lb != undefined){
-                if(e.name == "player"){
-                    lb.ground(intersections[0].point.y, true);
-                } else {
-                    lb.ground(intersections[0].point.y, false);
+                if(intersections[0] !== undefined){
+                    if( lb != undefined){
+                        if(e.name == "player"){
+                            lb.ground(intersections[0].point.y, true);
+                        } else {
+                            lb.ground(intersections[0].point.y, false);
+                        }
+                    }
                 }
             }
-        }
-    }
-}
-
-function floor_narrow_check(e, delta){
-    
-    if(e != undefined){
-        var lb = e.get_component("rigidbody");
-        var lr = e.get_component("ray");
-
-        var r = floor.get_component("aabb");
-        var intersection = r.ray_intersect(lr);
-
-        if(intersection.val){
-            lr.set_intersecting(true);
-
-            if(e.name == "player"){
-                lb.ground(intersection.y, true);
-            } else {
-                lb.ground(intersection.y, false);
-            }
-        } 
+        });
     }
 }
 
@@ -143,7 +116,7 @@ function narrow_collision_check(near, e, delta){
 
     var l = e.get_component("aabb");
     var lb = e.get_component("rigidbody");
-    //var lr = e.get_component("ray");
+    var lr = e.get_component("ray");
 
     l.set_colliding(false);
     
@@ -162,20 +135,22 @@ function narrow_collision_check(near, e, delta){
         delt.y = 0;
 
                     
-        //if(lr.length != undefined){
-        //    for(var j = 0; j < lr.length; j++){
-        //        collision_ray_response(l, r, lr[j], lb, near[i].o);
-        //    }
-        //} else { 
-        //    collision_ray_response(l, r, lr, lb, near[i].o);
-        //}
+        if(lr.length != undefined){
+            for(var j = 0; j < lr.length; j++){
+                if (collision_ray_response(l, r, lr[j], lb, near[i].o)){
+                }
+            }
+        } else { 
+            if(collision_ray_response(l, r, lr, lb, near[i].o)){
+            }
+        }
         
         if(sat_response(e, l, r, lb, rb, near[i].o, delta)){
             l.set_colliding(true);
             r.set_colliding(true);
            break;
         };
-
+        
         //TODO: check for 90/180/270 dagree's as not roated
         if(e.transform.has_rotated() || near[i].o.transform.has_rotated()){
         //stable_sat for OOB, 
@@ -349,7 +324,11 @@ function collision_ray_response(l, r, lr, lb, r_o){
         } else {
             lb.ground(intersection.y, false);
         }
+
+        return true;
     } 
+
+    return false;
 }
 
 function collision_sweep_response(sweep, e, r){
