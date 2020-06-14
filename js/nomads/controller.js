@@ -38,7 +38,6 @@ function movement(delta){
     if(controls !== undefined && player != null){
         if ( controls.isLocked === true ) {
             var player_body = player.get_component("rigidbody");
-            var player_col = player.get_component("aabb");
 
             direction.z = Number( moveForward ) - Number( moveBackward );
             direction.x = Number( moveRight ) - Number( moveLeft );

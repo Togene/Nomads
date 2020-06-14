@@ -31,7 +31,7 @@ rigidbody.prototype.set_parent = function(p){
 };
 
 rigidbody.prototype.update = function(delta){
-    var col = player.get_component("aabb");
+    
 
         //*-------------------- Caps -----------------------
         this.cap(delta);
@@ -39,15 +39,11 @@ rigidbody.prototype.update = function(delta){
 
         this.old_parent_position = this.parent.transform.position.clone();
 
-        if(col.colliding){
-
-        } else {
-            //drag --------------------
-            this.velocity.x -= this.velocity.x * (10.0) * delta;
-            this.velocity.z -= this.velocity.z * (10.0) * delta;
-            //drag -------------------
-        }
-
+        //drag --------------------
+        this.velocity.x -= this.velocity.x * (10.0) * delta;
+        this.velocity.z -= this.velocity.z * (10.0) * delta;
+        //drag -------------------
+   
         //update the collider before the actaul gameobject
         //that way it can check collision in advance
         this.step(delta);
@@ -162,7 +158,6 @@ rigidbody.prototype.update_aabb_position = function(delta){
     right.setFromMatrixColumn( camera.matrix, 0 );
 
     var pos_clone = this.parent.transform.position.clone();
-    var col = this.parent.get_component("aabb");
 
     var projection_mag = 1.1; //! 1 second in the future? or .1 steps in the future?
 
@@ -170,7 +165,6 @@ rigidbody.prototype.update_aabb_position = function(delta){
     pos_clone.addScaledVector(right, -((this.velocity.x * projection_mag) * delta));
     pos_clone += (this.velocity.y * delta);
  
-    col.direct_position_set(pos_clone);
 }
 
 // Get current direction of velocity with added direction from rotation
@@ -209,29 +203,6 @@ rigidbody.prototype.add_force = function(f, d, delta){
 }
 
 rigidbody.prototype.ground = function(y, isplayer){
-
-    var diffrence = Math.abs(this.parent.transform.position.y - y);
-
-    var scale = this.parent.transform.scale;
-    var pos = this.parent.transform.position;
-
-    var diffrence = Math.abs(this.parent.transform.position.y - y);
-    var diffrence = Math.abs(this.parent.transform.position.y - y);
-
-
-
-    var col = this.parent.get_component("aabb");
-   
-    //! .1 + collider size (which is 1)
-    if(diffrence <= (col.h + (scale.y/2 - col.h) + 0.1)){
-        //y + (this.parent.transform.scale.y/2 + .1);
-        this.parent.transform.position.y = y + col.h + (scale.y/2 - col.h);
-        this.velocity.y = 0;
-
-        if(isplayer) {
-            canJump = true;
-        }
-    }
 }
 
 rigidbody.prototype.set_grounded = function(bool){

@@ -16,8 +16,6 @@ function house_create(p, q, save = true) {
         p.z
     );
 
-    console.log(house.transform.position);
-
     house.transform.rotation = new quaternion(0, 0, 0, 1);
 
     var half_x = house.transform.scale.x / 2;
@@ -63,9 +61,6 @@ function create_grid(pos, dagree, axis, inner_dag, inner_axis, size_x, size_y, o
     }
 
     if (extra_rot != null) grid_object.transform.rotation = grid_object.transform.rotation.q_mul(extra_rot);
-
-    var collider = new aabb(grid_object.transform, size_x / 2, .05, size_y / 2, true, 0x00ffff, true);
-    grid_object.add_component(collider);
 
     physics_objects.push(grid_object);
     broad_quad_tree_insert(grid_object);

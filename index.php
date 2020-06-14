@@ -34,19 +34,6 @@
 			<script src = "js/core/GUI/text.js"></script>
 
 			<script src = "js/core/physics/rigidbody.js"></script>
-			<script src = "js/core/physics/collision/edge.js"></script>
-			<script src = "js/core/physics/collision/sphere.js"></script>
-			<script src = "js/core/physics/collision/sutherland_hodgman.js"></script>
-			<script src = "js/core/physics/collision/projection.js"></script>
-			<script src = "js/core/physics/collision/ray.js"></script>
-			<script src = "js/core/physics/collision/sweep.js"></script>
-			<script src = "js/core/physics/collision/hit.js"></script>
-
-			<script src = "js/core/physics/collision/aabb/aabb.js"></script>
-			<script src = "js/core/physics/collision/aabb/aabb_ray_intersect.js"></script>
-			<script src = "js/core/physics/collision/aabb/aabb_legacy.js"></script>
-			<script src = "js/core/physics/collision/aabb/aabb_sat.js"></script>
-			<script src = "js/core/physics/collision/aabb/aabb_sweep.js"></script>
 
 			<script src = "js/core/decomposer.js"></script>
 			<script src = "js/core/decube.js"></script>
@@ -62,9 +49,6 @@
 			<script src = "js/nomads/world/generator_utilities/map_generator.js"></script>
 			<script src = "js/nomads/world/generator_utilities/noise_from_texture.js"></script>
 			<script src = "js/nomads/world/generator_utilities/regions.js"></script>
-						
-			<script src = "js/nomads/components/brain.js"></script>
-			<script src = "js/nomads/components/interaction.js"></script>
 
 			<script src = "js/nomads/yard_stick.js"></script>
 			<script src = "js/nomads/box.js"></script>
@@ -79,7 +63,6 @@
 			<script src = "js/nomads/physics.js"></script>
 			<script src = "js/nomads/controller.js"></script>
 
-
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/rendering/rendering_pool.js"></script>
@@ -87,7 +70,6 @@
 
 			<script src = "js/nomads/gui/pause.js"></script>
 
-			<script src = "js/nomads/input/mouse.js"></script>
 			<script src = "js/nomads/input/keyboard.js"></script>
 
 			

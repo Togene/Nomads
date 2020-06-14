@@ -7,7 +7,7 @@ function pause_init(){
     blocker = document.getElementById( 'blocker' );
 
     pause_screen.addEventListener( 'click', function (e) {
-        //controls.lock();
+        controls.lock();
     }, false );
 
     controls.addEventListener( 'lock', function () {

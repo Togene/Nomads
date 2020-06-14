@@ -28,7 +28,6 @@ function game_bootstrap(data){
     game_resources = data;
 
     keyboard_init();
-    mouse_init();
     controller_init();
     pause_init();
     player_init();
@@ -60,20 +59,8 @@ function game_bootstrap(data){
     //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
     //cube1.matrixAutoUpdate = false;
     //cube2.matrixAutoUpdate = false;
-
-    //TestCreatures();
-    //TestTree();
-    //TestStructures();
-    //TestNPC();
     
     for(var i = 0; i < Scene.length; i++){
-        //Scene[i].information();
-        if(Scene[i].has_component("aabb")){
-            physics_objects.push(Scene[i]);
-            broad_quad_tree_insert(Scene[i]);
-        }
-            
-
         if(Scene[i].has_component("rigidbody")){
             rigidbodies_insert(Scene[i].get_component("rigidbody"));
         }
@@ -120,7 +107,6 @@ function update(delta){
     flora_update(delta);
     humanoid_update(delta);
     box_update(delta);
-    mouse_update(delta);
 }
 
 

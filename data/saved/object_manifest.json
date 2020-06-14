@@ -43,11 +43,7 @@
 				"parent": {
 					"name": "house"
 				},
-				"components": [
-					{
-						"name": "aabb"
-					}
-				],
+				"components": [],
 				"children": [
 					{
 						"name": "grid_face",

@@ -24,7 +24,6 @@ function creature_create(){
         buffer.index,
     );
 
-    crab.add_component(new aabb(crab.transform, .25, .25, .25, true, 0x00FF00, true));
     crab.add_component(new rigidbody(1, false));
     crab.add_component(crab_decomposer);
     crab.add_component(new ray(crab.transform.position, new THREE.Vector3(0, -1, 0)));
@@ -95,10 +94,8 @@ function TestCreatures(){
            buffer.index,
         );
 
-        crab.add_component(new aabb(crab.transform, .5, .5, .5, true, 0x00FF00, true));
         crab.add_component(new rigidbody(1, false));
         crab.add_component(crab_decomposer);
-        crab.add_component(new ray(crab.transform.position, new THREE.Vector3(0, -1, 0)));
             
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),
@@ -126,11 +123,6 @@ function fauna_update(delta){
     if(test_crabs.length != 0){
         for(var i = 0; i < test_crabs.length; i++){
 
-            var collider = test_crabs[i].get_component("aabb");
-
-            if(collider.colliding) {
-                test_crabs[i].get_component("animator").set_animation_sequence(1);
-            } 
         }
     }
 

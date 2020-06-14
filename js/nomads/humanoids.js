@@ -28,15 +28,9 @@ function npc_create(p, q){
         buffer.index,
     );
 
-    npc.add_component(new aabb(npc.transform, .5, .5, .5, true, 0x00FF00, true));
-
-    var trigger_zone = new sphere(npc.transform, 1, true);
-    npc.add_component(trigger_zone);
-    npc.add_component(new interaction(trigger_zone));
 
     npc.add_component(new rigidbody(1, false));
     npc.add_component(npc_decomposer);
-    npc.add_component(new ray(npc.transform.position, new THREE.Vector3(0, -1, 0)));
 
     npc.add_component(anim =  new animator(
         [
@@ -103,10 +97,8 @@ function TestNPC(){
            buffer.index,
         );
 
-        npc.add_component(new aabb(npc.transform, .5, .5, .5, true, 0x00FF00, true));
         npc.add_component(new rigidbody(25, false));
         npc.add_component(npc_decomposer);
-        npc.add_component(new ray(npc.transform.position, new THREE.Vector3(0, -1, 0)));
             
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),
@@ -133,7 +125,6 @@ function humanoid_update(delta){
 
     if(test_npcs.length != 0){
         for(var i = 0; i < test_npcs.length; i++){
-            //test_npcs[i].transform.rotation.y += 0.5;
         }
     }
 

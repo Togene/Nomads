@@ -51,11 +51,6 @@ function TestStructures(){
             }
         }
 
-        floor.add_component(new aabb(floor.transform,
-            100,
-            0.15,
-            100, true, 0xFFFFFF, true))
-
     CreateInstance(
         "Test", 
         animated_sprites, 

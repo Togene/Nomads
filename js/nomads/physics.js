@@ -25,11 +25,6 @@ function physics_update(delta){
 
 function add_gravity(o, delta){
     if(o.velocity.y < calc_terminal(o)) {
-        var collider = o.parent.get_component("aabb");
-
-        if(!collider.colliding){
-            o.add_force(gravity * o.mass * delta, new THREE.Vector3(0, -1, 0));
-        }
     }
     
 }

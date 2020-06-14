@@ -25,8 +25,6 @@ function tree_create(p, q){
 
     leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
 
-    tree.get_component("aabb");
-
     var leaves_decomposer = new decomposer(
         [ MapToSS(3, 0),],
         new THREE.Vector2(1, 1),
@@ -39,7 +37,6 @@ function tree_create(p, q){
     );
     
     leaves.add_component(leaves_decomposer);
-    tree.add_component(new aabb(tree.transform, 0.5, 0.5, 0.5, true, 0xFFFFFF, true));
     
     PopulateBuffer(
         new THREE.Vector3(0, 0, 0),
@@ -85,7 +82,6 @@ function TestTree(){
         tree.add_child(leaves);
 
         leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
-        tree.get_component("aabb");
 
         var leaves_decomposer = new decomposer(
             [ MapToSS(3, 0),],
@@ -99,7 +95,6 @@ function TestTree(){
         );
         
         leaves.add_component(leaves_decomposer);
-        tree.add_component(new aabb(tree.transform, 1, 2, 1, true, 0xFFFFFF, true));
         
         PopulateBuffer(
             new THREE.Vector3(0, 0, 0),
@@ -217,12 +212,6 @@ function flora_occlusion(){
 
 
     for(var i = 0; i < test_trees.length; i++){
-        var box = test_trees[i].get_component("aabb").toBox3D();
 
-        if(frustum.intersectsBox(box)){
-
-        } else {
-
-        }
     }
 }
