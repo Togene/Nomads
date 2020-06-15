@@ -1,6 +1,6 @@
 var boxes = [];
 
-function box_create(p, q, save = true){
+function box_create(p, q){
     var shader = get_data("instance_shader");
     shader.extra.trans = true;
 
@@ -45,13 +45,6 @@ function box_create(p, q, save = true){
     CreateInstance(solid_sprites, buffer, attributes, sprite_sheet_size , shader, 5, false, false);
     boxes.push(box);
 
-    if(save){
-        antlion_add_to_manifest(box.toJSON());
-    }
-
-    physics_objects.push(box);
-    broad_quad_tree_insert(box);
-
     return box;
 } 
 
@@ -86,11 +79,4 @@ function create_box_face(y_rot, axis, offset, parent, buffer, attributes){
         new THREE.Vector3(5, 5, 5), 
         buffer, 
         face_decomposer);
-}
-
-function box_update(delta){
-    if(boxes != undefined){
-        for(var i = 0; i < boxes.length; i++){
-        }
-    }
 }

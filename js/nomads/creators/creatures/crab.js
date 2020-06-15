@@ -1,14 +1,10 @@
-var test_crabs = [];
-
-function creature_create(){
+function crab_create(){
     var crab_shader = get_data("instance_shader");
     var buffer = create_buffer();
     var attributes = [];
 
     var crab = new gameobject("crab");
                     
-    test_crabs.push(crab);
-
     crab.transform.position = new THREE.Vector3(0, 0, 0);
     crab.transform.rotation = new quaternion(0, random_range(-45, 45), 0, 1);
     crab.transform.scale = new THREE.Vector3(1,1,1);
@@ -45,26 +41,16 @@ function creature_create(){
         anim.current_animation,
     );
 
-    CreateInstance(
-    animated_sprites, 
-    buffer, 
-    attributes, 
-    sprite_sheet_size , 
-    crab_shader, 
-    0, 
-    true, 
-    false);
+    //CreateInstance(
+    //animated_sprites, 
+    //buffer, 
+    //attributes, 
+    //sprite_sheet_size , 
+    //crab_shader, 
+    //0, 
+    //true, 
+    //false);
 
     return crab;
 }
 
-
-function fauna_update(delta){
-
-    if(test_crabs.length != 0){
-        for(var i = 0; i < test_crabs.length; i++){
-
-        }
-    }
-
-}

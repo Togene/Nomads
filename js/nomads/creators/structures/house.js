@@ -1,5 +1,3 @@
-var houses = [];
-
 function house_create(p, q, save = true) {
     var shader = get_data("instance_shader");
     shader.extra.trans = true;
@@ -33,9 +31,7 @@ function house_create(p, q, save = true) {
         0, new THREE.Vector3(1, 0, 0),
         90, new THREE.Vector3(1, 0, 0), 3, 3, house, buffer, attributes, block_out);
 
-    CreateInstance(solid_sprites, buffer, attributes, sprite_sheet_size, shader, 5, false, false);
-
-    houses.push(house);
+    //CreateInstance(solid_sprites, buffer, attributes, sprite_sheet_size, shader, 5, false, false);
 
     if (save) {
         antlion_add_to_manifest(house.toJSON());
@@ -61,9 +57,6 @@ function create_grid(pos, dagree, axis, inner_dag, inner_axis, size_x, size_y, o
     }
 
     if (extra_rot != null) grid_object.transform.rotation = grid_object.transform.rotation.q_mul(extra_rot);
-
-    physics_objects.push(grid_object);
-    broad_quad_tree_insert(grid_object);
 
     object.add_child(grid_object);
 }
@@ -97,13 +90,5 @@ function create_house_face(dagree, axis, offset, parent, buffer, attributes) {
         buffer,
         face_decomposer);
 
-    parent.add_child(face);
-
     return face;
-}
-
-function box_update(delta) {
-    if (houses != undefined) {
-        for (var i = 0; i < houses.length; i++) {}
-    }
 }

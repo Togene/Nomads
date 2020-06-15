@@ -1,14 +1,10 @@
-var test_trees = [];
-
-function tree_create(p, q){
+function tree_01_create(p, q){
     var shader = get_data("instance_shader");
     //var buffer = create_buffer();
     var attributes = [];
 
     var tree = new gameobject("tree");
     
-    test_trees.push(tree);
- 
     create_face(0, tree, attributes);
     create_face(45, tree, attributes);
     create_face(135, tree, attributes);
@@ -40,7 +36,7 @@ function tree_create(p, q){
         leaves_decomposer
     );
     
-    CreateInstance(solid_sprites, DYNAMIC_BUFFER, attributes, sprite_sheet_size , shader, 1, false, false);
+    //CreateInstance(solid_sprites, DYNAMIC_BUFFER, attributes, sprite_sheet_size , shader, 1, false, false);
     return tree;
 }
 
@@ -124,28 +120,4 @@ function create_face(y_rot, tree, attributes){
         branch_decomposer);
 
     return branch.transform.get_transformed_position().y;
-}
-
-function flora_update(delta){
-  
-   for(var i = 0; i < test_trees.length; i++){
-        //test_trees[i].transform.position.y = Math.sin(game_time);
-        //test_trees[i].transform.rotation.y += .01;
-   }
-
-   flora_occlusion();
-}
-
-function flora_occlusion(){
-    var frustum = new THREE.Frustum();
-    frustum.setFromMatrix( 
-        new THREE.Matrix4().multiplyMatrices( 
-            camera.projectionMatrix, 
-            camera.matrixWorldInverse 
-        ));
-
-
-    for(var i = 0; i < test_trees.length; i++){
-
-    }
 }

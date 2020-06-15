@@ -20,7 +20,7 @@ function yard_stick_create(p, q){
 
     stick.add_component(new aabb(stick.transform, 1, 1, 1, true, 0xFFFFFF, true));
     
-    CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 5, false, false);
+    //CreateInstance(solid_sprites, buffer, attributes, sprite_sheet_size , shader, 5, false, false);
     return stick;
 } 
 
@@ -51,7 +51,4 @@ function create_yard_face(y_rot, parent, buffer, attributes){
         new THREE.Vector3(5, 5, 5), 
         buffer, 
         face_decomposer);
-}
-
-function yard_stick_update(delta){
 }

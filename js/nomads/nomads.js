@@ -89,11 +89,6 @@ function update(delta){
     newobject1.transform.rotation.y += .5;
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
-    
-    fauna_update(delta);
-    flora_update(delta);
-    humanoid_update(delta);
-    box_update(delta);
 }
 
 

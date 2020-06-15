@@ -1,10 +1,7 @@
-function structures_init(){
-
-}
 
 var floor;
 
-function TestStructures(){
+function floor_create(){
     var floor_shader = get_data("instance_shader");
     var buffer = create_buffer();
     var attributes = [];
@@ -51,19 +48,14 @@ function TestStructures(){
             }
         }
 
-    CreateInstance(
-        "Test", 
-        animated_sprites, 
-        buffer, 
-        attributes, 
-        sprite_sheet_size , 
-        floor_shader, 
-        3, 
-        false, 
-        false);
-
-}
-
-function structures_update(){
+    //CreateInstance(
+    //    animated_sprites, 
+    //    buffer, 
+    //    attributes, 
+    //    sprite_sheet_size , 
+    //    floor_shader, 
+    //    3, 
+    //    false, 
+    //    false);
 
 }

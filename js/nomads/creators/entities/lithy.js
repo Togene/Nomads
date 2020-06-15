@@ -1,14 +1,10 @@
-var test_npcs = [];
-
-function npc_create(p, q){
+function lithy_create(p, q){
     var npc_shader = get_data("instance_shader");
     var buffer = create_buffer();
     var attributes = [];
 
     var npc = new gameobject("npc");
                     
-    test_npcs.push(npc);
-
     npc.transform.position = new THREE.Vector3(
         p.x,
         p.y + npc.transform.scale.y/2,
@@ -43,18 +39,15 @@ function npc_create(p, q){
         buffer, 
         npc_decomposer);
 
-    CreateInstance(
-    animated_sprites, 
-    buffer, 
-    attributes, 
-    sprite_sheet_size , 
-    npc_shader, 
-    4, 
-    true, 
-    true);
-
-    physics_objects.push(npc);
-    broad_quad_tree_insert(npc);
+    //CreateInstance(
+    //animated_sprites, 
+    //buffer, 
+    //attributes, 
+    //sprite_sheet_size , 
+    //npc_shader, 
+    //4, 
+    //true, 
+    //true);
 
     return npc;
 }
