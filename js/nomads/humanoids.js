@@ -9,8 +9,6 @@ function npc_create(p, q){
                     
     test_npcs.push(npc);
 
-    npc.transform.rotation = new quaternion(0, 0, 0, 1 );
-    npc.transform.scale = new THREE.Vector3(1,1,1);
     npc.transform.position = new THREE.Vector3(
         p.x,
         p.y + npc.transform.scale.y/2,
@@ -28,7 +26,6 @@ function npc_create(p, q){
         buffer.index,
     );
 
-
     npc.add_component(new rigidbody(1, false));
     npc.add_component(npc_decomposer);
 
@@ -42,12 +39,11 @@ function npc_create(p, q){
     PopulateBuffer(
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, 0), 
-        npc.transform.scale,
+        new THREE.Vector3(0, 0, 0),
         buffer, 
         npc_decomposer);
 
     CreateInstance(
-    "Test", 
     animated_sprites, 
     buffer, 
     attributes, 
@@ -110,7 +106,6 @@ function TestNPC(){
     }
 
     CreateInstance(
-    "Test", 
     animated_sprites, 
     buffer, 
     attributes, 

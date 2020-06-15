@@ -6,14 +6,12 @@
 */
 
 function getPointInBetweenByLen(pointA, pointB, length) {
-
 	var dir = pointB.clone().sub(pointA).normalize().multiplyScalar(length);
 	return pointA.clone().add(dir);
 
 }
 
 function getPointInBetweenByPerc(pointA, pointB, percentage) {
-
 	var dir = pointB.clone().sub(pointA);
 	var len = dir.length();
 	dir = dir.normalize().multiplyScalar(len * percentage);
@@ -33,14 +31,6 @@ function face3D(p0, p1, p2, p3) {
 
 face3D.prototype.CalculateNormal = function (debug = false) {
 	var up = new THREE.Vector3(0, 1, 0);
-
-	//For each triangle ABC
-	//// compute the cross product and add it to each vertex
-
-	//p := cross(B-A, C-A)
-	//A.n += p
-	//B.n += p
-	//C.n += p
 
 	//------------------traingle 1-------------------------
 	var B0_m_A0 = this.p1.clone().sub(this.p0);
@@ -70,10 +60,10 @@ face3D.prototype.CalculateNormal = function (debug = false) {
 	}
 }
 
-function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, levelOfDetial, ChunkSize, Worldx, Worldy, mapsize, gridsize, scale, xIndex, yIndex, buffers, yoffset) {
+function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, levelOfDetial, 
+	Worldx, Worldy, mapsize, gridsize, scale, xIndex, yIndex) {
 
 	var bufferGeometry = new THREE.BufferGeometry();
-	var step = 0;
 
 	width = mapsize || 1;
 	height = mapsize || 1;
@@ -277,7 +267,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			}
 			//--------------------------FACE-------------------------------------
 
-			vertices.push(obj_x, finalP + yoffset, obj_y);
+			vertices.push(obj_x, finalP, obj_y);
 
 			normals.push(
 				faces[faces.length - 1].x,
@@ -324,36 +314,4 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	}
 
 	return geo;
-}
-
-function create_decube(p, n, q){
-
-	var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-	var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-	var cube = new THREE.Mesh( geometry, material );
-
-	cube.position.set(
-		p.x,
-		p.y,
-		p.z
-	);
-	cube.lookAt(
-		new THREE.Vector3(
-			p.x + n.x,
-			p.y + n.y,
-			p.z + n.z
-		)
-	);
-
-	cube.position.set(
-		p.x + n.x/2,
-		p.y + n.y/2,
-		p.z + n.z/2
-	);
-
-	scene.add( cube );
-}
-
-function place(){
-
 }

@@ -23,7 +23,6 @@ function sky_init(){
     moon_init(buffer, attributes);
 
     CreateInstance(
-        "stars", 
         animated_sprites, 
         buffer, 
         attributes,
@@ -119,7 +118,6 @@ function sun_init(buffer, attributes){
 
     var sun = new gameobject("sun");
     sky.add_child(sun);
-    //sun.transform.position = new THREE.Vector3(0, 0, 0);
 
     var sun_decomposer = new decomposer(
         [ MapToSS(0, 1),],

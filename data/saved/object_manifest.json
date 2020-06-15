@@ -1,11 +1,11 @@
 [
 	{
 		"name": "house",
-		"id": "1.0019531250.68137764295981914.986328125",
+		"id": "-0.9902343750.68137764295981910.0058593750000000555",
 		"position": {
-			"x": 1.001953125,
+			"x": -0.990234375,
 			"y": 0.6813776429598191,
-			"z": 4.986328125
+			"z": 0.0058593750000000555
 		},
 		"rotation": {
 			"x": 0,
@@ -23,11 +23,1511 @@
 		"children": [
 			{
 				"name": "grid",
-				"id": "1.0019531250.68137764295981914.986328125",
+				"id": "-0.9902343750.68137764295981910.0058593750000000555",
 				"position": {
-					"x": 1.001953125,
+					"x": -0.990234375,
 					"y": 0.6813776429598191,
-					"z": 4.986328125
+					"z": 0.0058593750000000555
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0,
+					"w": 1
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				},
+				"parent": {
+					"name": "house"
+				},
+				"components": [],
+				"children": [
+					{
+						"name": "grid_face",
+						"id": "-1-0.5-1",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 0
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "-1-0.50",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 1
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "-1-0.51",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 2
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.5-1",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 3
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.50",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 4
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.51",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 5
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.5-1",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 6
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.50",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 7
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.51",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 8
+							}
+						],
+						"children": []
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "house",
+		"id": "0.00585937500000005550.68137764295981910.0058593750000000555",
+		"position": {
+			"x": 0.0058593750000000555,
+			"y": 0.6813776429598191,
+			"z": 0.0058593750000000555
+		},
+		"rotation": {
+			"x": 0,
+			"y": 0,
+			"z": 0,
+			"w": 1
+		},
+		"scale": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"parent": null,
+		"components": [],
+		"children": [
+			{
+				"name": "grid",
+				"id": "0.00585937500000005550.68137764295981910.0058593750000000555",
+				"position": {
+					"x": 0.0058593750000000555,
+					"y": 0.6813776429598191,
+					"z": 0.0058593750000000555
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0,
+					"w": 1
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				},
+				"parent": {
+					"name": "house"
+				},
+				"components": [],
+				"children": [
+					{
+						"name": "grid_face",
+						"id": "-1-0.5-1",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 0
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "-1-0.50",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 1
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "-1-0.51",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 2
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.5-1",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 3
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.50",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 4
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.51",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 5
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.5-1",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 6
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.50",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 7
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.51",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 8
+							}
+						],
+						"children": []
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "house",
+		"id": "-0.9902343750.68137764295981911.001953125",
+		"position": {
+			"x": -0.990234375,
+			"y": 0.6813776429598191,
+			"z": 1.001953125
+		},
+		"rotation": {
+			"x": 0,
+			"y": 0,
+			"z": 0,
+			"w": 1
+		},
+		"scale": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"parent": null,
+		"components": [],
+		"children": [
+			{
+				"name": "grid",
+				"id": "-0.9902343750.68137764295981911.001953125",
+				"position": {
+					"x": -0.990234375,
+					"y": 0.6813776429598191,
+					"z": 1.001953125
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0,
+					"w": 1
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				},
+				"parent": {
+					"name": "house"
+				},
+				"components": [],
+				"children": [
+					{
+						"name": "grid_face",
+						"id": "-1-0.5-1",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 0
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "-1-0.50",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 1
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "-1-0.51",
+						"position": {
+							"x": -1,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 2
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.5-1",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 3
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.50",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 4
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "0-0.51",
+						"position": {
+							"x": 0,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 5
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.5-1",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": -1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 6
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.50",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": 0
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 7
+							}
+						],
+						"children": []
+					},
+					{
+						"name": "grid_face",
+						"id": "1-0.51",
+						"position": {
+							"x": 1,
+							"y": -0.5,
+							"z": 1
+						},
+						"rotation": {
+							"x": 0.7071067811865475,
+							"y": 0,
+							"z": 0,
+							"w": 0.7071067811865476
+						},
+						"scale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"parent": {
+							"name": "grid"
+						},
+						"components": [
+							{
+								"name": "decomposer",
+								"ssIndex": [
+									{
+										"x": 0,
+										"y": 0.125
+									}
+								],
+								"animationFrames": {
+									"x": 1,
+									"y": 1
+								},
+								"colors": [
+									7890508
+								],
+								"centre_offset": {
+									"x": 0,
+									"y": 0,
+									"z": 0
+								},
+								"type": 1,
+								"fog": 0,
+								"buffer_idx": 8
+							}
+						],
+						"children": []
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "house",
+		"id": "0.00585937500000005550.68137764295981911.001953125",
+		"position": {
+			"x": 0.0058593750000000555,
+			"y": 0.6813776429598191,
+			"z": 1.001953125
+		},
+		"rotation": {
+			"x": 0,
+			"y": 0,
+			"z": 0,
+			"w": 1
+		},
+		"scale": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"parent": null,
+		"components": [],
+		"children": [
+			{
+				"name": "grid",
+				"id": "0.00585937500000005550.68137764295981911.001953125",
+				"position": {
+					"x": 0.0058593750000000555,
+					"y": 0.6813776429598191,
+					"z": 1.001953125
 				},
 				"rotation": {
 					"x": 0,

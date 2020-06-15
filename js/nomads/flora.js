@@ -2,22 +2,16 @@ var test_trees = [];
 
 function tree_create(p, q){
     var shader = get_data("instance_shader");
-    var buffer = create_buffer();
+    //var buffer = create_buffer();
     var attributes = [];
-
-    var num_trees = 1;
 
     var tree = new gameobject("tree");
     
     test_trees.push(tree);
  
-    tree.transform.scale = new THREE.Vector3(1,1,1);
-    tree.transform.position = new THREE.Vector3(0, 0, 0);
-    tree.transform.rotation = new quaternion(0,0,0,1);
-    
-    create_face(0, tree, buffer, attributes);
-    create_face(45, tree, buffer, attributes);
-    create_face(135, tree, buffer, attributes);
+    create_face(0, tree, attributes);
+    create_face(45, tree, attributes);
+    create_face(135, tree, attributes);
     
     leaves = new gameobject("leaves");
     
@@ -33,7 +27,7 @@ function tree_create(p, q){
         leaves.transform,
         0,
         attributes,
-        buffer.index,
+        DYNAMIC_BUFFER.index,
     );
     
     leaves.add_component(leaves_decomposer);
@@ -42,75 +36,15 @@ function tree_create(p, q){
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(2, 2, 2), 
-        buffer, 
+        DYNAMIC_BUFFER, 
         leaves_decomposer
     );
     
-    CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 1, false, false);
+    CreateInstance(solid_sprites, DYNAMIC_BUFFER, attributes, sprite_sheet_size , shader, 1, false, false);
     return tree;
-    
 }
 
-function TestTree(){
-    var shader = get_data("instance_shader");
-    var buffer = create_buffer();
-    var attributes = [];
-
-    var num_trees = 1;
-
-    for(var i = 0; i < num_trees; i++){
-        
-        var tree = new gameobject("tree");
-        
-        var rand = new p_random(1);
-        var x = random_range(-1, 1);
-        var z = random_range(-1, 1);
-        //console.log(z);
-
-        test_trees.push(tree);
-        tree.transform.scale = new THREE.Vector3(3,3,3);
-        tree.transform.position = new THREE.Vector3(0, tree.transform.scale.y/2, 0);
-        tree.transform.rotation = new quaternion(0, 0, 0, 1);
-        
-        create_face(0, tree, buffer, attributes);
-        create_face(45, tree, buffer, attributes);
-        create_face(90, tree, buffer, attributes);
-        create_face(135, tree, buffer, attributes);
-        
-        leaves = new gameobject("leaves");
-        
-        tree.add_child(leaves);
-
-        leaves.transform.position = new THREE.Vector3(0, pixel*52, 0);
-
-        var leaves_decomposer = new decomposer(
-            [ MapToSS(3, 0),],
-            new THREE.Vector2(1, 1),
-            [ new THREE.Color(0x008B00) ],
-            new THREE.Vector3(0, 0, 0),
-            leaves.transform,
-            0,
-            attributes,
-            buffer.index,
-        );
-        
-        leaves.add_component(leaves_decomposer);
-        
-        PopulateBuffer(
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(10, 10, 10), 
-            buffer, 
-            leaves_decomposer
-        );
-    }
-
-    
-    CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size , shader, 1, false, false);
-
-}
-
-function create_face(y_rot, tree, buffer, attributes){
+function create_face(y_rot, tree, attributes){
     
     var root = new gameobject("root");
     var trunk = new gameobject("trunk");
@@ -130,7 +64,7 @@ function create_face(y_rot, tree, buffer, attributes){
         root.transform,
         1,
         attributes,
-        buffer.index,
+        DYNAMIC_BUFFER.index,
     );
     
     root.add_component(root_decomposer);
@@ -139,7 +73,7 @@ function create_face(y_rot, tree, buffer, attributes){
         root.transform.get_transformed_position(), 
         root.transform.get_transformed_rotation(), 
         new THREE.Vector3(5, 5, 5), 
-        buffer, 
+        DYNAMIC_BUFFER, 
         root_decomposer);
     
         trunk.transform.position = new THREE.Vector3(0, pixel*3, 0);
@@ -152,7 +86,7 @@ function create_face(y_rot, tree, buffer, attributes){
         trunk.transform,
         1,
         attributes,
-        buffer.index,
+        DYNAMIC_BUFFER.index,
     );
     
     trunk.add_component(trunk_decomposer);
@@ -161,7 +95,7 @@ function create_face(y_rot, tree, buffer, attributes){
         trunk.transform.get_transformed_position(), 
         trunk.transform.get_transformed_rotation(),  
         new THREE.Vector3(5, 5, 5),
-        buffer, 
+        DYNAMIC_BUFFER, 
         trunk_decomposer);
 
     //5 unit        = 32 pixel
@@ -177,7 +111,7 @@ function create_face(y_rot, tree, buffer, attributes){
         branch.transform,
         1,
         attributes,
-        buffer.index,
+        DYNAMIC_BUFFER.index,
     );
     
     branch.add_component(branch_decomposer);
@@ -186,7 +120,7 @@ function create_face(y_rot, tree, buffer, attributes){
         branch.transform.get_transformed_position(),
         branch.transform.get_transformed_rotation(),  
         new THREE.Vector3(5, 5, 5),
-        buffer, 
+        DYNAMIC_BUFFER, 
         branch_decomposer);
 
     return branch.transform.get_transformed_position().y;

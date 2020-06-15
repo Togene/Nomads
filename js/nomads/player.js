@@ -10,7 +10,6 @@ function player_init(){
     player.transform.scale = new THREE.Vector3(1, 1.45, 1);
     player.transform.rotation = new quaternion(0, 0, 0, 1);
 
-    player.add_component(player_box);
     player.add_component(new rigidbody(180, false));
 }
 

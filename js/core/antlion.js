@@ -77,7 +77,7 @@ function antlion_fall(i, data){
             i - 1);
     }
 
-    console.log("FALLING!", i);
+    //console.log("FALLING!", i);
 }
 
 //push the last data, and flag for done;
@@ -95,7 +95,7 @@ function antlion_done(i, data){
 
 function antlion_pool_load(data){
     pool = JSON.parse(data);
-    console.log("loading successful.", pool);
+    //console.log("loading successful.", pool);
 }
 
 

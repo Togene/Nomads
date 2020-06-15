@@ -8,10 +8,10 @@ function create_buffer(){
         uvoffsets: [],
 
         //-----------------------------------
-           // animationFrame: [],
-            animation_start: [],
-            animation_end: [],
-            animation_time: [],
+        //animationFrame: [],
+        animation_start: [],
+        animation_end: [],
+        animation_time: [],
         //----------------------------------
 
         type: [],
@@ -25,6 +25,10 @@ function create_buffer(){
     };
 }
 
+/**
+ * @type {{ name: string, sayHello: () => void}}
+ */
+// @ts-ignore
 function PopulateBuffer(position, orient, scale, buffer, renderer, animation){
 
     buffer.scales.push(scale.x, scale.y, scale.z);
@@ -85,11 +89,7 @@ function PopulateBuffer(position, orient, scale, buffer, renderer, animation){
     buffer.index ++;
 }
 
-function UpdateAttribute(attributes){
-
-}
-
-function CreateInstance(id, world, buffer, attributes, spritesheetsize, shader, urlindex, animate, is3D = false) {
+function CreateInstance(world, buffer, attributes, spritesheetsize, shader, urlindex, animate, is3D = false) {
 
     var bufferGeometry = new THREE.PlaneBufferGeometry(1, 1, 1); 
     bufferGeometry.castShadow = true;

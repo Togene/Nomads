@@ -57,7 +57,6 @@ rendering_pool.prototype.init = function(){
     }
 
     CreateInstance(
-        "Generic", 
         animated_sprites, 
         this.buffer, 
         attributes, 

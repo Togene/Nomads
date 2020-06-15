@@ -33,7 +33,7 @@ function house_create(p, q, save = true) {
         0, new THREE.Vector3(1, 0, 0),
         90, new THREE.Vector3(1, 0, 0), 3, 3, house, buffer, attributes, block_out);
 
-    CreateInstance("Test", solid_sprites, buffer, attributes, sprite_sheet_size, shader, 5, false, false);
+    CreateInstance(solid_sprites, buffer, attributes, sprite_sheet_size, shader, 5, false, false);
 
     houses.push(house);
 

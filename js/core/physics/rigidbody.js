@@ -31,7 +31,6 @@ rigidbody.prototype.set_parent = function(p){
 };
 
 rigidbody.prototype.update = function(delta){
-    
 
         //*-------------------- Caps -----------------------
         this.cap(delta);
@@ -203,6 +202,21 @@ rigidbody.prototype.add_force = function(f, d, delta){
 }
 
 rigidbody.prototype.ground = function(y, isplayer){
+
+    var diffrence = Math.abs(this.parent.transform.position.y - y);
+
+    var scale = this.parent.transform.scale;
+
+    //! .1 + collider size (which is 1)
+    if(diffrence <= ((scale.y/2) + 0.1)){
+        //y + (this.parent.transform.scale.y/2 + .1);
+        this.parent.transform.position.y = y + (scale.y/2);
+        this.velocity.y = 0;
+
+        if(isplayer) {
+            canJump = true;
+        }
+    }
 }
 
 rigidbody.prototype.set_grounded = function(bool){

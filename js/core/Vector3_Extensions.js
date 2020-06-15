@@ -5,7 +5,6 @@ THREE.Vector3.prototype.perp = function(){
     return this;
 }
 
-
 THREE.Vector3.prototype.rotate = function(rot){
     var conj = rot.conjugate(); //
 

@@ -1,11 +1,5 @@
 
 Scene = [];
-const sprite_sheet_size = new THREE.Vector2(8, 8);
-
-//------------- Sprite THREE.Object3D holders ---------
-var animated_sprites = new THREE.Object3D();
-var solid_sprites = new THREE.Object3D();
-//--------------------------------------------
 
 var newobject1 = new gameobject("poop");
 var newobject2 = new gameobject();
@@ -25,6 +19,9 @@ var physics_objects = [];
 var pool = null;
 
 function game_bootstrap(data){
+    STATIC_BUFFER = create_buffer();
+    DYNAMIC_BUFFER = create_buffer();
+
     game_resources = data;
 
     keyboard_init();
@@ -38,30 +35,30 @@ function game_bootstrap(data){
     get_to_work();
     world_init();
 
-    //scene.add(cube1);
-    //scene.add(cube2);
+    scene.add(cube1);
+    scene.add(cube2);
     scene.add(solid_sprites);
     scene.add(animated_sprites);
 
     console.log("%cGame Initialized", 'color: #DAA45C');
     
-    //newobject1.transform.position = new THREE.Vector3(0,0,0);
-    //newobject1.transform.scale = new THREE.Vector3(1,10.5,1);
+    newobject1.transform.position = new THREE.Vector3(0,0,0);
+    newobject1.transform.scale = new THREE.Vector3(1,10.5,1);
 
-    //newobject2.transform.position = new THREE.Vector3(0,1,0);
-    //newobject1.add_child(newobject2);
-    
-    //for(var i = 0; i < Scene.length; i++){
-    //    Scene[i].information();
-    //}
-    
-    //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
-    //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
-    //cube1.matrixAutoUpdate = false;
-    //cube2.matrixAutoUpdate = false;
+    newobject2.transform.position = new THREE.Vector3(0,1,0);
+    newobject1.add_child(newobject2);
+    for(var i = 0; i < Scene.length; i++){
+       // Scene[i].information();
+    }
+    cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
+    cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
+    cube1.matrixAutoUpdate = false;
+    cube2.matrixAutoUpdate = false;
+
     
     for(var i = 0; i < Scene.length; i++){
         if(Scene[i].has_component("rigidbody")){
+            broad_quad_tree_insert(Scene[i]);
             rigidbodies_insert(Scene[i].get_component("rigidbody"));
         }
     }
@@ -73,24 +70,14 @@ function game_bootstrap(data){
 */
 function game_update(delta){
     game_time += (delta * game_speed);
-
-    var num_frames = 1;
-    for(var i = 0; i < num_frames; i++){
-
-
-        movement(delta/num_frames);
-        physics_update(delta/num_frames);
-     
-        update(delta);
-        player_update(delta/num_frames);
-
-         
-        for(var j = 0; j < Scene.length; j++){
-            Scene[j].update(delta/num_frames);
-        }
+    movement(delta);
+    physics_update(delta);
+    update(delta);
+    player_update(delta);
+    for(var j = 0; j < Scene.length; j++){
+        Scene[j].update(delta);
     }
-    collision_update(delta/num_frames);
-
+    collision_update(delta);
     shader_update(delta);
     world_update(delta);
     
@@ -99,9 +86,9 @@ function game_update(delta){
 }
 
 function update(delta){
-   // newobject1.transform.rotation.y += .5;
-    //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
-   // cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
+    newobject1.transform.rotation.y += .5;
+    cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
+    cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
     
     fauna_update(delta);
     flora_update(delta);
