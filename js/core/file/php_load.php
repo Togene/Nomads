@@ -4,16 +4,16 @@
    $result = 'error';
    $data = '';
 
-   if(file_exists('../../../data/saved/' . $name . '.'. $type)){
+   if(file_exists('../../../data/' . $name . '.'. $type)){
       $result = 'ok';
-      $data = file_get_contents('../../../data/saved/' . $name . '.'. $type);
+      $data = file_get_contents('../../../data/' . $name . '.'. $type);
    } else {
       
-      $file = fopen('../../../data/saved/'. $name . '.'. $type,'w+');
+      $file = fopen('../../../data/'. $name . '.'. $type,'w+');
       fwrite($file, json_encode (json_decode ("[\n]")));
       fclose($file);
 
-      $data = file_get_contents('../../../data/saved/' . $name . '.'. $type);
+      $data = file_get_contents('../../../data/' . $name . '.'. $type);
    }
 
    $array = array(

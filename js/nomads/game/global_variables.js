@@ -1,3 +1,7 @@
+const SOLID = 1;
+const SPRITE = 0;
+const PARTICLE = 3;
+
 const sprite_sheet_size = new THREE.Vector2(8, 8);
 var STATIC_BUFFER;
 var DYNAMIC_BUFFER;

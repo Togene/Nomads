@@ -13,25 +13,24 @@ var sky_colors = [
 ];
 
 function sky_init(){
-
-    var shader = get_data("instance_shader");
-    var buffer = create_buffer();
-    var attributes = [];
-
-    prime_star_init(buffer, attributes);
-    sun_init(buffer, attributes);
-    moon_init(buffer, attributes);
-
-    CreateInstance(
-        animated_sprites, 
-        buffer, 
-        attributes,
-        sprite_sheet_size , 
-        shader, 
-        2, 
-        true, 
-        false
-        );
+   // var shader = get_data("instance_shader");
+   // var buffer = create_buffer();
+   // var attributes = [];
+//
+   // prime_star_init(buffer, attributes);
+   // sun_init(buffer, attributes);
+   // moon_init(buffer, attributes);
+//
+   // CreateInstance(
+   //     animated_sprites, 
+   //     buffer, 
+   //     attributes,
+   //     sprite_sheet_size , 
+   //     shader, 
+   //     2, 
+   //     true, 
+   //     false
+   //     );
 }
 
 function update_sky(delta){
@@ -91,11 +90,9 @@ function prime_star_init(buffer, attributes){
               new THREE.Color(0xA87BFF),
             ],
             new THREE.Vector3(0, 0, 0),
-            star.transform,
-            3,
+            PARTICLE,
             attributes,
             buffer.index,
-            0
         );
         
         star.add_component(star_decomposer);
@@ -126,11 +123,9 @@ function sun_init(buffer, attributes){
           new THREE.Color(0xFFD27D),
         ],
         new THREE.Vector3(0, 0, 0),
-        sun.transform,
-        3,
+        PARTICLE,
         attributes,
         buffer.index,
-        0,
     );
     
     sun.add_component(sun_decomposer);
@@ -158,11 +153,9 @@ function moon_init(buffer, attributes){
           new THREE.Color(0xFFFFFF),
         ],
         new THREE.Vector3(0, 0, 0),
-        moon.transform,
-        3,
+        PARTICLE,
         attributes,
         buffer.index,
-        0,
     );
     
     moon.add_component(moon_decomposer);

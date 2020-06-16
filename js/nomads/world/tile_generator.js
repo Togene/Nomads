@@ -193,6 +193,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 					}
 					
 					if(g_d == 255) {	
+						place(curface)
 					}
 			}
 			//--------------------------FACE-------------------------------------
@@ -237,8 +238,8 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	return geo;
 }
 
-function place(){
-	/*
+function place(curface){
+	
 	var axis = new THREE.Vector3();
 	var up = new THREE.Vector3(0, 1, 0);;
 	
@@ -250,7 +251,7 @@ function place(){
 	//determine the amount to rotate
 	var radians = Math.acos(curface.normal.dot(up));
 	
-	var npc = npc_create(curface.centre);
+	var npc = lithy_create(curface.centre);
 	
 	npc.transform.position = new THREE.Vector3(
 		curface.centre.x + curface.normal.x * npc.transform.scale.x/2,
@@ -259,5 +260,4 @@ function place(){
 	);
 	
 	npc.transform.rotation = new quaternion(0,0,0,0, axis, radians);
-	*/
 }

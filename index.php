@@ -15,7 +15,7 @@
 			<script src = "data/dither.js"></script>
 			<script src = "data/resources.js"></script>	
 			<script src = "js/core/file/file_helpers.js"></script>
-
+			
 			<script src = "js/nomads/game/global_variables.js"></script>
 			<script src = "js/nomads/game/world_map.js"></script>
 
@@ -68,7 +68,7 @@
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/rendering/rendering_pool.js"></script>
-			<script src = "js/nomads/game/sky.js"></script>
+			<script src = "js/nomads/sky.js"></script>
 
 			<script src = "js/nomads/gui/pause.js"></script>
 

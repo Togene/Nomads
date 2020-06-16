@@ -5,7 +5,7 @@ function shader_init(){
         
     console.log("%cLoading Pool", 'color: #DAA45C');
     
-    pool = new rendering_pool(5);
+    //pool = new rendering_pool(5);
     
     //save(pool.buffer, 'pool_data', 'json');
 

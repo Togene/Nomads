@@ -1,0 +1,14 @@
+{
+    "crab" : {
+        "color" : ["0x78664c"],
+        "mapping" : [0, 1],
+        "frames" : [],
+        "offset" : {"x":0, "y":0, "z":0}
+    },
+    "lithy" : {
+        "color" : ["0xffffff"],
+        "mapping" : {"x":0, "y":0},
+        "frames" :  {"x":0, "y":0},
+        "offset" :  {"x":0, "y":0, "z":0}
+    }
+}

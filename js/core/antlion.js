@@ -8,6 +8,7 @@ var async_time = 0;
 var elapsed_time = 0;
 var map_index = 0;
 var pool;
+var meta_data = null;
 var manifest = [];
 
 /*used to grab all outside resources for the game since all resources
@@ -82,8 +83,9 @@ function antlion_fall(i, data){
 
 //push the last data, and flag for done;
 function antlion_done(i, data){
-    load('pool_data', 'json', antlion_pool_load);
-    load('object_manifest', 'json', antlion_manifest_load);
+    load('saved/pool_data', 'json', antlion_pool_load);
+    load('saved/object_manifest', 'json', antlion_manifest_load);
+    load('meta_data', 'json', meta_data_load);
 
     compiled_data.push(data);
  
@@ -95,9 +97,12 @@ function antlion_done(i, data){
 
 function antlion_pool_load(data){
     pool = JSON.parse(data);
-    //console.log("loading successful.", pool);
 }
 
+function meta_data_load(data){
+    meta_data = JSON.parse(data);
+    console.log("meta data loaded successful");
+}
 
 function antlion_manifest_load(data){
    // manifest = JSON.parse(data);
@@ -116,15 +121,19 @@ function antlion_reset_manifest(){
     remove('object_manifest', 'json');
 }
 
-function antlion_get_manifest(){
-    return manifest;
-}
-
 function antlion_add_to_manifest(data){
     console.log(manifest);
 
     manifest.push(data);
     save(manifest, 'object_manifest', 'json');
+}
+
+function antlion_get_manifest(){
+    return manifest;
+}
+
+function get_meta(){
+    return meta_data;
 }
 
 // Credit to THeK3nger - https://gist.github.com/THeK3nger/300b6a62b923c913223fbd29c8b5ac73

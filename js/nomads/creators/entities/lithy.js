@@ -11,13 +11,13 @@ function lithy_create(p, q){
         p.z
     );
 
+    console.log(get_meta());
     var npc_decomposer = new decomposer(
         [ MapToSS(0, 0),],
         new THREE.Vector2(1, 1),
         [ new THREE.Color(0xffffff) ],
         new THREE.Vector3(0, 0, 0),
-        npc.transform,
-        0,
+        SPRITE,
         attributes,
         buffer.index,
     );
@@ -35,19 +35,19 @@ function lithy_create(p, q){
     PopulateBuffer(
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, 0), 
-        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(1, 1, 1),
         buffer, 
         npc_decomposer);
 
-    //CreateInstance(
-    //animated_sprites, 
-    //buffer, 
-    //attributes, 
-    //sprite_sheet_size , 
-    //npc_shader, 
-    //4, 
-    //true, 
-    //true);
+    CreateInstance(
+    animated_sprites, 
+    buffer, 
+    attributes, 
+    sprite_sheet_size , 
+    npc_shader, 
+    4, 
+    true, 
+    true);
 
     return npc;
 }

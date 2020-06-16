@@ -46,6 +46,10 @@ gameobject.prototype.add_component = function(c){
     if(c == null){console.error(this.name + ": no component was given!"); return;}
     this.components.push(c);
     c.set_parent(this);
+
+    if(c.name == "decomposer"){
+        c.set_transform(this.transform);
+    }
 }
 
 gameobject.prototype.information = function(){
