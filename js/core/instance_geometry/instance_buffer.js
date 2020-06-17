@@ -1,96 +1,100 @@
-function create_buffer(){
-    return {
-        translation: [],
-        orientations: [],
-        vector: new THREE.Vector4(),
-        scales: [],
-        colors: [],
-        uvoffsets: [],
-
-        //-----------------------------------
-        //animationFrame: [],
-        animation_start: [],
-        animation_end: [],
-        animation_time: [],
-        //----------------------------------
-
-        type: [],
-        fog: [],
-        normals: [],
-        m0: [], //matrix in segments because set attributes is a bitch :(
-        m1: [],
-        m2: [],
-        m3: [],
-        index : 0 
-    };
+function instance_buffer(){
+    this.translation = [];
+    this.orientations = [];
+    this.vector =  new THREE.Vector4();
+    this.scales = [];
+    this.colors = [];
+    this.uvoffsets = [];
+    this.animation_start = [];
+    this.animation_end = [];
+    this.animation_time = [];
+    this.type = [];
+    this.fog = [];
+    this.normals = [];
+    this.m0 = [];
+    this.m1 = [];
+    this.m2 = [];
+    this.m3 = [];
+    this.index = 0;
 }
 
-/**
- * @type {{ name: string, sayHello: () => void}}
- */
-// @ts-ignore
-function PopulateBuffer(position, orient, scale, buffer, renderer, animation){
+instance_buffer.prototype.get_index = function(){
+    return this.index;
+}
 
-    buffer.scales.push(scale.x, scale.y, scale.z);
+instance_buffer.prototype.append = function(position, orient, scale, decomposer, animation){
+    this.scales.push(scale.x, scale.y, scale.z);
 
-    buffer.vector.set(position.x, position.y, position.z, 0).normalize();
+    this.vector.set(position.x, position.y, position.z, 0).normalize();
 
-    buffer.translation.push(
-        position.x + buffer.vector.x + renderer.centre_offset.x, 
-        position.y + buffer.vector.y + renderer.centre_offset.y, 
-        position.z + buffer.vector.z + renderer.centre_offset.z);
+    this.translation.push(
+        position.x + this.vector.x + decomposer.centre_offset.x, 
+        position.y + this.vector.y + decomposer.centre_offset.y, 
+        position.z + this.vector.z + decomposer.centre_offset.z);
 
-    buffer.vector.set(position.x, position.y, position.z).normalize();
+    this.vector.set(position.x, position.y, position.z).normalize();
 
-    buffer.orientations.push(orient.x, orient.y, orient.z, orient.w);
+    this.orientations.push(orient.x, orient.y, orient.z, orient.w);
 
-    var col = renderer.colors[randomRangeRound(0, renderer.colors.length - 1)];
-    buffer.colors.push(col.r, col.g, col.b);
+    var col = decomposer.colors[randomRangeRound(0, decomposer.colors.length - 1)];
+    this.colors.push(col.r, col.g, col.b);
 
-    var uvs = renderer.ssIndex[randomRangeRound(0, renderer.ssIndex.length - 1)];
+    var uvs = decomposer.ssIndex[randomRangeRound(0, decomposer.ssIndex.length - 1)];
 
-    buffer.uvoffsets.push(uvs.x, uvs.y);
+    this.uvoffsets.push(uvs.x, uvs.y);
 
-    //buffer.animationFrame.push(renderer.animationFrames.x, renderer.animationFrames.y);
+    //this.animationFrame.push(decomposer.animationFrames.x, decomposer.animationFrames.y);
 
     if(animation != null){
-        buffer.animation_start.push(animation.start);
-        buffer.animation_end.push(animation.length);
-        buffer.animation_time.push(random_range(0, 3));
+        this.animation_start.push(animation.start);
+        this.animation_end.push(animation.length);
+        this.animation_time.push(random_range(0, 3));
     } else {
-        buffer.animation_start.push(0);
-        buffer.animation_end.push(0);
-        buffer.animation_time.push(0);
+        this.animation_start.push(0);
+        this.animation_end.push(0);
+        this.animation_time.push(0);
     }
 
-    buffer.type.push(renderer.type);
+    this.type.push(decomposer.type);
 
-    buffer.fog.push(renderer.fog);
+    this.fog.push(decomposer.fog);
 
-    buffer.normals.push(0.0, 1.0, 0.0);
+    this.normals.push(0.0, 1.0, 0.0);
 
     //Most Transform information now within the matrix 
-    buffer.m0.push(
-        renderer.matrix.elements[0],  renderer.matrix.elements[1],  renderer.matrix.elements[2],  renderer.matrix.elements[3],
+    this.m0.push(
+        decomposer.matrix.elements[0],  decomposer.matrix.elements[1],  decomposer.matrix.elements[2],  decomposer.matrix.elements[3],
     );
 
-    buffer.m1.push(
-        renderer.matrix.elements[4],  renderer.matrix.elements[5],  renderer.matrix.elements[6],  renderer.matrix.elements[7],
+    this.m1.push(
+        decomposer.matrix.elements[4],  decomposer.matrix.elements[5],  decomposer.matrix.elements[6],  decomposer.matrix.elements[7],
     );
 
-    buffer.m2.push(
-        renderer.matrix.elements[8],  renderer.matrix.elements[9],  renderer.matrix.elements[10], renderer.matrix.elements[11],
+    this.m2.push(
+        decomposer.matrix.elements[8],  decomposer.matrix.elements[9],  decomposer.matrix.elements[10], decomposer.matrix.elements[11],
     );
 
-    buffer.m3.push(
-        renderer.matrix.elements[12], renderer.matrix.elements[13], renderer.matrix.elements[14], renderer.matrix.elements[15],
+    this.m3.push(
+        decomposer.matrix.elements[12], decomposer.matrix.elements[13], decomposer.matrix.elements[14], decomposer.matrix.elements[15],
     );
 
-    buffer.index ++;
+    this.index ++;
 }
 
-function CreateInstance(world, buffer, attributes, spritesheetsize, shader, urlindex, animate, is3D = false) {
+instance_buffer.prototype.name = "instance_buffer";
 
+/**
+ * 
+ * @param {*} container 
+ * @param {*} this 
+ * @param {*} attributes 
+ * @param {*} spritesheetsize 
+ * @param {*} shader 
+ * @param {*} urlindex 
+ * @param {*} animate 
+ * @param {*} is3D 
+ */
+function create_instance(container, buffer, attributes, shader, urlindex, animate, is3D = false) {
     var bufferGeometry = new THREE.PlaneBufferGeometry(1, 1, 1); 
     bufferGeometry.castShadow = true;
 
@@ -104,9 +108,6 @@ function CreateInstance(world, buffer, attributes, spritesheetsize, shader, urli
     var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.colors), 3);
     var uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.uvoffsets), 2);
     var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.scales), 3);
-
-    //var animationFrameAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animationFrame), 2);
-
     var animation_startAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_start), 1);
     var animation_endAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_end), 1);
     var animation_timeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_time), 1);
@@ -125,16 +126,12 @@ function CreateInstance(world, buffer, attributes, spritesheetsize, shader, urli
     geometry.setAttribute('col', colorAttribute);
     geometry.setAttribute('uvoffset', uvOffsetAttribute);
     geometry.setAttribute('scale', scaleAttribute);
-    //geometry.setAttribute('animationFrame', animationFrameAttribute);
-
     geometry.setAttribute('animation_start', animation_startAttribute);
     geometry.setAttribute('animation_end', animation_endAttribute);
     geometry.setAttribute('animation_time', animation_timeAttribute);
-
     geometry.setAttribute('type', typeAttribute);
     geometry.setAttribute('fog', fogAttribute);
     geometry.setAttribute('normal', normalsAttribute);
-    
     geometry.setAttribute('m0', m0Attribute);
     geometry.setAttribute('m1', m1Attribute);
     geometry.setAttribute('m2', m2Attribute);
@@ -169,8 +166,8 @@ function CreateInstance(world, buffer, attributes, spritesheetsize, shader, urli
 
     var instanceUniforms = {
         map: { value: texture },
-        spriteSheetX: { type: "f", value: spritesheetsize.x },
-        spriteSheetY: { type: "f", value: spritesheetsize.y },
+        spriteSheetX: { type: "f", value: SPRITE_SHEET_SIZE.x },
+        spriteSheetY: { type: "f", value: SPRITE_SHEET_SIZE.y },
         animationSwitch: { type: "f", value: animationSwitch },
         is3D: { type: "f", value: is3DSwitch },
         time: { type: "f", value: 1.0 },
@@ -199,12 +196,12 @@ function CreateInstance(world, buffer, attributes, spritesheetsize, shader, urli
 
     mesh = new THREE.Mesh(geometry, material);
     material.uniforms.map.value = texture;
-    material.uniforms.spriteSheetX.value = spritesheetsize.x;
-    material.uniforms.spriteSheetY.value = spritesheetsize.y;
+    material.uniforms.spriteSheetX.value = SPRITE_SHEET_SIZE.x;
+    material.uniforms.spriteSheetY.value = SPRITE_SHEET_SIZE.y;
 
     material.side = THREE.DoubleSide;
     mesh.frustumCulled = false;
     mesh.castShadow = true;
 
-    world.add(mesh);
+    container.add(mesh);
 }

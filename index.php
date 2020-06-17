@@ -10,25 +10,25 @@
 			<!-- THREE libs -->
 			<script src = "js/libs/three.min.js"></script>
 			<script src = "js/libs/PointerLockControls.js"></script>
+			
+			<script src = "js/nomads/game/global_variables.js"></script>
+			<script src = "js/nomads/game/world_map.js"></script>
+
 			<!-- THREE libs -->
+			<script src = "js/core/instance_geometry/instance_buffer.js"></script>
+			<script src = "js/core/instance_geometry/decomposer.js"></script>
 			
 			<script src = "data/dither.js"></script>
 			<script src = "data/resources.js"></script>	
 			<script src = "js/core/file/file_helpers.js"></script>
-			
-			<script src = "js/nomads/game/global_variables.js"></script>
-			<script src = "js/nomads/game/world_map.js"></script>
 
 			<script src = "js/core/utilities.js"></script>
 			<script src = "js/core/antlion.js"></script>
 			<script src = "js/core/workers.js"></script>
 			<script src = "js/core/color_utilities.js"></script>
-			<script src = "js/core/instance_geometry.js"></script>
-			
 			<script src = "js/core/animation/animation.js"></script>
 			<script src = "js/core/animation/animator.js"></script>
 			<script src = "js/core/animation/animation_sequence.js"></script>
-
 			<script src = "js/core/vector3_extensions.js"></script>
 			<script src = "js/core/matrix.js"></script>
 			<script src = "js/core/quaternion.js"></script>
@@ -38,7 +38,6 @@
 
 			<script src = "js/core/physics/rigidbody.js"></script>
 
-			<script src = "js/core/decomposer.js"></script>
 			<script src = "js/core/decube.js"></script>
 			<script src = "js/core/gameobject.js"></script>
 			<script src = "js/core/quadtree.js"></script>

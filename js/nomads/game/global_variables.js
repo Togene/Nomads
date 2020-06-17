@@ -2,13 +2,13 @@ const SOLID = 1;
 const SPRITE = 0;
 const PARTICLE = 3;
 
-const sprite_sheet_size = new THREE.Vector2(8, 8);
+const SPRITE_SHEET_SIZE = new THREE.Vector2(8, 8);
 var STATIC_BUFFER;
 var DYNAMIC_BUFFER;
 
 //------------- Sprite THREE.Object3D holders ---------
-var animated_sprites = new THREE.Object3D();
-var solid_sprites = new THREE.Object3D();
+var ANIMATED_SPRITES = new THREE.Object3D();
+var SOLID_SPRITES = new THREE.Object3D();
 //--------------------------------------------
 
 const pixel = 0.03125;

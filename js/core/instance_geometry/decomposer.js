@@ -1,5 +1,5 @@
 
-function decomposer(ss, frames, colors, offset, type, attributes, index){
+function decomposer(ss, frames, colors, offset, type, index){
     this.ssIndex = ss;
     this.animationFrames = frames;
     this.colors = colors;
@@ -9,7 +9,7 @@ function decomposer(ss, frames, colors, offset, type, attributes, index){
     if(index == undefined){console.error("Missing Index.");}
 
     this.buffer_idx = index;
-    this.attributes_refrence = attributes;
+    this.attributes_refrence = [];
 
     this.parent = null; //for gameobject
 }

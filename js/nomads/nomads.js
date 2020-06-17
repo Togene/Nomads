@@ -19,8 +19,8 @@ var physics_objects = [];
 var pool = null;
 
 function game_bootstrap(data){
-    STATIC_BUFFER = create_buffer();
-    DYNAMIC_BUFFER = create_buffer();
+    STATIC_BUFFER = new instance_buffer();
+    DYNAMIC_BUFFER = new instance_buffer();
 
     game_resources = data;
 
@@ -37,8 +37,8 @@ function game_bootstrap(data){
 
     scene.add(cube1);
     scene.add(cube2);
-    scene.add(solid_sprites);
-    scene.add(animated_sprites);
+    scene.add(SOLID_SPRITES);
+    scene.add(ANIMATED_SPRITES);
 
     console.log("%cGame Initialized", 'color: #DAA45C');
     

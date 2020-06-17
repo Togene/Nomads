@@ -1,119 +1,49 @@
 function lithy_create(p, q){
     var npc_shader = get_data("instance_shader");
-    var buffer = create_buffer();
-    var attributes = [];
+    //var buffer = new instance_buffer();
 
     var npc = new gameobject("npc");
-                    
+       
     npc.transform.position = new THREE.Vector3(
         p.x,
         p.y + npc.transform.scale.y/2,
         p.z
     );
 
-    console.log(get_meta());
     var npc_decomposer = new decomposer(
         [ MapToSS(0, 0),],
         new THREE.Vector2(1, 1),
         [ new THREE.Color(0xffffff) ],
         new THREE.Vector3(0, 0, 0),
         SPRITE,
-        attributes,
-        buffer.index,
+        DYNAMIC_BUFFER.get_index(),
     );
 
     npc.add_component(new rigidbody(1, false));
     npc.add_component(npc_decomposer);
 
-    npc.add_component(anim =  new animator(
-        [
+    npc.add_component(anim =  new animator([
             new animation_sequence("idle", [new animation("idle", 0, 4)], 8, true),
             new animation_sequence("wave", [new animation("wave", 4, 2)], 8, true), 
         ], 
         npc_decomposer));
 
-    PopulateBuffer(
+    DYNAMIC_BUFFER.append (
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, 0), 
         new THREE.Vector3(1, 1, 1),
-        buffer, 
-        npc_decomposer);
+        npc_decomposer
+    );
 
-    CreateInstance(
-    animated_sprites, 
-    buffer, 
-    attributes, 
-    sprite_sheet_size , 
-    npc_shader, 
-    4, 
-    true, 
-    true);
+    create_instance (
+        ANIMATED_SPRITES, 
+        DYNAMIC_BUFFER, 
+        npc_decomposer.attributes_refrence, 
+        npc_shader, 
+        4, 
+        true, 
+        true
+    );
 
     return npc;
-}
-
-function TestNPC(){
-    var npc_shader = get_data("instance_shader");
-    var buffer = create_buffer();
-    var attributes = [];
-
-    var num_npcs = 10;
-    var spacing = 3;
-
-    for(var i = 0; i < num_npcs; i++){
-        for(var j = 0; j < num_npcs; j++){
-
-        var npc = new gameobject("npc");
-                        
-        test_npcs.push(npc);
-
-        var x = (i * spacing) - (num_npcs/2) * spacing;
-        var z = (j * spacing) - (num_npcs/2) * spacing;
-            
- 
-        npc.transform.rotation = new quaternion(0, 0, 0, 1 );
-        npc.transform.scale = new THREE.Vector3(1,1,1);
-        npc.transform.position = new THREE.Vector3(x + 20, npc.transform.scale.y/2, z + 20);
-
-        var npc_decomposer = new decomposer(
-            [ MapToSS(0, 0),],
-            new THREE.Vector2(1, 1),
-            [ new THREE.Color(0xffffff) ],
-            new THREE.Vector3(0, 0, 0),
-           npc.transform,
-           0,
-           attributes,
-           buffer.index,
-        );
-
-        npc.add_component(new rigidbody(25, false));
-        npc.add_component(npc_decomposer);
-            
-        PopulateBuffer(
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(0, 0, 0), 
-            npc.transform.scale,
-            buffer, 
-            npc_decomposer);
-        }
-    }
-
-    CreateInstance(
-    animated_sprites, 
-    buffer, 
-    attributes, 
-    sprite_sheet_size , 
-    npc_shader, 
-    4, 
-    true, 
-    true);
-}
-
-function humanoid_update(delta){
-
-    if(test_npcs.length != 0){
-        for(var i = 0; i < test_npcs.length; i++){
-        }
-    }
-
 }
