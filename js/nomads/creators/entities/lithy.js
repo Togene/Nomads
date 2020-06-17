@@ -1,6 +1,5 @@
 function lithy_create(p, q){
     var npc_shader = get_data("instance_shader");
-    //var buffer = new instance_buffer();
 
     var npc = new gameobject("npc");
        
@@ -16,7 +15,7 @@ function lithy_create(p, q){
         [ new THREE.Color(0xffffff) ],
         new THREE.Vector3(0, 0, 0),
         SPRITE,
-        DYNAMIC_BUFFER.get_index(),
+        DYNAMIC_BUFFER,
     );
 
     npc.add_component(new rigidbody(1, false));
@@ -27,13 +26,6 @@ function lithy_create(p, q){
             new animation_sequence("wave", [new animation("wave", 4, 2)], 8, true), 
         ], 
         npc_decomposer));
-
-    DYNAMIC_BUFFER.append (
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, 0, 0), 
-        new THREE.Vector3(1, 1, 1),
-        npc_decomposer
-    );
 
     create_instance (
         ANIMATED_SPRITES, 

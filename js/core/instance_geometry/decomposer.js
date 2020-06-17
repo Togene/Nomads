@@ -1,17 +1,18 @@
 
-function decomposer(ss, frames, colors, offset, type, index){
+function decomposer(ss, frames, colors, offset, type, buffer){
     this.ssIndex = ss;
     this.animationFrames = frames;
     this.colors = colors;
     this.centre_offset = offset;
     this.type = type;
-
-    if(index == undefined){console.error("Missing Index.");}
-
-    this.buffer_idx = index;
     this.attributes_refrence = [];
 
     this.parent = null; //for gameobject
+
+    if(buffer == undefined){console.error("Missing buffer.");}
+
+    this.buffer_idx = buffer.index;
+    this.buffer = buffer;
 }
 
 decomposer.prototype.update = function(){
@@ -78,7 +79,6 @@ decomposer.prototype.set_orientation = function(o){
 }
 
 decomposer.prototype.update_attributes = function(){
-
     if(this.attributes_refrence != null && this.attributes_refrence.length != 0){
         var m0_attribute = this.attributes_refrence[0];
         var m1_attribute = this.attributes_refrence[1];
@@ -139,6 +139,14 @@ decomposer.prototype.set_parent = function(p){
 decomposer.prototype.set_transform = function(t){
     this.transform = t;
     this.matrix = t.get_transformation().toMatrix4();
+
+    //append to the buffer after all fields are set
+    this.buffer.append (
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, 0), 
+        new THREE.Vector3(1, 1, 1),
+        this
+    );
 }
 
 decomposer.prototype.set_usefog = function(b){
