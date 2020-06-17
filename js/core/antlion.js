@@ -15,6 +15,10 @@ var manifest = [];
 are async and require some to be compiled*/
 
 function antlion_init(){
+    load('saved/pool_data', 'json', antlion_pool_load);
+    load('saved/object_manifest', 'json', antlion_manifest_load);
+    load('meta_data', 'json', meta_data_load);
+
     async_time = Date.now();
     antlion_fall(raw_resources.length - 1, []);
 }
@@ -83,14 +87,8 @@ function antlion_fall(i, data){
 
 //push the last data, and flag for done;
 function antlion_done(i, data){
-    load('saved/pool_data', 'json', antlion_pool_load);
-    load('saved/object_manifest', 'json', antlion_manifest_load);
-    load('meta_data', 'json', meta_data_load);
-
     compiled_data.push(data);
- 
     elapsed_time = Date.now() - async_time;
-
     //start up init after data loaded
     game_bootstrap(compiled_data);
 }
@@ -101,7 +99,7 @@ function antlion_pool_load(data){
 
 function meta_data_load(data){
     meta_data = JSON.parse(data);
-    console.log("meta data loaded successful");
+    console.log("meta data loaded successful", meta_data);
 }
 
 function antlion_manifest_load(data){

@@ -1,12 +1,13 @@
-function gameobject(n = "default", child = [], comp = []){
+function gameobject(
+    n = "default", 
+    t = new THREE.Vector3(0,0,0), 
+    s = new THREE.Vector3(1,1,1), 
+    q = new quaternion(0,0,0,1)
+){
     this.name = n;
-    this.children = child;
-    this.components = comp;
-    this.transform = new transform (
-        new THREE.Vector3(0,0,0),
-        new THREE.Vector3(1,1,1),
-        new quaternion(0,0,0,1),
-    );
+    this.children = [];
+    this.components = [];
+    this.transform = new transform (t, s, q,);
     Scene.push(this);
 };
 
@@ -47,6 +48,7 @@ gameobject.prototype.add_component = function(c){
     this.components.push(c);
     c.set_parent(this);
 
+    //TODO give requiremnts list for each class
     if(c.name == "decomposer"){
         c.set_transform(this.transform);
     }

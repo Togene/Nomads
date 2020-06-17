@@ -1,13 +1,13 @@
 function lithy_create(p, q){
     var npc_shader = get_data("instance_shader");
-
-    var npc = new gameobject("npc");
-       
-    npc.transform.position = new THREE.Vector3(
+    var meta = get_meta();
+    
+    var npc = new gameobject("npc", 
+    new THREE.Vector3(
         p.x,
-        p.y + npc.transform.scale.y/2,
+        p.y + 5,
         p.z
-    );
+    ));
 
     var npc_decomposer = new decomposer(
         [ MapToSS(0, 0),],
@@ -15,7 +15,7 @@ function lithy_create(p, q){
         [ new THREE.Color(0xffffff) ],
         new THREE.Vector3(0, 0, 0),
         SPRITE,
-        DYNAMIC_BUFFER,
+        DYNAMIC_BUFFER
     );
 
     npc.add_component(new rigidbody(1, false));

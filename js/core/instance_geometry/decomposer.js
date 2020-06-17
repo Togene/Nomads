@@ -1,15 +1,16 @@
-
 function decomposer(ss, frames, colors, offset, type, buffer){
     this.ssIndex = ss;
     this.animationFrames = frames;
     this.colors = colors;
     this.centre_offset = offset;
-    this.type = type;
+    this.type = type || 0;
     this.attributes_refrence = [];
 
     this.parent = null; //for gameobject
 
-    if(buffer == undefined){console.error("Missing buffer.");}
+    if(buffer == undefined){
+        throw new Error("Buffered is required for decomposer!");
+    }
 
     this.buffer_idx = buffer.index;
     this.buffer = buffer;
@@ -17,7 +18,8 @@ function decomposer(ss, frames, colors, offset, type, buffer){
 
 decomposer.prototype.update = function(){
     if(this.transform != null && this.transform.hasChanged()){
-       //this.attribute_debug();
+       
+        //this.attribute_debug();
        this.matrix = this.transform.get_transformation().toMatrix4();
        //have to tell the buffer/instance_geometry to update aswell
        this.update_attributes();
@@ -129,7 +131,6 @@ decomposer.prototype.update_attributes = function(){
     } else {
         console.error("no attributes found!");
     }
-   
 }
 
 decomposer.prototype.set_parent = function(p){
