@@ -1,13 +1,17 @@
 function gameobject(
     n = "default", 
-    t = new THREE.Vector3(0,0,0), 
+    p = new THREE.Vector3(0,0,0), 
     s = new THREE.Vector3(1,1,1), 
-    q = new quaternion(0,0,0,1)
+    r = new quaternion(0,0,0,1)
 ){
     this.name = n;
     this.children = [];
     this.components = [];
-    this.transform = new transform (t, s, q,);
+
+    //TODO fix y position based on scale
+    p.y -= s.y/2;
+    this.transform = new transform (p, s, r);
+    
     Scene.push(this);
 };
 

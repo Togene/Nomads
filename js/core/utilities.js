@@ -21,8 +21,15 @@ function bais_greater_than(a, b){
     // >= instad of > for NAN comparison safty
     return a >= b * k_bias_relative + a * k_bais_absolute;
 }
-
-//map to Sprite Shader
+//map array of map indices to ss
+function array_map_to_ss(a){
+    ss = []
+    for(var i = 0; i < a.length; i++){
+        ss.push(MapToSS(a[i].x, a[i].y));
+    }
+    return ss;
+}
+//map to Sprite Shader Texture Index
 function MapToSS(x, y) {
     return new THREE.Vector2((1 / 8) * x, (1 / 8) * y);
 }
@@ -130,6 +137,14 @@ function traverse_list(l){
     }
 }
 
+//map array of map indices to ss
+function array_hex_to_three_color(a){
+    colors = []
+    for(var i = 0; i < a.length; i++){
+        colors.push(new THREE.Color(Number(a[i])));
+    }
+    return colors;
+}
 /*
  * Easing Functions - inspired from http://gizma.com/easing/
  * only considering the t value for the range [0, 1] => [0, 1]

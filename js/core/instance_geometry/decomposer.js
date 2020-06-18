@@ -1,15 +1,15 @@
-function decomposer(ss, frames, colors, offset, type, buffer){
-    this.ssIndex = ss;
-    this.animationFrames = frames;
-    this.colors = colors;
-    this.centre_offset = offset;
+function decomposer(meta, type, buffer){
+    this.ssIndex = array_map_to_ss(meta.mapping);
+    this.animationFrames = meta.frames;
+    this.colors = array_hex_to_three_color(meta.colors);
+    this.centre_offset = new THREE.Vector3(meta.offset.x, meta.offset.y, meta.offset.z);
     this.type = type || 0;
     this.attributes_refrence = [];
 
     this.parent = null; //for gameobject
 
     if(buffer == undefined){
-        throw new Error("Buffered is required for decomposer!");
+        throw new Error("Buffer is required for decomposer!");
     }
 
     this.buffer_idx = buffer.index;
@@ -17,11 +17,10 @@ function decomposer(ss, frames, colors, offset, type, buffer){
 }
 
 decomposer.prototype.update = function(){
-    if(this.transform != null && this.transform.hasChanged()){
-       
+    if(this.transform != null && this.transform.hasChanged()){  
         //this.attribute_debug();
        this.matrix = this.transform.get_transformation().toMatrix4();
-       //have to tell the buffer/instance_geometry to update aswell
+        //have to tell the buffer/instance_geometry to update aswell
        this.update_attributes();
        this.set_orientation(this.parent.transform.rotation);
     }
