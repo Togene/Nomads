@@ -3,8 +3,12 @@ const SPRITE = 0;
 const PARTICLE = 3;
 
 const SPRITE_SHEET_SIZE = new THREE.Vector2(8, 8);
+
 var STATIC_BUFFER;
+var STATIC_ATTRIBUTES = [];
+
 var DYNAMIC_BUFFER;
+var DYNAMIC_ATTRIBUTES = [];
 
 //------------- Sprite THREE.Object3D holders ---------
 var ANIMATED_SPRITES = new THREE.Object3D();

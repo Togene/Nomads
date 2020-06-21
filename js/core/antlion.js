@@ -82,7 +82,7 @@ function antlion_fall(i, data){
             i - 1);
     }
 
-    //console.log("FALLING!", i);
+    console.log("%cFALLING: " + i, 'color: #FF0000');
 }
 
 //push the last data, and flag for done;
@@ -99,7 +99,7 @@ function antlion_pool_load(data){
 
 function meta_data_load(data){
     meta_data = JSON.parse(data);
-    console.log("meta data loaded successful", meta_data);
+    console.log("%cmeta data loaded successful", 'color: #FF0000');
 }
 
 function antlion_manifest_load(data){

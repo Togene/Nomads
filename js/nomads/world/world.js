@@ -108,7 +108,7 @@ function CreateTile(shader, height, color, detial_map, detial_test,
             var y_loc = ((y) * chunkSize) + world_mapping;
 
             var chunkgeo = GenerateTileMesh(
-                height, detial_map, 50, 1.0, detial,
+                height, detial_map, 150, 12.0, detial,
                 x_loc,
                 y_loc,
                 chunkSize, gridSize, scale, x, y);

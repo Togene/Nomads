@@ -183,7 +183,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 
 					faces.push(curface);
 
-					curface.CalculateNormal(false);
+					curface.CalculateNormal(true);
 					//curface.index = Index_xy/4;
 					
 					if(r_d == 255) {	
@@ -244,18 +244,21 @@ function place(curface){
 	
 	if (curface.normal.y == 1 || curface.normal.y == -1) {
 		axis = new THREE.Vector3(1, 0, 0);
+		console.log(axis);
 	} else {
-		axis = new THREE.Vector3().crossVectors(up, curface.normal);
+		axis = new THREE.Vector3().crossVectors(up, curface.normal).normalize();
 	}
 	//determine the amount to rotate
 	var radians = Math.acos(curface.normal.dot(up));
 	
-	var npc = lithy_create(
-	new THREE.Vector3(
+	var npc = tree_01_create( new THREE.Vector3(0,0,0,),
+	  new quaternion(null,null,null,null, axis, (radians), null,  true).conjugate());
+	npc.transform.position = new THREE.Vector3(
 		curface.centre.x + curface.normal.x,
 		curface.centre.y + curface.normal.y,
 		curface.centre.z + curface.normal.z,
-	));
-	
-	npc.transform.rotation = new quaternion(0,0,0,0, axis, radians);
+	);
+
+	//console.log(npc.transform.rotation);
 }
+ 

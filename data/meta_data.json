@@ -3,12 +3,62 @@
         "mapping" : [0, 1],
         "colors" : ["0x78664c"],
         "frames" : [],
-        "offset" : {"x":0, "y":0, "z":0}
+        "transform" : {
+            "position" : {"x":0, "y":0, "z":0},
+            "orient" : {"x":0, "y":0, "z":0, "w":1},
+            "scale" : {"x":1, "y":1, "z":1}
+        }
     },
     "lithy" : {
         "mapping" : [{"x":0, "y":0}],
         "frames" :  {"x":0, "y":0},
         "colors" : ["0xffffff", "0xff00ff"],
-        "offset" :  {"x":0, "y":0, "z":0}
+        "transform" : {
+            "position" : {"x":0, "y":0, "z":0},
+            "orient" : {"x":0, "y":0, "z":0, "w":1},
+            "scale" : {"x":1, "y":1, "z":1}
+        }
+    },
+    "tree_01" : {
+        "leaves" : {
+            "mapping" : [{"x":3, "y":0}],
+            "frames" :  {"x":1, "y":1},
+            "colors" : ["0x008B00"],
+            "transform" : {
+                "position" : {"x":0, "y":0, "z":0},
+                "orient" : {"x":0, "y":0, "z":0, "w":1},
+                "scale" : {"x":2, "y":2, "z":2}
+            }
+        },
+        "root" : {
+            "mapping" : [{"x":0, "y":0}],
+            "frames" :  {"x":1, "y":1},
+            "colors" : ["0x78664c"],
+            "transform" : {
+                "position" : {"x":0, "y":0, "z":0},
+                "orient" : {"x":0, "y":0, "z":0, "w":1},
+                "scale" : {"x":1, "y":1, "z":1}
+            }
+        },
+        "trunk" : {
+            "mapping" : [{"x":1, "y":0}],
+            "frames" :  {"x":1, "y":2},
+            "colors" : ["0x78664c"],
+            "transform" : {
+                "position" : {"x":0, "y":0, "z":0},
+                "orient" : {"x":0, "y":0, "z":0, "w":1},
+                "scale" : {"x":1, "y":1, "z":1}
+            }
+        },
+        "branch" : {
+            "mapping" : [{"x":2, "y":0}],
+            "frames" :  {"x":1, "y":3},
+            "colors" : ["0x78664c"],
+            "transform" : {
+                "position" : {"x":0, "y":0, "z":0},
+                "orient" : {"x":0, "y":0, "z":0, "w":1},
+                "scale" : {"x":1, "y":1, "z":1}
+            }
+        }
     }
 }

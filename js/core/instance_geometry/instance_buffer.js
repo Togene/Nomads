@@ -22,19 +22,35 @@ instance_buffer.prototype.get_index = function(){
     return this.index;
 }
 
-instance_buffer.prototype.append = function(position, orient, scale, decomposer, animation){
-    this.scales.push(scale.x, scale.y, scale.z);
+instance_buffer.prototype.append = function(decomposer, animation){
+    this.scales.push(
+        decomposer.scale.x, 
+        decomposer.scale.y, 
+        decomposer.scale.z
+    );
 
-    this.vector.set(position.x, position.y, position.z, 0).normalize();
+    this.vector.set(
+        decomposer.position.x, 
+        decomposer.position.y, 
+        decomposer.position.z, 0).normalize();
 
     this.translation.push(
-        position.x + this.vector.x + decomposer.centre_offset.x, 
-        position.y + this.vector.y + decomposer.centre_offset.y, 
-        position.z + this.vector.z + decomposer.centre_offset.z);
+        decomposer.position.x + this.vector.x, 
+        decomposer.position.y + this.vector.y, 
+        decomposer.position.z + this.vector.z
+    );
 
-    this.vector.set(position.x, position.y, position.z).normalize();
+    this.vector.set(
+        decomposer.position.x, 
+        decomposer.position.y,
+        decomposer.position.z
+    ).normalize();
 
-    this.orientations.push(orient.x, orient.y, orient.z, orient.w);
+    this.orientations.push(
+        decomposer.orient.x, 
+        decomposer.orient.y, 
+        decomposer.orient.z, 
+        decomposer.orient.w);
 
     var col = decomposer.colors[randomRangeRound(0, decomposer.colors.length - 1)];
     this.colors.push(col.r, col.g, col.b);
@@ -94,7 +110,7 @@ instance_buffer.prototype.name = "instance_buffer";
  * @param {*} animate 
  * @param {*} is3D 
  */
-function create_instance(container, buffer, attributes, shader, urlindex, animate, is3D = false) {
+function bake_buffer(container, buffer, attributes, shader, urlindex, animate, is3D = false) {
     var bufferGeometry = new THREE.PlaneBufferGeometry(1, 1, 1); 
     bufferGeometry.castShadow = true;
 

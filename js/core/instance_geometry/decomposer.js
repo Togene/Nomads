@@ -1,11 +1,44 @@
-function decomposer(meta, type, buffer){
+
+function pass_transforms(
+    p = new THREE.Vector3(), 
+    o = new THREE.Vector4(), 
+    s = new THREE.Vector3(1, 1, 1))
+    {
+        this.position = p;
+        this.orient = o;
+        this.scale = s;
+}
+
+function decomposer(meta, type, buffer, attributes, pass_transform){
+    if(meta == undefined){
+        throw new Error("Meta Data is required for decomposer!");
+    }
+
     this.ssIndex = array_map_to_ss(meta.mapping);
     this.animationFrames = meta.frames;
     this.colors = array_hex_to_three_color(meta.colors);
-    this.centre_offset = new THREE.Vector3(meta.offset.x, meta.offset.y, meta.offset.z);
     this.type = type || 0;
-    this.attributes_refrence = [];
+    this.attributes_refrence = attributes;
 
+    this.position;
+    this.scale;
+    this.orient;
+
+    if(pass_transform == null){
+        this.position = new THREE.Vector3(
+            meta.transform.position.x, meta.transform.position.y, meta.transform.position.z);
+        this.scale = new THREE.Vector3(
+            meta.transform.scale.x, meta.transform.scale.y, meta.transform.scale.z);
+        this.orient = new THREE.Vector4(
+            meta.transform.orient.x, meta.transform.orient.y, 
+            meta.transform.orient.z, meta.transform.orient.w);
+    } else {
+        this.position = pass_transform.position.clone();
+        this.scale = pass_transform.scale.clone();
+        this.orient = pass_transform.orient.clone();
+    }
+
+    
     this.parent = null; //for gameobject
 
     if(buffer == undefined){
@@ -142,9 +175,6 @@ decomposer.prototype.set_transform = function(t){
 
     //append to the buffer after all fields are set
     this.buffer.append (
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, 0, 0), 
-        new THREE.Vector3(1, 1, 1),
         this
     );
 }
