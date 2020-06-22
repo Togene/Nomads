@@ -1,3 +1,34 @@
+
+function instance_renderer(map_index, mesh, type, animate, is3D = false) {
+    this.buffer = new instance_buffer();
+    this.attributes = [];
+    this.mesh = mesh;
+    this.map_index = map_index;
+    this.type = type;
+    this.shader = get_data("instance_shader");
+    this.animate = animate;
+    this.is3D = is3D
+}
+
+instance_renderer.prototype.get_buffer = function(){
+    return this.buffer;
+}
+
+instance_renderer.prototype.get_attributes = function(){
+    return this.attributes;
+}
+
+instance_renderer.prototype.buffer_append = function(o){
+    if(o != undefined){
+        if(o.get_component("decomposer") != null){
+            this.buffer.append(o.get_component("decomposer"))
+        }
+    }
+}
+
+
+instance_renderer.prototype.name = "instance_renderer";
+
 function instance_buffer(){
     this.translation = [];
     this.orientations = [];
@@ -110,7 +141,11 @@ instance_buffer.prototype.name = "instance_buffer";
  * @param {*} animate 
  * @param {*} is3D 
  */
-function bake_buffer(container, buffer, attributes, shader, urlindex, animate, is3D = false) {
+instance_renderer.prototype.bake_buffer = function() {
+    if (this.buffer == undefined || this.buffer.length == 0) {
+        console.error("buffer error.")
+    }
+
     var bufferGeometry = new THREE.PlaneBufferGeometry(1, 1, 1); 
     bufferGeometry.castShadow = true;
 
@@ -119,23 +154,21 @@ function bake_buffer(container, buffer, attributes, shader, urlindex, animate, i
     geometry.attributes.position = bufferGeometry.attributes.position;
     geometry.attributes.uv = bufferGeometry.attributes.uv;
   
-    var translationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.translation), 3);
-    var orientationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.orientations), 4);
-    var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.colors), 3);
-    var uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.uvoffsets), 2);
-    var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.scales), 3);
-    var animation_startAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_start), 1);
-    var animation_endAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_end), 1);
-    var animation_timeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.animation_time), 1);
-
-
-    var typeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.type), 1);
-    var fogAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.fog), 1);
-    var normalsAttribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.normals), 3);
-    var m0Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m0), 4);
-    var m1Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m1), 4);
-    var m2Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m2), 4);
-    var m3Attribute = new THREE.InstancedBufferAttribute(new Float32Array(buffer.m3), 4);
+    var translationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.translation), 3);
+    var orientationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.orientations), 4);
+    var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.colors), 3);
+    var uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.uvoffsets), 2);
+    var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.scales), 3);
+    var animation_startAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_start), 1);
+    var animation_endAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_end), 1);
+    var animation_timeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_time), 1);
+    var typeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.type), 1);
+    var fogAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.fog), 1);
+    var normalsAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.normals), 3);
+    var m0Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m0), 4);
+    var m1Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m1), 4);
+    var m2Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m2), 4);
+    var m3Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m3), 4);
 
     geometry.setAttribute('translation', translationAttribute);
     geometry.setAttribute('orientation', orientationAttribute);
@@ -152,8 +185,8 @@ function bake_buffer(container, buffer, attributes, shader, urlindex, animate, i
     geometry.setAttribute('m1', m1Attribute);
     geometry.setAttribute('m2', m2Attribute);
     geometry.setAttribute('m3', m3Attribute);
-
-    attributes.push(
+    
+    this.attributes.push(
         m0Attribute,                    //0
         m1Attribute,                    //1
         m2Attribute,                    //2
@@ -166,7 +199,7 @@ function bake_buffer(container, buffer, attributes, shader, urlindex, animate, i
         animation_timeAttribute         //9
     );
 
-    var texture = new THREE.TextureLoader().load(MapFileurl[urlindex]);
+    var texture = new THREE.TextureLoader().load(MapFileurl[this.map_index]);
 
     texture.magFilter = THREE.NearestFilter;
     texture.minFilter = THREE.NearestFilter;
@@ -174,10 +207,10 @@ function bake_buffer(container, buffer, attributes, shader, urlindex, animate, i
     var animationSwitch = 0;
     var is3DSwitch = 0;
 
-    if (animate)
+    if (this.animate)
         animationSwitch = 1.0;
 
-    if(is3D)
+    if(this.is3D)
         is3DSwitch = 1.0;
 
     var instanceUniforms = {
@@ -189,9 +222,9 @@ function bake_buffer(container, buffer, attributes, shader, urlindex, animate, i
         time: { type: "f", value: 1.0 },
     }
 
-    if(shader == undefined){
+    if(this.shader == undefined){
         console.error("shader wasnt found, using defualt.");
-        shader = get_data("instance_shader");
+        this.shader = get_data("instance_shader");
     }
 
     var material = new THREE.RawShaderMaterial({
@@ -202,10 +235,10 @@ function bake_buffer(container, buffer, attributes, shader, urlindex, animate, i
                 instanceUniforms
             ]),
 
-        vertexShader: shader.vert,
-        fragmentShader: shader.frag,
-        wireframe: shader.extra.wf,
-        transparent: shader.extra.trans,
+        vertexShader: this.shader.vert,
+        fragmentShader:  this.shader.frag,
+        wireframe:  this.shader.extra.wf,
+        transparent:  this.shader.extra.trans,
         fog: true,
         lights: true,
     });
@@ -218,6 +251,7 @@ function bake_buffer(container, buffer, attributes, shader, urlindex, animate, i
     material.side = THREE.DoubleSide;
     mesh.frustumCulled = false;
     mesh.castShadow = true;
+    console.log(this.buffer.index)
 
-    container.add(mesh);
+    this.mesh.add(mesh);
 }

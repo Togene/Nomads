@@ -19,12 +19,15 @@ var physics_objects = [];
 var pool = null;
 
 function game_bootstrap(data){
-    STATIC_BUFFER = new instance_buffer();
-    STATIC_ATTRIBUTES = [];
 
-    DYNAMIC_BUFFER = new instance_buffer();
-    DYNAMIC_ATTRIBUTES = [];
-
+    TREE_RENDERER = new instance_renderer(
+        1,
+        SOLID_SPRITES,
+        SOLID,
+        false,
+        false
+    )
+    
     game_resources = data;
 
     keyboard_init();
@@ -66,25 +69,7 @@ function game_bootstrap(data){
         }
     }
 
-    bake_buffer (
-        ANIMATED_SPRITES, 
-        DYNAMIC_BUFFER, 
-        DYNAMIC_ATTRIBUTES, 
-        get_data("instance_shader"), 
-        1, 
-        false, 
-        false
-    );
-
-    bake_buffer (
-        SOLID_SPRITES, 
-        STATIC_BUFFER, 
-        STATIC_ATTRIBUTES, 
-        get_data("instance_shader"), 
-        1, 
-        false, 
-        false
-    );
+    TREE_RENDERER.bake_buffer()
 }
 
 /*

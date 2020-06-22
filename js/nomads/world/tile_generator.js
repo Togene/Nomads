@@ -135,7 +135,6 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			var height_xy = heightMap.data[Index_xy] / 255;
 			//------------------------ MAP SAMPLING --------------------------- \\
 
-
 			//------------------------ Normal Height -------------------------
 			var finalP = EasingFunctions.easeInQuint(height);
 			var finalP_x = EasingFunctions.easeInQuint(height_x);
@@ -148,7 +147,6 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			finalP_y *= heightMultiplier;
 			finalP_xy *= heightMultiplier;
 
-			
 			//------------------------- -ocean floor -------------------------
 			if (finalP <= 0.01) { finalP = - 100; }
 			if (finalP_x <= 0.01) { finalP_x = - 100; }
@@ -174,7 +172,6 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 
 			//--------------------------FACE-------------------------------------
 			if ((ix + 1) < gridX1 && (iy + 1) < gridY1) {
-					
 					var curface	= new face3D(
 							new THREE.Vector3(obj_x, finalP, obj_y),
 							new THREE.Vector3(obj_x1, finalP_x, obj_y),
@@ -183,7 +180,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 
 					faces.push(curface);
 
-					curface.CalculateNormal(true);
+					curface.CalculateNormal(false);
 					//curface.index = Index_xy/4;
 					
 					if(r_d == 255) {	
@@ -244,21 +241,17 @@ function place(curface){
 	
 	if (curface.normal.y == 1 || curface.normal.y == -1) {
 		axis = new THREE.Vector3(1, 0, 0);
-		console.log(axis);
 	} else {
 		axis = new THREE.Vector3().crossVectors(up, curface.normal).normalize();
 	}
 	//determine the amount to rotate
 	var radians = Math.acos(curface.normal.dot(up));
 	
-	var npc = tree_01_create( new THREE.Vector3(0,0,0,),
-	  new quaternion(null,null,null,null, axis, (radians), null,  true).conjugate());
-	npc.transform.position = new THREE.Vector3(
+	var npc = tree_01_create( new THREE.Vector3(
 		curface.centre.x + curface.normal.x,
 		curface.centre.y + curface.normal.y,
 		curface.centre.z + curface.normal.z,
-	);
-
-	//console.log(npc.transform.rotation);
+	),
+	  new quaternion(null,null,null,null, axis, (radians), null).conjugate());
 }
  

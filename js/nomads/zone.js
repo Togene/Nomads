@@ -1,20 +1,16 @@
-function zone(){
-    this.static_buffer = [];
-    this.dynamic_buffer = [];
-    this.land = null;
+function zone(empty = true){
+    if(!empty)this.tile = this.genere_tile();
+    this.instances = []
 }
 
-zone.prototype.get_static = function(){
-    return this.static_buffer;
-}
-
-zone.prototype.get_dynamic = function(){
-    return this.dynamic_buffer;
+zone.prototype.generate_tile(){
+    
 }
 
 zone.prototype.bake_zone = function(){
-    
     //generate map
 
     //create instances
 }
+
+zone.prototype.name = "zone";

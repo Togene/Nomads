@@ -9,16 +9,19 @@ function pass_transforms(
         this.scale = s;
 }
 
-function decomposer(meta, type, buffer, attributes, pass_transform){
-    if(meta == undefined){
+function decomposer(meta, type, renderer, pass_transform){
+    if(meta == undefined){ 
         throw new Error("Meta Data is required for decomposer!");
+    }
+    if(renderer == undefined){ 
+        throw new Error("Renderer is required for decomposer!");
     }
 
     this.ssIndex = array_map_to_ss(meta.mapping);
     this.animationFrames = meta.frames;
     this.colors = array_hex_to_three_color(meta.colors);
     this.type = type || 0;
-    this.attributes_refrence = attributes;
+    this.attributes_refrence = renderer.attributes;
 
     this.position;
     this.scale;
@@ -37,25 +40,24 @@ function decomposer(meta, type, buffer, attributes, pass_transform){
         this.scale = pass_transform.scale.clone();
         this.orient = pass_transform.orient.clone();
     }
-
     
     this.parent = null; //for gameobject
 
-    if(buffer == undefined){
-        throw new Error("Buffer is required for decomposer!");
-    }
-
-    this.buffer_idx = buffer.index;
-    this.buffer = buffer;
+    this.buffer_idx = renderer.buffer.index;
+    this.buffer = renderer.buffer;
+    this.animate = renderer.animate;
 }
 
 decomposer.prototype.update = function(){
-    if(this.transform != null && this.transform.hasChanged()){  
-        //this.attribute_debug();
-       this.matrix = this.transform.get_transformation().toMatrix4();
-        //have to tell the buffer/instance_geometry to update aswell
-       this.update_attributes();
-       this.set_orientation(this.parent.transform.rotation);
+    if(this.animate){
+        if(this.transform != null && this.transform.hasChanged()){  
+            //this.attribute_debug();
+           this.matrix = this.transform.get_transformation().toMatrix4();
+          
+           //have to tell the buffer/instance_geometry to update aswell
+           this.update_attributes();
+           this.set_orientation(this.parent.transform.rotation);
+        }
     }
 }    
 
@@ -64,7 +66,7 @@ decomposer.prototype.set_animation = function(s, e, t){
         var start_attribute = this.attributes_refrence[7];
         var end_attribute = this.attributes_refrence[8];
         var time_attribute = this.attributes_refrence[9];
-
+  
         start_attribute.setX  (this.buffer_idx, s);
         start_attribute.needsUpdate = true;
 
@@ -173,10 +175,12 @@ decomposer.prototype.set_transform = function(t){
     this.transform = t;
     this.matrix = t.get_transformation().toMatrix4();
 
+    
     //append to the buffer after all fields are set
     this.buffer.append (
         this
     );
+
 }
 
 decomposer.prototype.set_usefog = function(b){

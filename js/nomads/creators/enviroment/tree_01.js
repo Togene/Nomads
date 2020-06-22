@@ -7,19 +7,19 @@ function tree_01_create(p, q){
     create_face(45, tree);
     create_face(135, tree);
     
-    leaves = new gameobject("leaves", new THREE.Vector3(0, 1.6, 0));
-    leaves.add_component(new decomposer(
-        get_meta().tree_01.leaves,
-        SPRITE,
-        DYNAMIC_BUFFER, 
-        DYNAMIC_ATTRIBUTES,
-    ));
-    tree.add_child(leaves);
+   leaves = new gameobject("leaves", new THREE.Vector3(0, 1.6, 0));
+   leaves.add_component(new decomposer(
+       get_meta().tree_01.leaves,
+       SPRITE,
+       TREE_RENDERER,
+   ));
+
+   tree.add_child(leaves);
 
     return tree;
 }
 
-function create_face(y_rot, tree, attributes){
+function create_face(y_rot, tree){
     var root = new gameobject("root");
     var trunk = new gameobject("trunk");
     var branch = new gameobject("branch");
@@ -28,13 +28,13 @@ function create_face(y_rot, tree, attributes){
     root.add_child(trunk);
     trunk.add_child(branch);
 
-    root.transform.rotation = new quaternion(0, 0, 0, 1, new THREE.Vector3(0, 1, 0), dag_to_rad(y_rot));
+    root.transform.rotation = new quaternion(0, 0, 0, 1, 
+        new THREE.Vector3(0, 1, 0), dag_to_rad(y_rot));
     
     var root_decomposer = new decomposer(
         get_meta().tree_01.root,
         SOLID,
-        STATIC_BUFFER, 
-        STATIC_ATTRIBUTES,
+        TREE_RENDERER,
         new pass_transforms(
             root.transform.get_transformed_position(), 
             root.transform.get_transformed_rotation(), 
@@ -50,8 +50,7 @@ function create_face(y_rot, tree, attributes){
     var trunk_decomposer = new decomposer(
         get_meta().tree_01.trunk,
         SOLID,
-        STATIC_BUFFER, 
-        STATIC_ATTRIBUTES,
+        TREE_RENDERER,
         new pass_transforms(
             trunk.transform.get_transformed_position(), 
             trunk.transform.get_transformed_rotation(),  
@@ -66,8 +65,7 @@ function create_face(y_rot, tree, attributes){
     var branch_decomposer = new decomposer(
         get_meta().tree_01.branch,
         SOLID,
-        STATIC_BUFFER, 
-        STATIC_ATTRIBUTES,
+        TREE_RENDERER,
         new pass_transforms(
             branch.transform.get_transformed_position(),
             branch.transform.get_transformed_rotation(),  

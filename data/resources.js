@@ -43,13 +43,6 @@ function map_resource(url){
     this.url = url;
 };
 
-// { name:"Water_Tile",type: 'island_textures', color_file: 'img/World/water_tile.png', height_file: 'img/World/water_level_color.png', detail_file: 'img/World/Crab_Island_detail.png'},
-
-//{ name:"Cloud_Shader",type: 'shader', vert: 'js/Shaders/Cloud/Cloud.vs.glsl', frag: 'js/Shaders/Cloud/Cloud.fs.glsl', extra: {wf:false, trans:true, anim:false} },
-//{ name:"Sky_Shader",type: 'shader', vert: 'js/Shaders/Sky/Sky.vs.glsl', frag: 'js/Shaders/Sky/Sky.fs.glsl', extra: {wf:false, trans:false, anim:false} },
-//{ name:"Land_Shader",type: 'shader', vert: 'js/Shaders/Land/Land.vs.glsl', frag: 'js/Shaders/Land/Land.fs.glsl', extra: {wf:false, trans:true, anim:false}  },
-//{ name:"Water_Shader",type: 'shader', vert: 'js/Shaders/Water/Water.vs.glsl', frag: 'js/Shaders/Water/Water.fs.glsl', extra:  {wf:false, trans:true, anim:true}  },
-
 const raw_resources = [
     new raw_resource(
         "instance_shader", 
