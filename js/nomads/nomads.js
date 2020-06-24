@@ -23,11 +23,17 @@ function game_bootstrap(data){
     TREE_RENDERER = new instance_renderer(
         1,
         SOLID_SPRITES,
-        SOLID,
         false,
         false
     )
     
+    CRAB_RENDERER = new instance_renderer(
+        0,
+        ANIMATED_SPRITES,
+        true,
+        false
+    )
+
     game_resources = data;
 
     keyboard_init();
@@ -70,6 +76,7 @@ function game_bootstrap(data){
     }
 
     TREE_RENDERER.bake_buffer()
+    CRAB_RENDERER.bake_buffer()
 }
 
 /*

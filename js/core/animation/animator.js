@@ -1,7 +1,5 @@
-function animator(animations, decomposer){
-   
+function animator(animations){
     this.animations_sequences = animations;
-    this.decomposer = decomposer;
 
     this.parent = null;
     
@@ -49,4 +47,12 @@ animator.prototype.set_parent = function(p){
     this.parent = p;
 };
 
+animator.prototype.set_requirements = function(d){
+    if(d.name == "decomposer"){
+        this.decomposer = d;
+        this.decomposer.update_buffer_animation(this);
+    }
+}
+
 animator.prototype.name = "animator";
+animator.prototype.requires = ["decomposer"];

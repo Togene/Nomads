@@ -4,31 +4,33 @@
 
 		//vertex position
 		attribute vec3 position;
-
 		attribute vec3 translation;
 		attribute vec4 orientation;
 		attribute vec3 scale;
-		attribute vec3 col;
+		//attribute vec3 col;
 		attribute vec2 uv;
 		attribute vec2 uvoffset;
-	
+		attribute vec2 tile_size;
 		attribute float type;
 		attribute float fog;
+		attribute float animation_start;
+		attribute float animation_end;
+		attribute float animation_time;
+		attribute vec4 m0;
+		attribute vec4 m1;
+		attribute vec4 m2;
+		attribute vec4 m3;
+
 		varying float fog_pass;
 
 		varying vec2 vUv;
 		uniform float spriteSheetX;
 		uniform float spriteSheetY;
 		
-		//attribute vec2 animationFrame;
 		uniform float time;
 		uniform float animationSwitch;
 	
-		//varying vec2 animationframePass;
-
-		attribute float animation_start;
-		attribute float animation_end;
-		attribute float animation_time;
+		
 
 		varying float animation_start_pass;
 		varying float animation_end_pass;
@@ -39,16 +41,12 @@
 		varying vec2 spritesheetsizePass;
 
 		uniform mat4 viewMatrix;
-		uniform mat4 modelMatrix;
+		//uniform mat4 modelMatrix;
 		uniform vec3 cameraPosition;
 		varying vec2 viewDirection;
 		varying vec4 posWorld;
 		varying vec4 rotation;
 
-		attribute vec4 m0;
-		attribute vec4 m1;
-		attribute vec4 m2;
-		attribute vec4 m3;
 
 		varying vec3 forward;
 
@@ -178,16 +176,15 @@
 				//---------------------------------------------------Solid Sprite ---------------------------------------------------
 			}
 
-			vUv = vec2((uv.x/spriteSheetX) + (uvoffset.x), (uv.y/spriteSheetY) + (uvoffset.y));
+			vUv = vec2(((uv.x/spriteSheetX) + (uvoffset.x)) * tile_size.x, ((uv.y/spriteSheetY) + (uvoffset.y)) * tile_size.y);
 
 
-			colorPass = col.rgb;
+			colorPass = vec3(1,1,1); //col.rgb
 
 			//animationframePass = animationFrame;
 			uvoffsetPass = uvoffset;
 
 			spritesheetsizePass = vec2(spriteSheetX, spriteSheetY);	
-
 
 			animation_start_pass = animation_start;
 			animation_end_pass = animation_end;

@@ -1,7 +1,7 @@
 {
     "crab" : {
         "mapping" : [0, 1],
-        "colors" : ["0x78664c"],
+        "colors" : ["0xF8665E"],
         "frames" : [],
         "transform" : {
             "position" : {"x":0, "y":0, "z":0},
@@ -60,5 +60,16 @@
                 "scale" : {"x":1, "y":1, "z":1}
             }
         }
+    },
+    "circle" : {
+        "mapping" : [{"x":0, "y":0}],
+        "frames" :  {"x":0, "y":0},
+        "colors" : ["0xFFFFFF"],
+        "transform" : {
+            "position" : {"x":0, "y":0, "z":0},
+            "orient" : {"x":0, "y":0, "z":0, "w":1},
+            "scale" : {"x":2, "y":2, "z":2}
+        },
+        "tile_size" : {"x":2, "y":2}
     }
 }

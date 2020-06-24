@@ -20,6 +20,7 @@ gameobject.prototype.add_child = function(o){
         this.children.push(o);
         o.set_parent(this);
         o.transform.set_parent(this.transform);
+        o.update();
     } else {
         console.error("%c Cant Add Self!", 'background: #333; color: #bada55');
     }
@@ -30,7 +31,6 @@ gameobject.prototype.set_parent = function(p){
 }
 
 gameobject.prototype.update = function(delta){
-
     if(this.components != null){
         for(var i = 0; i < this.components.length; i++){
             this.components[i].update(delta);
@@ -47,14 +47,31 @@ gameobject.prototype.update = function(delta){
 }
 
 gameobject.prototype.add_component = function(c){
- 
     if(c == null){console.error(this.name + ": no component was given!"); return;}
     this.components.push(c);
     c.set_parent(this);
+    this.add_requirements(c);
+}
 
-    //TODO give requiremnts list for each class
-    if(c.name == "decomposer"){
-        c.set_transform(this.transform);
+gameobject.prototype.add_requirements = function(c){
+
+    if(c.requires == null){
+        return;
+    }
+
+    for(var i = 0; i < c.requires.length; i++) {
+        
+        if(c.requires == "transform"){
+            c.set_transform(this.transform);
+            continue;
+        }
+
+        var component = this.get_component(c.requires[i]);
+        if(component == null){
+            console.error("component: " + "\"" + c.requires[i] + "\"" + " is missing")
+        } else {
+            c.set_requirements(component)
+        }
     }
 }
 

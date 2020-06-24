@@ -5,6 +5,7 @@ const PARTICLE = 3;
 const SPRITE_SHEET_SIZE = new THREE.Vector2(8, 8);
 
 var TREE_RENDERER;
+var CRAB_RENDERER;
 
 //------------- Sprite THREE.Object3D holders ---------
 var ANIMATED_SPRITES = new THREE.Object3D();

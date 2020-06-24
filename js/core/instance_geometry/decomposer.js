@@ -17,6 +17,12 @@ function decomposer(meta, type, renderer, pass_transform){
         throw new Error("Renderer is required for decomposer!");
     }
 
+    this.tile_size = new THREE.Vector3(1,1);
+
+    if(meta.tile_size != null){
+        this.tile_size = new THREE.Vector2(meta.tile_size.x, meta.tile_size.y);
+    }
+
     this.ssIndex = array_map_to_ss(meta.mapping);
     this.animationFrames = meta.frames;
     this.colors = array_hex_to_three_color(meta.colors);
@@ -51,15 +57,18 @@ function decomposer(meta, type, renderer, pass_transform){
 decomposer.prototype.update = function(){
     if(this.animate){
         if(this.transform != null && this.transform.hasChanged()){  
-            //this.attribute_debug();
+           //this.attribute_debug();
            this.matrix = this.transform.get_transformation().toMatrix4();
-          
            //have to tell the buffer/instance_geometry to update aswell
            this.update_attributes();
            this.set_orientation(this.parent.transform.rotation);
         }
     }
 }    
+
+decomposer.prototype.update_buffer_animation = function(animation){
+    this.buffer.append_animation(this.buffer_idx, animation);
+}
 
 decomposer.prototype.set_animation = function(s, e, t){
     if(this.attributes_refrence != null && this.attributes_refrence.length != 0){
@@ -175,12 +184,8 @@ decomposer.prototype.set_transform = function(t){
     this.transform = t;
     this.matrix = t.get_transformation().toMatrix4();
 
-    
     //append to the buffer after all fields are set
-    this.buffer.append (
-        this
-    );
-
+    this.buffer.append(this);
 }
 
 decomposer.prototype.set_usefog = function(b){
@@ -208,3 +213,4 @@ decomposer.prototype.toJSON = function(){
 }
 
 decomposer.prototype.name = "decomposer";
+decomposer.prototype.requires = ["transform"];

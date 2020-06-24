@@ -148,10 +148,10 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 			finalP_xy *= heightMultiplier;
 
 			//------------------------- -ocean floor -------------------------
-			if (finalP <= 0.01) { finalP = - 100; }
-			if (finalP_x <= 0.01) { finalP_x = - 100; }
-			if (finalP_y <= 0.01) { finalP_y = - 100; }
-			if (finalP_xy <= 0.01) { finalP_xy = - 100; }
+			if (finalP <= 0.01) { finalP = - 5; }
+			if (finalP_x <= 0.01) { finalP_x = - 5; }
+			if (finalP_y <= 0.01) { finalP_y = - 5; }
+			if (finalP_xy <= 0.01) { finalP_xy = - 5; }
 			//------------------------ Normal Height -------------------------
 
 			var obj_x = (x + Worldx + 1);
@@ -247,11 +247,18 @@ function place(curface){
 	//determine the amount to rotate
 	var radians = Math.acos(curface.normal.dot(up));
 	
-	var npc = tree_01_create( new THREE.Vector3(
+	//var npc = tree_01_create( new THREE.Vector3(
+	//	curface.centre.x + curface.normal.x,
+	//	curface.centre.y + curface.normal.y,
+	//	curface.centre.z + curface.normal.z,
+	//),
+	//  new quaternion(null,null,null,null, axis, (radians), null).conjugate());
+	
+	var circle = circle_create( new THREE.Vector3(
 		curface.centre.x + curface.normal.x,
 		curface.centre.y + curface.normal.y,
 		curface.centre.z + curface.normal.z,
-	),
-	  new quaternion(null,null,null,null, axis, (radians), null).conjugate());
+	), new quaternion(null,null,null,null, 
+		axis, (radians), null).conjugate());
 }
  

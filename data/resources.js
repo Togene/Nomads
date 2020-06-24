@@ -19,6 +19,7 @@ const MapFileurl = [
     'img/sprite_sheets/structures.png',
     'img/sprite_sheets/lithies.png',
     'img/sprite_sheets/debug.png',
+    'img/sprite_sheets/multi_test.png',
 ];
 
 function raw_resource(n, t, d){
@@ -50,7 +51,7 @@ const raw_resources = [
         new shader_resource(
             'js/shaders/instance/instance.vs.glsl',
             'js/shaders/instance/instance.fs.glsl',
-            {wf:false, trans:false, anim:false} 
+            {wf:false, trans:true, anim:false} 
         )),
     new raw_resource(
         "Land_Shader", 

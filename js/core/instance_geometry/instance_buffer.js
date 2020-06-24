@@ -1,10 +1,9 @@
 
-function instance_renderer(map_index, mesh, type, animate, is3D = false) {
+function instance_renderer(map_index, mesh, animate, is3D = false) {
     this.buffer = new instance_buffer();
     this.attributes = [];
     this.mesh = mesh;
     this.map_index = map_index;
-    this.type = type;
     this.shader = get_data("instance_shader");
     this.animate = animate;
     this.is3D = is3D
@@ -26,7 +25,6 @@ instance_renderer.prototype.buffer_append = function(o){
     }
 }
 
-
 instance_renderer.prototype.name = "instance_renderer";
 
 function instance_buffer(){
@@ -36,12 +34,12 @@ function instance_buffer(){
     this.scales = [];
     this.colors = [];
     this.uvoffsets = [];
+    this.tile_size = [];
     this.animation_start = [];
     this.animation_end = [];
     this.animation_time = [];
     this.type = [];
     this.fog = [];
-    this.normals = [];
     this.m0 = [];
     this.m1 = [];
     this.m2 = [];
@@ -53,11 +51,22 @@ instance_buffer.prototype.get_index = function(){
     return this.index;
 }
 
+instance_buffer.prototype.append_animation = function(index, animation){
+    this.animation_start[index] = animation.start;
+    this.animation_end[index] = animation.length;
+    this.animation_time[index] = random_range(0, 3);
+}
+
 instance_buffer.prototype.append = function(decomposer, animation){
     this.scales.push(
         decomposer.scale.x, 
         decomposer.scale.y, 
         decomposer.scale.z
+    );
+
+    this.tile_size.push(
+        decomposer.tile_size.x, 
+        decomposer.tile_size.y,
     );
 
     this.vector.set(
@@ -90,8 +99,6 @@ instance_buffer.prototype.append = function(decomposer, animation){
 
     this.uvoffsets.push(uvs.x, uvs.y);
 
-    //this.animationFrame.push(decomposer.animationFrames.x, decomposer.animationFrames.y);
-
     if(animation != null){
         this.animation_start.push(animation.start);
         this.animation_end.push(animation.length);
@@ -105,8 +112,6 @@ instance_buffer.prototype.append = function(decomposer, animation){
     this.type.push(decomposer.type);
 
     this.fog.push(decomposer.fog);
-
-    this.normals.push(0.0, 1.0, 0.0);
 
     //Most Transform information now within the matrix 
     this.m0.push(
@@ -146,6 +151,11 @@ instance_renderer.prototype.bake_buffer = function() {
         console.error("buffer error.")
     }
 
+    if(this.buffer.index <= 0){
+        console.log("buffer is empty!")
+        return
+    }
+
     var bufferGeometry = new THREE.PlaneBufferGeometry(1, 1, 1); 
     bufferGeometry.castShadow = true;
 
@@ -158,13 +168,13 @@ instance_renderer.prototype.bake_buffer = function() {
     var orientationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.orientations), 4);
     var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.colors), 3);
     var uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.uvoffsets), 2);
+    var tileSizeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.tile_size), 2);
     var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.scales), 3);
     var animation_startAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_start), 1);
     var animation_endAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_end), 1);
     var animation_timeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_time), 1);
     var typeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.type), 1);
     var fogAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.fog), 1);
-    var normalsAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.normals), 3);
     var m0Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m0), 4);
     var m1Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m1), 4);
     var m2Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m2), 4);
@@ -174,13 +184,13 @@ instance_renderer.prototype.bake_buffer = function() {
     geometry.setAttribute('orientation', orientationAttribute);
     geometry.setAttribute('col', colorAttribute);
     geometry.setAttribute('uvoffset', uvOffsetAttribute);
+    geometry.setAttribute('tile_size', tileSizeAttribute);
     geometry.setAttribute('scale', scaleAttribute);
     geometry.setAttribute('animation_start', animation_startAttribute);
     geometry.setAttribute('animation_end', animation_endAttribute);
     geometry.setAttribute('animation_time', animation_timeAttribute);
     geometry.setAttribute('type', typeAttribute);
     geometry.setAttribute('fog', fogAttribute);
-    geometry.setAttribute('normal', normalsAttribute);
     geometry.setAttribute('m0', m0Attribute);
     geometry.setAttribute('m1', m1Attribute);
     geometry.setAttribute('m2', m2Attribute);
@@ -251,7 +261,7 @@ instance_renderer.prototype.bake_buffer = function() {
     material.side = THREE.DoubleSide;
     mesh.frustumCulled = false;
     mesh.castShadow = true;
-    console.log(this.buffer.index)
+    console.log("objects baked: ", this.buffer.index)
 
     this.mesh.add(mesh);
 }

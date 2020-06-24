@@ -6,15 +6,15 @@ function tree_01_create(p, q){
     create_face(0, tree);
     create_face(45, tree);
     create_face(135, tree);
-    
-   leaves = new gameobject("leaves", new THREE.Vector3(0, 1.6, 0));
-   leaves.add_component(new decomposer(
-       get_meta().tree_01.leaves,
-       SPRITE,
-       TREE_RENDERER,
-   ));
 
-   tree.add_child(leaves);
+    leaves = new gameobject("leaves", new THREE.Vector3(0, 1.6, 0));
+    tree.add_child(leaves);
+
+    leaves.add_component(new decomposer(
+        get_meta().tree_01.leaves,
+        SPRITE,
+        TREE_RENDERER,
+    ));
 
     return tree;
 }
@@ -30,8 +30,8 @@ function create_face(y_rot, tree){
 
     root.transform.rotation = new quaternion(0, 0, 0, 1, 
         new THREE.Vector3(0, 1, 0), dag_to_rad(y_rot));
-    
-    var root_decomposer = new decomposer(
+
+    root.add_component(new decomposer(
         get_meta().tree_01.root,
         SOLID,
         TREE_RENDERER,
@@ -40,14 +40,11 @@ function create_face(y_rot, tree){
             root.transform.get_transformed_rotation(), 
             new THREE.Vector3(5, 5, 5), 
         )
-    );
-    
-    root.add_component(root_decomposer);
-
+    ));
 
     trunk.transform.position = new THREE.Vector3(0, pixel*3, 0);
 
-    var trunk_decomposer = new decomposer(
+    trunk.add_component(new decomposer(
         get_meta().tree_01.trunk,
         SOLID,
         TREE_RENDERER,
@@ -56,13 +53,11 @@ function create_face(y_rot, tree){
             trunk.transform.get_transformed_rotation(),  
             new THREE.Vector3(5, 5, 5),
         )
-    );
-    
-    trunk.add_component(trunk_decomposer);
+    ));
 
     branch.transform.position = new THREE.Vector3(0, 1, 0);
 
-    var branch_decomposer = new decomposer(
+    branch.add_component(new decomposer(
         get_meta().tree_01.branch,
         SOLID,
         TREE_RENDERER,
@@ -71,9 +66,7 @@ function create_face(y_rot, tree){
             branch.transform.get_transformed_rotation(),  
             new THREE.Vector3(5, 5, 5),
         )
-    );
-    
-    branch.add_component(branch_decomposer);
+    ));
 
     return branch.transform.get_transformed_position().y;
 }

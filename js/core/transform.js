@@ -120,6 +120,7 @@ transform.prototype.set_parent = function(t){
     if(t instanceof transform){
         this.parent = t;
         this.parent_matrix = t.get_transformation();
+        this.update()
     } else {
         console.error("Not Transform!");
     }
@@ -130,7 +131,6 @@ transform.prototype.set_position = function(p){
 }
 
 transform.prototype.clone = function() {
-    
     var new_transform = new transform(
         this.position.clone(),
         this.scale.clone(),

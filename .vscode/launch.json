@@ -12,7 +12,7 @@
             "name": "Launch index.html",
             "type": "chrome",
             "request": "launch",
-            "file": "${workspaceFolder}/nomads/index.html"
+            "file": "${workspaceFolder}/index.php"
         },
     ]
 }
