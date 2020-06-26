@@ -27,6 +27,8 @@
 
 		varying float animation_start_pass;
 		varying float animation_end_pass;
+		
+		varying vec2 tile_size_pass;
 
 		const float PI = 3.1415926535897932384626433832795;
 
@@ -64,12 +66,12 @@
 				//TODO: Fix timeoffset glitching issue caused by time
 				float animation_length = ceil(animation_end_pass - animation_start_pass );
 
-				float timeOffsetX = (floor(mod(animation_time_pass, (animation_end_pass)))/spritesheetsizePass.x);
+				float timeOffsetX = (floor(mod(animation_time_pass, (animation_end_pass)))/spritesheetsizePass.x) * tile_size_pass.x;
 				
 				float yUvOffset = vUv.y;
 
 				if(is3D == 1.0){
-					yUvOffset += (index - uvoffsetPass.y)/spritesheetsizePass.y;
+					yUvOffset += ((index - uvoffsetPass.y)/spritesheetsizePass.y) * tile_size_pass.y;
 				}
 				//uvIndex = vec2(vUv.x + (timeOffsetX - uvoffsetPass.x), yUvOffset);
 				// - timeOffsetX

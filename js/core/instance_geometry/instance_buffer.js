@@ -58,15 +58,15 @@ instance_buffer.prototype.append_animation = function(index, animation){
 }
 
 instance_buffer.prototype.append = function(decomposer, animation){
+    this.tile_size.push(
+        decomposer.tile_size.x, 
+        decomposer.tile_size.y,
+    );
+
     this.scales.push(
         decomposer.scale.x, 
         decomposer.scale.y, 
         decomposer.scale.z
-    );
-
-    this.tile_size.push(
-        decomposer.tile_size.x, 
-        decomposer.tile_size.y,
     );
 
     this.vector.set(

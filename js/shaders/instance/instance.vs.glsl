@@ -11,6 +11,7 @@
 		attribute vec2 uv;
 		attribute vec2 uvoffset;
 		attribute vec2 tile_size;
+		varying vec2 tile_size_pass;
 		attribute float type;
 		attribute float fog;
 		attribute float animation_start;
@@ -189,7 +190,7 @@
 			animation_start_pass = animation_start;
 			animation_end_pass = animation_end;
 			animation_time_pass = animation_time;
-
+			tile_size_pass = tile_size;
 			fog_pass = fog;
 			gl_Position = finalPosition;
 		}

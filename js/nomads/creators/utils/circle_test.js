@@ -2,8 +2,8 @@ function circle_create(p, q) {
     CIRCLE_RENDERER = new instance_renderer(
         6,
         SOLID_SPRITES,
-        false,
-        false
+        true,
+        true
     )
 
     var circle = new gameobject("circle", 
@@ -12,9 +12,14 @@ function circle_create(p, q) {
     
     circle.add_component(new decomposer(
         get_meta().circle,
-        SOLID,
+        PARTICLE,
         CIRCLE_RENDERER,
     ));
+
+    circle.add_component(new animator([
+        new animation_sequence("walk", [new animation("walk", 0, 3)], 2, true), 
+    ]));
+
 
     CIRCLE_RENDERER.bake_buffer();
     return circle;
