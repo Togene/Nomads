@@ -70,6 +70,7 @@
             "orient" : {"x":0, "y":0, "z":0, "w":1},
             "scale" : {"x":2, "y":2, "z":2}
         },
+        "map_key" : "multi_test",
         "tile_size" : {"x":2, "y":2}
     }
 }

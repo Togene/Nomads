@@ -19,21 +19,6 @@ var physics_objects = [];
 var pool = null;
 
 function game_bootstrap(data){
-
-    TREE_RENDERER = new instance_renderer(
-        1,
-        SOLID_SPRITES,
-        false,
-        false
-    )
-    
-    CRAB_RENDERER = new instance_renderer(
-        0,
-        ANIMATED_SPRITES,
-        true,
-        false
-    )
-
     game_resources = data;
 
     keyboard_init();
@@ -66,7 +51,6 @@ function game_bootstrap(data){
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
     cube1.matrixAutoUpdate = false;
     cube2.matrixAutoUpdate = false;
-
     
     for(var i = 0; i < Scene.length; i++){
         if(Scene[i].has_component("rigidbody")){
@@ -75,8 +59,10 @@ function game_bootstrap(data){
         }
     }
 
-    TREE_RENDERER.bake_buffer()
-    CRAB_RENDERER.bake_buffer()
+    renderers.forEach(function(renderer) {
+        scene.add(renderer.mesh)
+        renderer.bake_buffer()
+    })
 }
 
 /*

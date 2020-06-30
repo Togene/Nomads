@@ -13,39 +13,28 @@ function shader_init(){
 }
 
 function shader_update(delta){
-    if (ANIMATED_SPRITES.children.length != 0) {
-        for (var i = 0; i < ANIMATED_SPRITES.children.length; i++) {
-            if (ANIMATED_SPRITES.children[i] != undefined) {
-
-                if(ANIMATED_SPRITES.children[i].material != undefined){
-                    ANIMATED_SPRITES.children[i].material.uniforms.time.value = game_time;
-                }
-
-                if(ANIMATED_SPRITES.children[i].children != undefined){
-                    for (var j = 0; j < ANIMATED_SPRITES.children[i].children.length; j++) {
-                        
-                        if(ANIMATED_SPRITES.children[i].children[j].material != undefined){
-                            ANIMATED_SPRITES.children[i].children[j].material.uniforms.time.value = game_time;
-                        }
-                    }
-                }
-            }
-        }
+    for(var i = 0; i < renderers.length; i++){
+    //    object_shader_update(renderers[i].mesh)
     }
 
-    if (ANIM_WORLD_OBJECTS != null) {
-        for (var i = 0; i < ANIM_WORLD_OBJECTS.children.length; i++) {
-            if (ANIM_WORLD_OBJECTS.children[i] != undefined) {
+    //object_shader_update(ANIMATED_SPRITES);
+    object_shader_update(ANIM_WORLD_OBJECTS);
+}
 
-                if(ANIM_WORLD_OBJECTS.children[i].material != undefined){
-                    ANIM_WORLD_OBJECTS.children[i].material.uniforms.time.value = game_time;
+function object_shader_update(o){
+    if (o != null) {
+        for (var i = 0; i < o.children.length; i++) {
+            if (o.children[i] != undefined) {
+
+                if(o.children[i].material != undefined){
+                    o.children[i].material.uniforms.time.value = game_time;
                 }
 
-                if(ANIM_WORLD_OBJECTS.children[i].children != undefined){
-                    for (var j = 0; j < ANIM_WORLD_OBJECTS.children[i].children.length; j++) {
+                if(o.children[i].children != undefined){
+                    for (var j = 0; j < o.children[i].children.length; j++) {
                         
-                        if(ANIM_WORLD_OBJECTS.children[i].children[j].material != undefined){
-                            ANIM_WORLD_OBJECTS.children[i].children[j].material.uniforms.time.value = game_time;
+                        if(o.children[i].children[j].material != undefined){
+                            o.children[i].children[j].material.uniforms.time.value = game_time;
                         }
                     }
                 }

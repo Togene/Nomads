@@ -10,17 +10,33 @@ var map_index = 0;
 var pool;
 var meta_data = null;
 var manifest = [];
+var renderers = new Map();
 
-/*used to grab all outside resources for the game since all resources
-are async and require some to be compiled*/
-
+//used to grab all outside resources for the game since all resources
+//are async and require some to be compiled
 function antlion_init(){
     load('saved/pool_data', 'json', antlion_pool_load);
     load('saved/object_manifest', 'json', antlion_manifest_load);
     load('meta_data', 'json', meta_data_load);
+    load_renderers();
+
 
     async_time = Date.now();
     antlion_fall(raw_resources.length - 1, []);
+}
+
+function load_renderers(){
+    for(var i = 0; i < renderer_text_info.length; i++){
+        var inst_renderer = new instance_renderer(
+            i,
+            renderer_text_info[i].container = new THREE.Object3D(),
+            renderer_text_info[i].animate,
+            renderer_text_info[i].is3D
+        );
+        renderers.set(renderer_text_info[i].name, inst_renderer)
+    }
+    console.log(renderers)
+
 }
 
 function antlion_fall(i, data){

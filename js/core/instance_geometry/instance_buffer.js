@@ -209,7 +209,7 @@ instance_renderer.prototype.bake_buffer = function() {
         animation_timeAttribute         //9
     );
 
-    var texture = new THREE.TextureLoader().load(MapFileurl[this.map_index]);
+    var texture = new THREE.TextureLoader().load(renderer_text_info[this.map_index].map);
 
     texture.magFilter = THREE.NearestFilter;
     texture.minFilter = THREE.NearestFilter;

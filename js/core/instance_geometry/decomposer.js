@@ -9,11 +9,26 @@ function pass_transforms(
         this.scale = s;
 }
 
-function decomposer(meta, type, renderer, pass_transform){
+function sprite(meta, pass_transform){
+    return new decomposer(meta, SPRITE, pass_transform)
+}
+
+function solid(meta, renderer, pass_transform){
+    return new decomposer(meta, SOLID, pass_transform)
+}
+
+function particle(meta, renderer, pass_transform){
+    return new decomposer(meta, PARTICLE, pass_transform)
+}
+
+function decomposer(meta, type, pass_transform){
     if(meta == undefined){ 
         throw new Error("Meta Data is required for decomposer!");
     }
-    if(renderer == undefined){ 
+    if(meta.map_key == undefined){ 
+        throw new Error("Map Key not defined!");
+    }
+    if(renderers.get(meta.map_key) == undefined){ 
         throw new Error("Renderer is required for decomposer!");
     }
 
@@ -22,6 +37,8 @@ function decomposer(meta, type, renderer, pass_transform){
     if(meta.tile_size != null){
         this.tile_size = new THREE.Vector2(meta.tile_size.x, meta.tile_size.y);
     }
+
+    var renderer = renderers.get(meta.map_key);
 
     this.ssIndex = array_map_to_ss(meta.mapping);
     this.animationFrames = meta.frames;

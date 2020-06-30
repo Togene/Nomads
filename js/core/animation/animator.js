@@ -4,8 +4,10 @@ function animator(animations){
     this.parent = null;
     
     this.current_sequence = this.animations_sequences[0];
+    
     this.current_animation = this.animations_sequences[0].current_animation;
     this.curent_index = 0;
+
 }
 
 animator.prototype.get_current_animation = function(name){
@@ -38,9 +40,9 @@ animator.prototype.set_animation_sequence = function(num){
 }
 
 animator.prototype.update = function(delta){
-    this.current_sequence.update(delta);
-    this.current_animation = this.current_sequence.current_animation;
-    this.decomposer.set_animation(this.current_animation.start, this.current_animation.length, this.current_sequence.current_frame);
+   this.current_sequence.update(delta);
+   this.current_animation = this.current_sequence.current_animation;
+   this.decomposer.set_animation(this.current_animation.start, this.current_animation.length, this.current_sequence.current_frame);
 }
 
 animator.prototype.set_parent = function(p){

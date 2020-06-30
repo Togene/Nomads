@@ -12,14 +12,14 @@ var landUniform =
     customColor: { type: "i", value: new THREE.Vector4(.48, .89, .90, 1) }
 };
 
-const MapFileurl = [
-    'img/sprite_sheets/critters.png',
-    'img/sprite_sheets/trees.png',
-    'img/sprite_sheets/sky.png',
-    'img/sprite_sheets/structures.png',
-    'img/sprite_sheets/lithies.png',
-    'img/sprite_sheets/debug.png',
-    'img/sprite_sheets/multi_test.png',
+const renderer_text_info = [
+    {name: "critters", map:'img/sprite_sheets/critters.png', animate:true, is3D:false, container: new THREE.Object3D()},
+    {name: "trees", map:'img/sprite_sheets/trees.png', animate:false, is3D:false, container: new THREE.Object3D()},
+    {name: "sky", map:'img/sprite_sheets/sky.png', animate:false, is3D:false, container: new THREE.Object3D()},
+    {name: "structures", map:'img/sprite_sheets/structures.png', animate:false, is3D:false, container: new THREE.Object3D()},
+    {name: "lithies", map:'img/sprite_sheets/lithies.png', animate:true, is3D:true, container: new THREE.Object3D()},
+    {name: "debug", map:'img/sprite_sheets/debug.png', animate:false, is3D:false, container: new THREE.Object3D()},
+    {name: "multi_test", map:'img/sprite_sheets/multi_test.png', animate:true, is3D:true, container: new THREE.Object3D()},
 ];
 
 function raw_resource(n, t, d){
