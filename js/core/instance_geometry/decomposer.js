@@ -9,6 +9,7 @@ function pass_transforms(
         this.scale = s;
 }
 
+//cyclinder sprite
 function sprite(meta, pass_transform){
     return new decomposer(meta, SPRITE, pass_transform)
 }
@@ -17,6 +18,7 @@ function solid(meta, renderer, pass_transform){
     return new decomposer(meta, SOLID, pass_transform)
 }
 
+//full sprite
 function particle(meta, renderer, pass_transform){
     return new decomposer(meta, PARTICLE, pass_transform)
 }

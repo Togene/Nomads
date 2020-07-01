@@ -254,7 +254,7 @@ function place(curface){
 	//),
 	//  new quaternion(null,null,null,null, axis, (radians), null).conjugate());
 	
-	var circle = circle_create( new THREE.Vector3(
+	var circle = crab_create( new THREE.Vector3(
 		curface.centre.x + curface.normal.x,
 		curface.centre.y + curface.normal.y,
 		curface.centre.z + curface.normal.z,

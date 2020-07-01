@@ -3,10 +3,8 @@ function crab_create(p, q){
 
     //crab.add_component(new rigidbody(1, false));
 
-    crab.add_component(crab_decomposer = new decomposer(
-        get_meta().crab,
-        SPRITE,
-        CRAB_RENDERER
+    crab.add_component(new sprite(
+        get_meta().crab
     ));
     
     crab.add_component(new animator([

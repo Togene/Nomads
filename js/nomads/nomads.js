@@ -87,7 +87,7 @@ function game_update(delta){
 }
 
 function update(delta){
-    newobject1.transform.rotation.y += .5;
+    newobject1.transform.rotation.y += 0.05 * delta;
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
 }
