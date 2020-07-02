@@ -54,6 +54,7 @@
 
 			<script src = "js/nomads/creators/utils/yard_stick.js"></script>
 			<script src = "js/nomads/creators/utils/circle_test.js"></script>
+			<script src = "js/nomads/creators/utils/default.js"></script>
 			<script src = "js/nomads/creators/structures/box.js"></script>
 			<script src = "js/nomads/creators/structures/house.js"></script>
 			<script src = "js/nomads/creators/creatures/crab.js"></script>

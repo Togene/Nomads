@@ -25,7 +25,8 @@ function particle(meta, renderer, pass_transform){
 
 function decomposer(meta, type, pass_transform){
     if(meta == undefined){ 
-        throw new Error("Meta Data is required for decomposer!");
+        meta = get_meta().default
+        console.error("Meta Data not found!");
     }
     if(meta.map_key == undefined){ 
         throw new Error("Map Key not defined!");

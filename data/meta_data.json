@@ -1,6 +1,18 @@
 {
+    
+    "default" : {
+        "mapping" : [{"x":1, "y":0}],
+        "colors" : ["0xFF00FF"],
+        "frames" : [],
+        "transform" : {
+            "position" : {"x":0, "y":0, "z":0},
+            "orient" : {"x":0, "y":0, "z":0, "w":1},
+            "scale" : {"x":1, "y":1, "z":1}
+        },
+        "map_key" : "debug"
+    },
     "crab" : {
-        "mapping" : [0, 1],
+        "mapping" : [{"x":0, "y":0}],
         "colors" : ["0xF8665E"],
         "frames" : [],
         "transform" : {
