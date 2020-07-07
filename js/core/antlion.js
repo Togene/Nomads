@@ -35,9 +35,8 @@ function load_renderers(){
         );
         renderers.set(renderer_text_info[i].name, inst_renderer)
     }
-    console.log(renderers)
-
 }
+
 
 function antlion_fall(i, data){
     //catch data dropping in from prevois call, except the first init

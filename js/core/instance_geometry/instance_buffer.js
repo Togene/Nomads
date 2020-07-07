@@ -1,7 +1,6 @@
-
 function instance_renderer(map_index, mesh, animate, is3D = false) {
     this.buffer = new instance_buffer();
-    this.attributes = [];
+    this.attributes = new instance_attributes();
     this.mesh = mesh;
     this.map_index = map_index;
     this.shader = get_data("instance_shader");
@@ -27,7 +26,7 @@ instance_renderer.prototype.buffer_append = function(o){
 
 instance_renderer.prototype.name = "instance_renderer";
 
-function instance_buffer(){
+function instance_buffer(prefill = false){
     this.translation = [];
     this.orientations = [];
     this.vector =  new THREE.Vector4();
@@ -45,16 +44,121 @@ function instance_buffer(){
     this.m2 = [];
     this.m3 = [];
     this.index = 0;
+    this.size = 1000;
+
+    if(prefill){
+        this.prefill()
+    }
+}
+
+instance_buffer.prototype.prefill = function(){
+    for(var i = 0; i < this.size; i++){
+
+        this.translation.push(0,0,0);
+        this.orientations.push(0,0,0,1);
+        this.vector =  new THREE.Vector4();
+        this.scales = [];
+        this.colors = [];
+        this.uvoffsets = [];
+        this.tile_size = [];
+        this.animation_start = [];
+        this.animation_end = [];
+        this.animation_time = [];
+        this.type = [];
+        this.fog = [];
+        this.m0 = [];
+        this.m1 = [];
+        this.m2 = [];
+        this.m3 = [];
+
+    }
 }
 
 instance_buffer.prototype.get_index = function(){
     return this.index;
 }
 
-instance_buffer.prototype.append_animation = function(index, animation){
+instance_buffer.prototype.set_animation = function(index, animation){
     this.animation_start[index] = animation.start;
     this.animation_end[index] = animation.length;
     this.animation_time[index] = random_range(0, 3);
+}
+
+instance_buffer.prototype.set = function(decomposer, animation){
+
+    this.tile_size[this.index] = decomposer.tile_size.x; 
+    this.tile_size[this.index + 1] = decomposer.tile_size.y;
+
+    this.scales[this.index] = decomposer.scale.x;
+    this.scales[this.index + 1] = decomposer.scale.y;
+    this.scales[this.index + 2] = decomposer.scale.z;
+
+    // ¯\_(ツ)_/¯
+    this.vector.set(
+        decomposer.position.x, 
+        decomposer.position.y, 
+        decomposer.position.z, 0).normalize();
+
+    this.translation[this.index] = decomposer.position.x + this.vector.x;
+    this.translation[this.index + 1] = decomposer.position.y + this.vector.y;
+    this.translation[this.index + 2] = decomposer.position.z + this.vector.z;
+
+    //  ¯\_(ツ)_/¯
+    this.vector.set(
+        decomposer.position.x, 
+        decomposer.position.y,
+        decomposer.position.z
+    ).normalize();
+
+    this.orientations[this.index] = decomposer.orient.x;
+    this.orientations[this.index + 1] = decomposer.orient.y;
+    this.orientations[this.index + 2] = decomposer.orient.z;
+    this.orientations[this.index + 3] = decomposer.orient.w;
+
+    var col = decomposer.colors[randomRangeRound(0, decomposer.colors.length - 1)];
+    this.colors[this.index] = col.r;
+    this.colors[this.index + 1] = col.g;
+    this.colors[this.index + 2] = col.b;
+
+    var uvs = decomposer.ssIndex[randomRangeRound(0, decomposer.ssIndex.length - 1)];
+    this.uvoffsets[this.index] = uvs.x;
+    this.uvoffsets[this.index + 1] = uvs.x;
+
+    if(animation != null){
+        this.animation_start[this.index] = animation.start;
+        this.animation_end[this.index] = animation.length;
+        this.animation_time[this.index] = random_range(0, 3);
+    } else {
+        this.animation_start[this.index] = 0;
+        this.animation_end[this.index] = 0;
+        this.animation_time[this.index] = 0;
+    }
+
+    this.type[this.index] = decomposer.type;
+    this.fog[this.index] = decomposer.fog;
+
+    //Most Transform information now within the matrix 
+    this.m0[this.index + 0] = decomposer.matrix.elements[0];
+    this.m0[this.index + 1] = decomposer.matrix.elements[1];
+    this.m0[this.index + 2] = decomposer.matrix.elements[2];
+    this.m0[this.index + 3] = decomposer.matrix.elements[3];
+
+    this.m1[this.index + 0] = decomposer.matrix.elements[4];
+    this.m1[this.index + 1] = decomposer.matrix.elements[5];
+    this.m1[this.index + 2] = decomposer.matrix.elements[6];
+    this.m1[this.index + 3] = decomposer.matrix.elements[7];
+
+    this.m2[this.index + 0] = decomposer.matrix.elements[8];
+    this.m2[this.index + 1] = decomposer.matrix.elements[9];
+    this.m2[this.index + 2] = decomposer.matrix.elements[10];
+    this.m2[this.index + 3] = decomposer.matrix.elements[11];
+
+    this.m3[this.index + 0] = decomposer.matrix.elements[12];
+    this.m3[this.index + 1] = decomposer.matrix.elements[13];
+    this.m3[this.index + 2] = decomposer.matrix.elements[14];
+    this.m3[this.index + 3] = decomposer.matrix.elements[15];
+
+    this.index ++;
 }
 
 instance_buffer.prototype.append = function(decomposer, animation){
@@ -196,17 +300,24 @@ instance_renderer.prototype.bake_buffer = function() {
     geometry.setAttribute('m2', m2Attribute);
     geometry.setAttribute('m3', m3Attribute);
     
-    this.attributes.push(
-        m0Attribute,                    //0
-        m1Attribute,                    //1
-        m2Attribute,                    //2
-        m3Attribute,                    //3
-        colorAttribute,                 //4
-        typeAttribute,                  //5
-        orientationAttribute,           //6
-        animation_startAttribute,       //7
-        animation_endAttribute,         //8
-        animation_timeAttribute         //9
+    this.attributes.populate(
+        [
+            translationAttribute,
+            orientationAttribute,
+            colorAttribute,
+            uvOffsetAttribute,
+            tileSizeAttribute,
+            scaleAttribute,
+            animation_startAttribute,
+            animation_endAttribute,
+            animation_timeAttribute,
+            typeAttribute,
+            fogAttribute,
+            m0Attribute,
+            m1Attribute,
+            m2Attribute,
+            m3Attribute,
+        ], this.buffer.index
     );
 
     var texture = new THREE.TextureLoader().load(renderer_text_info[this.map_index].map);

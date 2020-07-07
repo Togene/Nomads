@@ -14,19 +14,18 @@ function sprite(meta, pass_transform){
     return new decomposer(meta, SPRITE, pass_transform)
 }
 
-function solid(meta, renderer, pass_transform){
+function solid(meta, pass_transform){
     return new decomposer(meta, SOLID, pass_transform)
 }
 
 //full sprite
-function particle(meta, renderer, pass_transform){
+function particle(meta, pass_transform){
     return new decomposer(meta, PARTICLE, pass_transform)
 }
 
 function decomposer(meta, type, pass_transform){
     if(meta == undefined){ 
         meta = get_meta().default
-        console.error("Meta Data not found!");
     }
     if(meta.map_key == undefined){ 
         throw new Error("Map Key not defined!");
@@ -87,14 +86,14 @@ decomposer.prototype.update = function(){
 }    
 
 decomposer.prototype.update_buffer_animation = function(animation){
-    this.buffer.append_animation(this.buffer_idx, animation);
+    this.buffer.set_animation(this.buffer_idx, animation);
 }
 
 decomposer.prototype.set_animation = function(s, e, t){
     if(this.attributes_refrence != null && this.attributes_refrence.length != 0){
-        var start_attribute = this.attributes_refrence[7];
-        var end_attribute = this.attributes_refrence[8];
-        var time_attribute = this.attributes_refrence[9];
+        var start_attribute = this.attributes_refrence.animation_start;
+        var end_attribute = this.attributes_refrence.animation_end;
+        var time_attribute = this.attributes_refrence.animation_time;
   
         start_attribute.setX  (this.buffer_idx, s);
         start_attribute.needsUpdate = true;
@@ -111,7 +110,7 @@ decomposer.prototype.set_animation = function(s, e, t){
 
 decomposer.prototype.attribute_debug = function(){
     if(this.attributes_refrence != null && this.attributes_refrence.length != 0){
-        var color_attribute = this.attributes_refrence[4];
+        var color_attribute = this.attributes_refrence.col;
         color_attribute.setXYZ(this.buffer_idx, 0,random_range(0, 1),0);
         color_attribute.needsUpdate = true;
     } else {
@@ -121,7 +120,7 @@ decomposer.prototype.attribute_debug = function(){
 
 decomposer.prototype.set_color = function(hex){
     if(this.attributes_refrence != null && this.attributes_refrence.length != 0){
-        var color_attribute = this.attributes_refrence[4];
+        var color_attribute = this.attributes_refrence.col;
         var col = new THREE.Color(hex);
         var col_vector = new THREE.Vector3(col.r, col.g, col.b);
 
@@ -134,7 +133,7 @@ decomposer.prototype.set_color = function(hex){
 
 decomposer.prototype.set_orientation = function(o){
     if(this.attributes_refrence != null && this.attributes_refrence.length != 0){
-        var orientation_attribute = this.attributes_refrence[6];
+        var orientation_attribute = this.attributes_refrence.orientation;
         orientation_attribute.setXYZW(this.buffer_idx, o.x, o.y, o.z, o.w);
         
         orientation_attribute.needsUpdate = true;
@@ -145,10 +144,10 @@ decomposer.prototype.set_orientation = function(o){
 
 decomposer.prototype.update_attributes = function(){
     if(this.attributes_refrence != null && this.attributes_refrence.length != 0){
-        var m0_attribute = this.attributes_refrence[0];
-        var m1_attribute = this.attributes_refrence[1];
-        var m2_attribute = this.attributes_refrence[2];
-        var m3_attribute = this.attributes_refrence[3];
+        var m0_attribute = this.attributes_refrence.m0;
+        var m1_attribute = this.attributes_refrence.m1;
+        var m2_attribute = this.attributes_refrence.m2;
+        var m3_attribute = this.attributes_refrence.m3;
     
         //buffer is a temp data pass
         //data is stored in attributes that the GPU uses
