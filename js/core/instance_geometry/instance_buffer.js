@@ -1,5 +1,5 @@
 function instance_renderer(map_index, mesh, animate, is3D = false) {
-    this.buffer = new instance_buffer();
+    this.buffer = new instance_buffer(true);
     this.attributes = new instance_attributes();
     this.mesh = mesh;
     this.map_index = map_index;
@@ -53,24 +53,23 @@ function instance_buffer(prefill = false){
 
 instance_buffer.prototype.prefill = function(){
     for(var i = 0; i < this.size; i++){
-
         this.translation.push(0,0,0);
         this.orientations.push(0,0,0,1);
         this.vector =  new THREE.Vector4();
-        this.scales = [];
-        this.colors = [];
-        this.uvoffsets = [];
-        this.tile_size = [];
-        this.animation_start = [];
-        this.animation_end = [];
-        this.animation_time = [];
-        this.type = [];
-        this.fog = [];
-        this.m0 = [];
-        this.m1 = [];
-        this.m2 = [];
-        this.m3 = [];
-
+        this.scales.push(0,0,0);
+        this.colors.push(0,0,0);
+        this.uvoffsets.push(0,0);
+        this.tile_size.push(0,0);
+        this.animation_start.push(0);
+        this.animation_end.push(0);
+        this.animation_time.push(0);
+        this.type.push(0);
+        this.fog.push(0);
+        this.m0.push(0,0,0,1);
+        this.m1.push(0,0,0,1);
+        this.m2.push(0,0,0,1);
+        this.m3.push(0,0,0,1);
+        this.index ++;
     }
 }
 
@@ -85,7 +84,6 @@ instance_buffer.prototype.set_animation = function(index, animation){
 }
 
 instance_buffer.prototype.set = function(decomposer, animation){
-
     this.tile_size[this.index] = decomposer.tile_size.x; 
     this.tile_size[this.index + 1] = decomposer.tile_size.y;
 

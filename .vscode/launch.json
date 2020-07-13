@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost/nomads/index.php",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "C:/wamp64/www/Nomads/js"
         }
     ]
 }

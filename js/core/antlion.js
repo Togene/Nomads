@@ -18,8 +18,6 @@ function antlion_init(){
     load('saved/pool_data', 'json', antlion_pool_load);
     load('saved/object_manifest', 'json', antlion_manifest_load);
     load('meta_data', 'json', meta_data_load);
-    load_renderers();
-
 
     async_time = Date.now();
     antlion_fall(raw_resources.length - 1, []);
@@ -33,10 +31,12 @@ function load_renderers(){
             renderer_text_info[i].animate,
             renderer_text_info[i].is3D
         );
-        renderers.set(renderer_text_info[i].name, inst_renderer)
+    
+        renderers.set(renderer_text_info[i].name, inst_renderer);
+        scene.add(renderer_text_info[i].container)
+        inst_renderer.bake_buffer();
     }
 }
-
 
 function antlion_fall(i, data){
     //catch data dropping in from prevois call, except the first init
@@ -104,7 +104,10 @@ function antlion_fall(i, data){
 function antlion_done(i, data){
     compiled_data.push(data);
     elapsed_time = Date.now() - async_time;
-    //start up init after data loaded
+
+    // start up init after data loaded
+    load_renderers();
+    
     game_bootstrap(compiled_data);
 }
 

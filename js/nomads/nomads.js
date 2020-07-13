@@ -59,10 +59,10 @@ function game_bootstrap(data){
         }
     }
 
-    renderers.forEach(function(renderer) {
-        scene.add(renderer.mesh)
-        renderer.bake_buffer()
-    })
+   // renderers.forEach(function(renderer) {
+   //     scene.add(renderer.mesh)
+   //     //renderer.bake_buffer()
+   // })
 }
 
 /*
@@ -81,8 +81,6 @@ function game_update(delta){
     collision_update(delta);
     shader_update(delta);
     world_update(delta);
-    
- 
     update_sky(delta);
 }
 

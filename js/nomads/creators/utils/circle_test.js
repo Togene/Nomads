@@ -3,7 +3,7 @@ function circle_create(p, q) {
     new THREE.Vector3 (p.x, p.y + 1, p.z), 
     new THREE.Vector3(2,2,2), q);
     
-    circle.add_component(new particle(
+    circle.add_component(new sprite(
         get_meta().circle,
     ));
 

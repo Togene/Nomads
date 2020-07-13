@@ -152,9 +152,10 @@
 				modelview[2][0] = 0.0;
 				modelview[2][1] = 0.0;
 				modelview[2][2] = 1.0;
-	
+
+				//  * scale
 				
-				vec4 mvPosition =  modelview * vec4(((position  * scale) + translation) ,  1.0);
+				vec4 mvPosition =  modelview * vec4(((position) + translation) ,  1.0);
 				
 				finalPosition = projectionMatrix * (mvPosition);
 
@@ -164,11 +165,12 @@
 				//---------------------------------------------------Normal/3D Sprite ---------------------------------------------------
 			} else if (type == 3.0){
 			/* Sprites Face The Camera*/
-				vec4 mvPosition =  viewMatrix * transform_matrix * vec4(translation ,  1.0 );
-				mvPosition.xyz += (position  * scale);
+				vec4 mvPosition =  viewMatrix * transform_matrix * vec4(translation,  1.0 );
+				mvPosition.xyz += (position);
 				finalPosition = projectionMatrix * mvPosition;
 
 			} else if (type == 1.0){
+				//  * scale
 				//---------------------------------------------------Solid Sprite ---------------------------------------------------
 				/* Sprites Dont Face The Camera*/
 				vec3 pos = position;
