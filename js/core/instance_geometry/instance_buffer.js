@@ -266,12 +266,12 @@ instance_renderer.prototype.bake_buffer = function() {
     geometry.attributes.position = bufferGeometry.attributes.position;
     geometry.attributes.uv = bufferGeometry.attributes.uv;
   
-    var translationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.translation), 3);
+    //var translationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.translation), 3);
     var orientationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.orientations), 4);
     var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.colors), 3);
     var uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.uvoffsets), 2);
     var tileSizeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.tile_size), 2);
-    var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.scales), 3);
+    //var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.scales), 3);
     var animation_startAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_start), 1);
     var animation_endAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_end), 1);
     var animation_timeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.animation_time), 1);
@@ -282,12 +282,12 @@ instance_renderer.prototype.bake_buffer = function() {
     var m2Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m2), 4);
     var m3Attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.m3), 4);
 
-    geometry.setAttribute('translation', translationAttribute);
+    //geometry.setAttribute('translation', translationAttribute);
     geometry.setAttribute('orientation', orientationAttribute);
     geometry.setAttribute('col', colorAttribute);
     geometry.setAttribute('uvoffset', uvOffsetAttribute);
     geometry.setAttribute('tile_size', tileSizeAttribute);
-    geometry.setAttribute('scale', scaleAttribute);
+   // geometry.setAttribute('scale', scaleAttribute);
     geometry.setAttribute('animation_start', animation_startAttribute);
     geometry.setAttribute('animation_end', animation_endAttribute);
     geometry.setAttribute('animation_time', animation_timeAttribute);
@@ -300,12 +300,12 @@ instance_renderer.prototype.bake_buffer = function() {
     
     this.attributes.populate(
         [
-            translationAttribute,
+            //translationAttribute,
             orientationAttribute,
             colorAttribute,
             uvOffsetAttribute,
             tileSizeAttribute,
-            scaleAttribute,
+            //scaleAttribute,
             animation_startAttribute,
             animation_endAttribute,
             animation_timeAttribute,

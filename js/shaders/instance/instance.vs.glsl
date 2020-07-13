@@ -4,10 +4,10 @@
 
 		//vertex position
 		attribute vec3 position;
-		attribute vec3 translation;
+		//attribute vec3 translation;
 		attribute vec4 orientation;
-		attribute vec3 scale;
-		//attribute vec3 col;
+		//attribute vec3 scale;
+		attribute vec3 col;
 		attribute vec2 uv;
 		attribute vec2 uvoffset;
 		attribute vec2 tile_size;
@@ -30,8 +30,6 @@
 		
 		uniform float time;
 		uniform float animationSwitch;
-	
-		
 
 		varying float animation_start_pass;
 		varying float animation_end_pass;
@@ -46,8 +44,6 @@
 		uniform vec3 cameraPosition;
 		varying vec2 viewDirection;
 		varying vec4 posWorld;
-		varying vec4 rotation;
-
 
 		varying vec3 forward;
 
@@ -97,28 +93,9 @@
 			return vec3(w.x, w.y, w.z);
 		}
 
-		// http://www.geeks3d.com/20141201/how-to-rotate-a-vertex-by-a-quaternion-in-glsl/
-		vec3 applyQuaternionToVector( vec4 q, vec3 v ){
-			return v + 2.0 * cross( q.xyz, cross( q.xyz, v ) + q.w * v );
-		}
-
-		vec3 transform(inout vec3 position, vec3 T, vec4 R, vec3 S){
-			//applies the scale
-			position *= S;
-			
-			//compute rotaiton where R is a quaternion
-			position += 2.0 * cross(R.xyz, cross(R.xyz, position) + R.w * position);
-
-			//translate that bitch
-			position += T;
-			
-			return position;
-		}
 
 		void main() {
-			
-			rotation = orientation;
-			forward = normalize(rotate(vec3(0, 0, 1), rotation));
+			forward = normalize(rotate(vec3(0, 0, 1), orientation));
 
 			vec4 finalPosition = vec4(0);
 			mat4 transform_matrix = mat4(m0, m1, m2, m3);
@@ -128,7 +105,7 @@
 
 			
 			//viewdirection
-			posWorld = transform_matrix * vec4((translation),1.0);
+			posWorld = transform_matrix * vec4((vec3(0,0,0)),1.0);
 			viewDirection = normalize((posWorld.xz - cameraPosition.xz));	
 		
 			//---------------------------------------------------------
@@ -136,12 +113,9 @@
 			if(type == 0.0){
 				//---------------------------------------------------Normal/3D Sprite ---------------------------------------------------
 				/* Sprites Face The Camera in Y Axis*/
-				vec3 viewDirection3D = normalize((posWorld.xyz - cameraPosition.xyz));			
-				float angle = dot(forward, viewDirection3D);
-
 				mat4 modelview = viewMatrix * transform_matrix;
 
-				modelview[0][0] = 1.0;
+				modelview[0][0] = transform_matrix[0][0];
 				modelview[0][1] = 0.0;
 				modelview[0][2] = 0.0;
 
@@ -150,12 +124,10 @@
 				//modelview[1][2] = 0.0;
 
 				modelview[2][0] = 0.0;
-				modelview[2][1] = 0.0;
-				modelview[2][2] = 1.0;
+			    modelview[2][1] = 0.0;
+				modelview[2][2] = transform_matrix[2][2];
 
-				//  * scale
-				
-				vec4 mvPosition =  modelview * vec4(((position) + translation) ,  1.0);
+				vec4 mvPosition =  modelview * vec4(((position) + vec3(0,0,0)) * vec3(tile_size.x, tile_size.y, 1) ,  1.0);
 				
 				finalPosition = projectionMatrix * (mvPosition);
 
@@ -165,24 +137,23 @@
 				//---------------------------------------------------Normal/3D Sprite ---------------------------------------------------
 			} else if (type == 3.0){
 			/* Sprites Face The Camera*/
-				vec4 mvPosition =  viewMatrix * transform_matrix * vec4(translation,  1.0 );
-				mvPosition.xyz += (position);
+				vec4 mvPosition =  viewMatrix * transform_matrix * vec4(vec3(0,0,0),  1.0);
+				mvPosition.xyz += (position * vec3(transform_matrix[0][0], transform_matrix[1][1], transform_matrix[2][2]) * vec3(tile_size.x, tile_size.y, 1));
 				finalPosition = projectionMatrix * mvPosition;
 
 			} else if (type == 1.0){
-				//  * scale
 				//---------------------------------------------------Solid Sprite ---------------------------------------------------
 				/* Sprites Dont Face The Camera*/
-				vec3 pos = position;
+				vec3 pos = position ;
 				mat4 MVP =  projectionMatrix * viewMatrix * transform_matrix;
-				finalPosition = MVP * vec4(position, 1.0 ) ; 
+				finalPosition = MVP * vec4(position * vec3(tile_size.x, tile_size.y, 1), 1.0 ) ; 
 				//---------------------------------------------------Solid Sprite ---------------------------------------------------
 			}
 
 			vUv = vec2(((uv.x/spriteSheetX) + (uvoffset.x)) * tile_size.x, ((uv.y/spriteSheetY) + (uvoffset.y)) * tile_size.y);
 
 
-			colorPass = vec3(1,1,1); //col.rgb
+			colorPass = col.rgb;
 
 			//animationframePass = animationFrame;
 			uvoffsetPass = uvoffset;

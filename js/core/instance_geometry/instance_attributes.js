@@ -5,29 +5,29 @@ function instance_attributes(array, index){
 }
 
 instance_attributes.prototype.populate = function(array, index){
-    this.translation = array[0]; // ✓
-    this.orientation = array[1]; // ✓
+    //this.translation = array[0]; // ✓
+    this.orientation = array[0]; // ✓
 
     // color
-    this.col = array[2]; // ✓
+    this.col = array[1]; // ✓
 
-    this.uvoffset = array[3]; // ✓
-    this.tile_size = array[4]; // ✓
-    this.scale = array[5]; // ✓
+    this.uvoffset = array[2]; // ✓
+    this.tile_size = array[3]; // ✓
+   // this.scale = array[5]; // ✓
 
     // animations
-    this.animation_start = array[6]; // ✓
-    this.animation_end = array[7];  // ✓
-    this.animation_time = array[8]; // ✓
+    this.animation_start = array[4]; // ✓
+    this.animation_end = array[5];  // ✓
+    this.animation_time = array[6]; // ✓
     
-    this.type = array[9]; // ✓
-    this.fog = array[10]; // ✓
+    this.type = array[7]; // ✓
+    this.fog = array[8]; // ✓
     
     //transform
-    this.m0 = array[11]; // ✓
-    this.m1 = array[12]; // ✓
-    this.m2 = array[13]; // ✓
-    this.m3 = array[14]; // ✓
+    this.m0 = array[9]; // ✓
+    this.m1 = array[10]; // ✓
+    this.m2 = array[11]; // ✓
+    this.m3 = array[12]; // ✓
 
     this.index = 0;
     this.max = index;
@@ -43,18 +43,18 @@ instance_attributes.prototype.set = function(decomposer){
 
     this.set_tile_size(index, decomposer.tile_size);
 
-    var vector = new THREE.Vector4(
-        decomposer.position.x, 
-        decomposer.position.y, 
-        decomposer.position.z, 0).normalize();
-
-
-    var translation = new THREE.Vector3(
-        decomposer.position.x + vector.x, 
-        decomposer.position.y + vector.y, 
-        decomposer.position.z + vector.z
-    );
-
+    //var vector = new THREE.Vector4(
+    //    decomposer.position.x, 
+    //    decomposer.position.y, 
+    //    decomposer.position.z, 0).normalize();
+//
+//
+    //var translation = new THREE.Vector3(
+    //    decomposer.position.x + vector.x, 
+    //    decomposer.position.y + vector.y, 
+    //    decomposer.position.z + vector.z
+    //);
+//
     //this.set_translation(index, translation);
     this.set_orientation(index, decomposer.orient);
     //this.set_scale(index, new THREE.Vector3(1,1,1));
@@ -69,9 +69,8 @@ instance_attributes.prototype.set = function(decomposer){
 
     //this.set_animation(index, )
     this.set_transform(index, decomposer.matrix)
-
-    this.index += 1;
     decomposer.buffer_idx = this.index;
+    this.index += 1;
 }
 
 

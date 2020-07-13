@@ -22,7 +22,6 @@
 		varying vec2 viewDirection;
 		varying vec4 posWorld;
 
-		varying vec4 rotation;
 		varying vec3 forward;
 
 		varying float animation_start_pass;

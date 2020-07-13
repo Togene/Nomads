@@ -1,9 +1,9 @@
 function circle_create(p, q) {
     var circle = new gameobject("circle", 
-    new THREE.Vector3 (p.x, p.y + 1, p.z), 
-    new THREE.Vector3(2,2,2), q);
+    new THREE.Vector3 (p.x, p.y, p.z), 
+    new THREE.Vector3(0.5,0.5,0.5), q);
     
-    circle.add_component(new sprite(
+    circle.add_component(new particle(
         get_meta().circle,
     ));
 

@@ -9,7 +9,6 @@ function gameobject(
     this.components = [];
 
     //TODO fix y position based on scale
-    p.y -= s.y/2;
     this.transform = new transform (p, s, r);
     
     Scene.push(this);

@@ -1,12 +1,6 @@
 
-function pass_transforms(
-    p = new THREE.Vector3(), 
-    o = new THREE.Vector4(), 
-    s = new THREE.Vector3(1, 1, 1))
-    {
-        this.position = p;
+function pass_transforms(o = new THREE.Vector4()){
         this.orient = o;
-        this.scale = s;
 }
 
 //cyclinder sprite
@@ -48,21 +42,13 @@ function decomposer(meta, type, pass_transform){
     this.type = type || 0;
     this.attributes_refrence = renderer.attributes;
 
-    this.position;
-    this.scale;
     this.orient;
 
     if(pass_transform == null){
-        this.position = new THREE.Vector3(
-            meta.transform.position.x, meta.transform.position.y, meta.transform.position.z);
-        this.scale = new THREE.Vector3(
-            meta.transform.scale.x, meta.transform.scale.y, meta.transform.scale.z);
         this.orient = new THREE.Vector4(
             meta.transform.orient.x, meta.transform.orient.y, 
             meta.transform.orient.z, meta.transform.orient.w);
     } else {
-        this.position = pass_transform.position.clone();
-        this.scale = pass_transform.scale.clone();
         this.orient = pass_transform.orient.clone();
     }
     
@@ -75,7 +61,7 @@ function decomposer(meta, type, pass_transform){
 
 decomposer.prototype.update = function(){
     //if(this.animate){
-        this.attribute_debug();
+        //this.attribute_debug();
         if(this.transform != null && this.transform.hasChanged()){  
       
            //this.matrix = this.transform.get_transformation().toMatrix4();
