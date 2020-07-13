@@ -60,10 +60,17 @@ function decomposer(meta, type, pass_transform){
 }
 
 decomposer.prototype.update = function(){
-    //if(this.animate){
+    //if(this.animate)
+
+    if(random_range(0, 10) > 5){
+        this.attributes_refrence.reset(this.buffer_idx);
+    } else {
+        this.attributes_refrence.set(this)
+    }
+      
         //this.attribute_debug();
         if(this.transform != null && this.transform.hasChanged()){  
-      
+            
            //this.matrix = this.transform.get_transformation().toMatrix4();
            //have to tell the buffer/instance_geometry to update aswell
            //this.attributes_refrence.set_transform(this.buffer_idx, this.matrix)

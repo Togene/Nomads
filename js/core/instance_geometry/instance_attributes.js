@@ -73,6 +73,23 @@ instance_attributes.prototype.set = function(decomposer){
     this.index += 1;
 }
 
+instance_attributes.prototype.reset = function(index){
+    console.log("attributes being reset?", index)
+
+    this.set_uvoffset(index, new THREE.Vector2(0,0));
+    this.set_tile_size(index, new THREE.Vector2(0,0));
+
+    this.set_orientation(index, new THREE.Vector4(0,0,0,0));
+    //this.set_scale(index, new THREE.Vector3(1,1,1));
+    this.set_type(index, 0);
+    this.set_fog(index, 0);
+    var col_vector = new THREE.Vector3(0, 0, 0);
+    this.set_color(index, col_vector)
+
+    //this.set_animation(index, )
+    this.set_transform(index, new THREE.Matrix4())
+    this.index -= 1;
+}
 
 instance_attributes.prototype.set_uvoffset = function(index, uv){
     this.uvoffset.setXY(index, uv.x, uv.y);
