@@ -73,7 +73,7 @@ instance_attributes.prototype.set = function(decomposer){
     this.index += 1;
 }
 
-instance_attributes.prototype.reset = function(index){
+instance_attributes.prototype.unset = function(index){
     console.log("attributes being reset?", index)
 
     this.set_uvoffset(index, new THREE.Vector2(0,0));

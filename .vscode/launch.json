@@ -9,7 +9,17 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost/nomads/index.php",
-            "webRoot": "C:/wamp64/www/Nomads/js"
+            "webRoot": "C:/wamp64/www/Nomads/js",
+            "runtimeArgs": [
+                "--disk-cache-size=1"
+              ],
+
+            
         }
-    ]
+    ],
+    "runtimeArgs": [
+        "--disk-cache-size=1"
+      ],
+
+    
 }

@@ -57,17 +57,12 @@ function decomposer(meta, type, pass_transform){
     this.buffer_idx = renderer.buffer.index;
     this.buffer = renderer.buffer;
     this.animate = renderer.animate;
+
+    this.rendering = false;
 }
 
 decomposer.prototype.update = function(){
     //if(this.animate)
-
-    if(random_range(0, 10) > 5){
-        this.attributes_refrence.reset(this.buffer_idx);
-    } else {
-        this.attributes_refrence.set(this)
-    }
-      
         //this.attribute_debug();
         if(this.transform != null && this.transform.hasChanged()){  
             
@@ -114,7 +109,22 @@ decomposer.prototype.set_transform = function(t){
     this.matrix = t.get_transformation().toMatrix4();
 
     //append to the buffer after all fields are set
-    this.attributes_refrence.set(this);
+    //this.attributes_refrence.set(this);
+    TestQuadTree.insert(this.parent)
+}
+
+decomposer.prototype.render = function(){
+    if(!this.rendering){
+        this.attributes_refrence.set(this)
+        this.rendering = true;
+    }
+}
+
+decomposer.prototype.derender = function(){
+    if(this.rendering){
+        this.attributes_refrence.unset(this.buffer_idx)
+        this.rendering = false;
+    }
 }
 
 decomposer.prototype.set_usefog = function(b){

@@ -1,5 +1,6 @@
 
-Scene = [];
+var Scene = [];
+var TestQuadTree;
 
 var newobject1 = new gameobject("poop");
 var newobject2 = new gameobject();
@@ -18,7 +19,16 @@ var physics_objects = [];
 
 var pool = null;
 
+var found = []
+var old = []
+
+
 function game_bootstrap(data){
+
+    TestQuadTree = new quad_tree(
+        new rectangle(-5000, -5000, 10000, 10000), 10
+    )
+    
     game_resources = data;
 
     keyboard_init();
@@ -82,12 +92,48 @@ function game_update(delta){
     shader_update(delta);
     world_update(delta);
     update_sky(delta);
+    quadtree_testing(delta);
 }
 
 function update(delta){
     newobject1.transform.rotation.y += 0.05 * delta;
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
+}
+
+function quadtree_testing(delta){
+    
+    for(var i = 0; i < old.length; i++){
+        console.log("eh?")
+        old[i].o.get_component("decomposer").derender()
+    }
+
+    found = []
+
+
+    /*
+    new circle(
+            player.transform.position.x,
+            player.transform.position.z,
+            5,
+        )
+    
+        */
+
+    var frustrum = new THREE.Frustum().setFromMatrix(
+        new THREE.Matrix4().multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse ) );
+
+    TestQuadTree.query(
+        frustrum,
+        found
+    )
+
+    for(var i = 0; i < found.length; i++){
+        found[i].o.get_component("decomposer").render()
+    }
+
+    old = [...found]
+    //console.log(found)
 }
 
 

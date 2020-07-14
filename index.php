@@ -14,6 +14,8 @@
 			<script src = "js/nomads/game/global_variables.js"></script>
 			<script src = "js/nomads/game/world_map.js"></script>
 
+			<script src = "js/core/geometry/polygon2D.js"></script>
+
 			<!--                 INSTANCE GEOMETRY                       -->
 			<script src = "js/core/instance_geometry/instance_buffer.js"></script>
 			<script src = "js/core/instance_geometry/instance_attributes.js"></script>

@@ -3,6 +3,8 @@
 // http://patreon.com/codingtrain
 
 
+
+
 //Quad Tree Responsible for Checking for nearby objects
 function rectangle(x, y, w, h){
     this.x = x; // CENTER X
@@ -28,9 +30,8 @@ rectangle.prototype.bottom = function(){
 }
 
 rectangle.prototype.contains = function(o){
-
     if(!(o instanceof gameobject)){
-        console.error("The fuck asshole, we only take gameobjects");
+        console.error("not of type gameobject!");
         return undefined;
     } else {
         var p = o.transform.get_transformed_position();
@@ -50,7 +51,7 @@ rectangle.prototype.intersects = function(range){
         range.y + range.h < this.y - this.h);
 }
 
-rectangle.prototype.name = function(){ return "rectangle";}
+rectangle.prototype.name = "rectangle";
 
 function circle(x, y, r){
     this.x = x;
@@ -143,7 +144,7 @@ quad_tree.prototype.subdivide = function(){
 }
 
 quad_tree.prototype.insert = function(o){
-    //console.log(o);
+    console.log(o);
 
     if(!this.boundary.contains(o)){
         return false;
@@ -165,36 +166,35 @@ quad_tree.prototype.insert = function(o){
         this.southwest.insert(o));
 }
 
-quad_tree.prototype.query = function(range, found, debug){
+quad_tree.prototype.query = function(range, found){
+
+    console.log(range)
+
     if(found == undefined){
         found = [];
     }
 
-    if(debug == undefined){
-        debug = [];
-    }
-
-    if(!range.intersects(this.boundary)){
-        return found;
-    }
-
-    for(var i = 0; i < this.objects.length; i++){
-        if(range.contains(this.objects[i])){
-            var range_vector = new THREE.Vector3(range.x, 0, range.y);
-
-            var d = range_vector.distanceToSquared(this.objects[i].transform.position);
-  
-            found.push({o: this.objects[i], d: d});
-            debug.push(this.objects[i].name);
+    if(range.name == "circle" || range.name == "rectangle"){
+        if(!range.intersects(this.boundary)){
+            return found;
         }
-        
+
+        for(var i = 0; i < this.objects.length; i++){
+            if(range.contains(this.objects[i])){
+                var range_vector = new THREE.Vector3(range.x, 0, range.y);
+                var d = range_vector.distanceToSquared(this.objects[i].transform.position);
+                found.push({o: this.objects[i], d: d});
+            }
+        }
     }
+
+
 
     if(this.divided){
-        this.northeast.query(range, found, debug);
-        this.northwest.query(range, found, debug);
-        this.southeast.query(range, found, debug);
-        this.southwest.query(range, found, debug);
+        this.northeast.query(range, found);
+        this.northwest.query(range, found);
+        this.southeast.query(range, found);
+        this.southwest.query(range, found);
     }
 
     return found;
