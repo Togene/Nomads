@@ -144,8 +144,6 @@ quad_tree.prototype.subdivide = function(){
 }
 
 quad_tree.prototype.insert = function(o){
-    console.log(o);
-
     if(!this.boundary.contains(o)){
         return false;
     }
@@ -167,9 +165,6 @@ quad_tree.prototype.insert = function(o){
 }
 
 quad_tree.prototype.query = function(range, found){
-
-    console.log(range)
-
     if(found == undefined){
         found = [];
     }
@@ -186,9 +181,62 @@ quad_tree.prototype.query = function(range, found){
                 found.push({o: this.objects[i], d: d});
             }
         }
+    } else {
+
+        // bounding "box" of the quad-tree section
+        var bound = new THREE.Box3(
+            new THREE.Vector3(this.boundary.x - this.boundary.w, 0.1, this.boundary.y - this.boundary.h),
+            new THREE.Vector3(this.boundary.x + this.boundary.w, 0.1, this.boundary.y + this.boundary.h))
+        
+        // if quad section is within the frustrum, check the points inside
+        occluders = []
+        if(range.intersectsBox(bound)){
+            for(var i = 0; i < this.objects.length; i++){
+
+                if (occluders.length > 0) {
+                    for(var j = 0; j < occluders.length; j++) {
+                        if(range.containsPoint(this.objects[i].transform.position) && 
+                        !occluders[j].containsPoint(this.objects[i].transform.position)){
+                            this.objects[i].get_component("decomposer").render()
+                            //var range_vector = new THREE.Vector3(range.x, 0, range.y);
+                            //var d = range_vector.distanceToSquared(this.objects[i].transform.position);
+                            if(!object_exists(this.objects[i].id, found)){
+                                found.push({o: this.objects[i], d: d});
+
+                                var cam_clone = camera.clone()
+                                cam_clone.position = this.objects[i].transform.position.clone()
+                                var frustrum = new THREE.Frustum().setFromMatrix(
+                                    new THREE.Matrix4().multiplyMatrices( 
+                                        cam_clone.projectionMatrix, cam_clone.matrixWorldInverse ));
+        
+                                occluders.push(frustrum)
+                            }
+                        } 
+                    }
+                } else {
+                    if(range.containsPoint(this.objects[i].transform.position)){
+                        this.objects[i].get_component("decomposer").render()
+                        //var range_vector = new THREE.Vector3(range.x, 0, range.y);
+                        //var d = range_vector.distanceToSquared(this.objects[i].transform.position);
+                            
+                        if(!object_exists(this.objects[i].id, found)){
+                            found.push({o: this.objects[i], d: d});
+    
+                            var cam_clone = camera.clone()
+                            cam_clone.position = this.objects[i].transform.position.clone()
+
+                            var frustrum = new THREE.Frustum().setFromMatrix(
+                                new THREE.Matrix4().multiplyMatrices( 
+                                    cam_clone.projectionMatrix, cam_clone.matrixWorldInverse ));
+    
+                            occluders.push(frustrum)
+                        }
+                    } 
+                }
+
+            }
+        }
     }
-
-
 
     if(this.divided){
         this.northeast.query(range, found);
@@ -199,6 +247,12 @@ quad_tree.prototype.query = function(range, found){
 
     return found;
 }
+
+function object_exists(id, array) {
+    return array.some(function(el) {
+      return el.o.id === id;
+    }); 
+  }
 
 quad_tree.prototype.closest = function(o, count, maxDistance){
 

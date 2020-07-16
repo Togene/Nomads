@@ -26,7 +26,7 @@ var old = []
 function game_bootstrap(data){
 
     TestQuadTree = new quad_tree(
-        new rectangle(-5000, -5000, 10000, 10000), 10
+        new rectangle(-5000, -5000, 10000, 10000), 2
     )
     
     game_resources = data;
@@ -102,38 +102,21 @@ function update(delta){
 }
 
 function quadtree_testing(delta){
-    
-    for(var i = 0; i < old.length; i++){
-        console.log("eh?")
-        old[i].o.get_component("decomposer").derender()
+  
+    for(var i = 0; i < found.length; i++){
+        found[i].o.get_component("decomposer").derender()
     }
 
     found = []
 
-
-    /*
-    new circle(
-            player.transform.position.x,
-            player.transform.position.z,
-            5,
-        )
-    
-        */
-
     var frustrum = new THREE.Frustum().setFromMatrix(
-        new THREE.Matrix4().multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse ) );
+        new THREE.Matrix4().multiplyMatrices( 
+            camera.projectionMatrix, camera.matrixWorldInverse ));
 
     TestQuadTree.query(
         frustrum,
         found
     )
-
-    for(var i = 0; i < found.length; i++){
-        found[i].o.get_component("decomposer").render()
-    }
-
-    old = [...found]
-    //console.log(found)
 }
 
 

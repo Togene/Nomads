@@ -4,7 +4,18 @@ function instance_attributes(array, index){
     }
 }
 
+function state(){
+    this.active = false
+}
+
 instance_attributes.prototype.populate = function(array, index){
+
+    var states = []
+    for(var i = 0; i < index; i++){
+        states.push(false)
+    }
+    this.states =  new THREE.InstancedBufferAttribute(new Float32Array(states), 1);
+
     //this.translation = array[0]; // ✓
     this.orientation = array[0]; // ✓
 
@@ -35,8 +46,12 @@ instance_attributes.prototype.populate = function(array, index){
 
 
 instance_attributes.prototype.set = function(decomposer){
-    var index = this.index;
-    console.log("attributes being set?", index)
+    var index = 0;
+    
+    // grab the first empty slot in the buffer
+    while (this.states.getX(index) != 0 && index < this.max){ index++ }
+    
+    this.states.setX(index, true)
 
     var uvs = decomposer.ssIndex[randomRangeRound(0, decomposer.ssIndex.length - 1)];
     this.set_uvoffset(index, uvs);
@@ -47,14 +62,14 @@ instance_attributes.prototype.set = function(decomposer){
     //    decomposer.position.x, 
     //    decomposer.position.y, 
     //    decomposer.position.z, 0).normalize();
-//
-//
+    //
+    //
     //var translation = new THREE.Vector3(
     //    decomposer.position.x + vector.x, 
     //    decomposer.position.y + vector.y, 
     //    decomposer.position.z + vector.z
     //);
-//
+    //
     //this.set_translation(index, translation);
     this.set_orientation(index, decomposer.orient);
     //this.set_scale(index, new THREE.Vector3(1,1,1));
@@ -65,16 +80,13 @@ instance_attributes.prototype.set = function(decomposer){
     var col_vector = new THREE.Vector3(col.r, col.g, col.b);
 
     this.set_color(index, col_vector)
-
-
-    //this.set_animation(index, )
     this.set_transform(index, decomposer.matrix)
-    decomposer.buffer_idx = this.index;
-    this.index += 1;
+
+    decomposer.buffer_idx = index;
 }
 
 instance_attributes.prototype.unset = function(index){
-    console.log("attributes being reset?", index)
+    //console.log("attributes being reset?", index)
 
     this.set_uvoffset(index, new THREE.Vector2(0,0));
     this.set_tile_size(index, new THREE.Vector2(0,0));
@@ -88,7 +100,7 @@ instance_attributes.prototype.unset = function(index){
 
     //this.set_animation(index, )
     this.set_transform(index, new THREE.Matrix4())
-    this.index -= 1;
+    this.states.setX(index, false)
 }
 
 instance_attributes.prototype.set_uvoffset = function(index, uv){

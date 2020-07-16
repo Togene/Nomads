@@ -1,3 +1,5 @@
+var gameobject_ledger = 0; 
+
 function gameobject(
     n = "default", 
     p = new THREE.Vector3(0,0,0), 
@@ -8,9 +10,12 @@ function gameobject(
     this.children = [];
     this.components = [];
 
+    //TODO generate proper unique ID's
+    this.id = gameobject_ledger++;
     //TODO fix y position based on scale
     this.transform = new transform (p, s, r);
     
+    this.active = true;
     Scene.push(this);
 };
 
