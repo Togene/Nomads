@@ -75,9 +75,9 @@ function CreateTile(shader, height, color, detial_map, detial_test,
         lights: true,
         wireframe: shader.extra.wf,
         transparent: shader.extra.trans,
-        polygonOffset: true,
-        polygonOffsetFactor: 1, // positive value pushes polygon further away
-        polygonOffsetUnits: 1,
+       // polygonOffset: true,
+        //polygonOffsetFactor: 1, // positive value pushes polygon further away
+        //polygonOffsetUnits: 1,
         fog: true
     });
 
@@ -124,7 +124,6 @@ function CreateTile(shader, height, color, detial_map, detial_test,
                 var wireframe = new THREE.LineSegments( geo, mat );
                 chunk.add( wireframe );
             }
-
             
             if(physical) { WORLD_COLLISION_ARRAY.push(chunk) };
 
@@ -145,18 +144,11 @@ function world_index(){
 }
 
 function world_occlusion(){
-    var frustum = new THREE.Frustum();
-    frustum.setFromMatrix( 
-        new THREE.Matrix4().multiplyMatrices( 
-            camera.projectionMatrix, 
-            camera.matrixWorldInverse 
-        ));
 
 
     if(ANIM_WORLD_OBJECTS != null){
         if(ANIM_WORLD_OBJECTS.children != null || ANIM_WORLD_OBJECTS.children.length != 0){
             for(var i = 0; i < ANIM_WORLD_OBJECTS.children.length; i++){
-
                 if(ANIM_WORLD_OBJECTS.children[i].children != null || 
                     ANIM_WORLD_OBJECTS.children[i].children.length != 0){
 
@@ -164,7 +156,7 @@ function world_occlusion(){
                                         
                         ANIM_WORLD_OBJECTS.children[i].children[j].geometry.computeBoundingSphere();
 
-                        if(frustum.intersectsObject( ANIM_WORLD_OBJECTS.children[i].children[j] )){
+                        if(CAMERA_FRUSTUM.intersectsObject( ANIM_WORLD_OBJECTS.children[i].children[j] )){
                             ANIM_WORLD_OBJECTS.children[i].children[j].visible = true;
                         } else {
                             ANIM_WORLD_OBJECTS.children[i].children[j].visible = false;
@@ -175,6 +167,8 @@ function world_occlusion(){
             }
         }
     }
+
+    visible_chunks = [];
 
     if(WORLD_OBJECT != null){
         if(WORLD_OBJECT.children != null || WORLD_OBJECT.children.length != 0){
@@ -187,7 +181,8 @@ function world_occlusion(){
                                         
                         WORLD_OBJECT.children[i].children[j].geometry.computeBoundingSphere();
 
-                        if(frustum.intersectsObject( WORLD_OBJECT.children[i].children[j] )){
+                        if(CAMERA_FRUSTUM.intersectsObject( WORLD_OBJECT.children[i].children[j] )){
+                            visible_chunks.push(WORLD_OBJECT.children[i].children[j])
                             WORLD_OBJECT.children[i].children[j].visible = true;
                         } else {
                             WORLD_OBJECT.children[i].children[j].visible = false;
@@ -198,4 +193,6 @@ function world_occlusion(){
             }
         }
     }
+
+    console.log(visible_chunks.length)
 }

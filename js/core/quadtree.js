@@ -30,17 +30,26 @@ rectangle.prototype.bottom = function(){
 }
 
 rectangle.prototype.contains = function(o){
-    if(!(o instanceof gameobject)){
-        console.error("not of type gameobject!");
-        return undefined;
-    } else {
-        var p = o.transform.get_transformed_position();
-        return (
-            p.x >= this.x - this.w &&
-            p.x <= this.x + this.w &&
-            p.z >= this.y - this.h &&
-            p.z <= this.y + this.h);
-    }
+
+    if(o == undefined) {return false}
+    //if(!(o instanceof gameobject)){
+    //    console.error("not of type gameobject!");
+    //    return undefined;
+    //} else {
+    //    var p = o.transform.get_transformed_position();
+    //    return (
+    //        p.x >= this.x - this.w &&
+    //        p.x <= this.x + this.w &&
+    //        p.z >= this.y - this.h &&
+    //        p.z <= this.y + this.h);
+    //}
+
+    //var p = o.transform.get_transformed_position();
+    return (
+        o.pos.x >= this.x - this.w &&
+        o.pos.x <= this.x + this.w &&
+        o.pos.z >= this.y - this.h &&
+        o.pos.z <= this.y + this.h);
 }
 
 rectangle.prototype.intersects = function(range){
@@ -61,16 +70,17 @@ function circle(x, y, r){
 }
 
 circle.prototype.contains = function(o){
-    
-    if(!(o instanceof gameobject)){
-        console.error("The fuck asshole, we only take gameobjects");
-        return false;
-    } else {
-       var p = o.transform.get_transformed_position();
-       var d = Math.pow((p.x - this.x), 2) + Math.pow((p.z - this.y), 2);
-
+    //if(!(o instanceof gameobject)){
+    //    console.error("The fuck asshole, we only take gameobjects");
+    //    return false;
+    //} else {
+    //   var p = o.transform.get_transformed_position();
+    //   var d = Math.pow((p.x - this.x), 2) + Math.pow((p.z - this.y), 2);
+//
+    //   return d <= this.rsqrd;
+    //}
+       var d = Math.pow((o.pos.x - this.x), 2) + Math.pow((o.pos.z - this.y), 2);
        return d <= this.rsqrd;
-    }
 }
 
 circle.prototype.intersects = function(range){
@@ -122,7 +132,6 @@ quad_tree.prototype.visulize = function(){
 }
 
 quad_tree.prototype.subdivide = function(){
-
     var x = this.boundary.x;
     var y = this.boundary.y;
     var w = this.boundary.w / 2;
@@ -141,6 +150,12 @@ quad_tree.prototype.subdivide = function(){
     this.southwest = new quad_tree(sw, this.capacity);
     
     this.divided = true;
+}
+
+function qt_point(pos, i, obj = null){
+    this.id = i;
+    this.pos = pos;
+    this.object = obj;
 }
 
 quad_tree.prototype.insert = function(o){
@@ -164,7 +179,7 @@ quad_tree.prototype.insert = function(o){
         this.southwest.insert(o));
 }
 
-quad_tree.prototype.query = function(range, found){
+quad_tree.prototype.query = function(range, found, raycaster){
     if(found == undefined){
         found = [];
     }
@@ -182,77 +197,92 @@ quad_tree.prototype.query = function(range, found){
             }
         }
     } else {
-
         // bounding "box" of the quad-tree section
         var bound = new THREE.Box3(
             new THREE.Vector3(this.boundary.x - this.boundary.w, 0.1, this.boundary.y - this.boundary.h),
             new THREE.Vector3(this.boundary.x + this.boundary.w, 0.1, this.boundary.y + this.boundary.h))
-        
+
+        this.objects.sort(function(a,b){
+            var ad = camera.position.distanceToSquared(a.pos);
+            var bd = camera.position.distanceToSquared(b.pos);
+            return ad-bd
+        });
+
         // if quad section is within the frustrum, check the points inside
-        occluders = []
         if(range.intersectsBox(bound)){
             for(var i = 0; i < this.objects.length; i++){
+                if(range.containsPoint(this.objects[i].pos)){
 
-                if (occluders.length > 0) {
-                    for(var j = 0; j < occluders.length; j++) {
-                        if(range.containsPoint(this.objects[i].transform.position) && 
-                        !occluders[j].containsPoint(this.objects[i].transform.position)){
-                            this.objects[i].get_component("decomposer").render()
-                            //var range_vector = new THREE.Vector3(range.x, 0, range.y);
-                            //var d = range_vector.distanceToSquared(this.objects[i].transform.position);
-                            if(!object_exists(this.objects[i].id, found)){
-                                found.push({o: this.objects[i], d: d});
+                    if(found.length == 0) {
+                        handle_object(this.objects[i], found);
 
-                                var cam_clone = camera.clone()
-                                cam_clone.position = this.objects[i].transform.position.clone()
-                                var frustrum = new THREE.Frustum().setFromMatrix(
-                                    new THREE.Matrix4().multiplyMatrices( 
-                                        cam_clone.projectionMatrix, cam_clone.matrixWorldInverse ));
-        
-                                occluders.push(frustrum)
+                    } else {
+                        notOccluded = true;
+                    
+                        var direction =  camera.position.clone().sub(
+                            this.objects[i].pos.clone()).normalize()
+                        
+                        raycaster.set(
+                            this.objects[i].pos,
+                            direction
+                        )
+
+                        for(var j = 0; j < found.length; j++) {
+                            if(raycaster.ray.intersectsBox(found[j].box)){
+                                notOccluded = false;
+                                break;
                             }
-                        } 
-                    }
-                } else {
-                    if(range.containsPoint(this.objects[i].transform.position)){
-                        this.objects[i].get_component("decomposer").render()
-                        //var range_vector = new THREE.Vector3(range.x, 0, range.y);
-                        //var d = range_vector.distanceToSquared(this.objects[i].transform.position);
-                            
-                        if(!object_exists(this.objects[i].id, found)){
-                            found.push({o: this.objects[i], d: d});
-    
-                            var cam_clone = camera.clone()
-                            cam_clone.position = this.objects[i].transform.position.clone()
-
-                            var frustrum = new THREE.Frustum().setFromMatrix(
-                                new THREE.Matrix4().multiplyMatrices( 
-                                    cam_clone.projectionMatrix, cam_clone.matrixWorldInverse ));
-    
-                            occluders.push(frustrum)
                         }
-                    } 
+                        
+                        if (notOccluded) {
+                            handle_object(this.objects[i], found);
+                        }
+                    }
                 }
-
             }
         }
     }
 
     if(this.divided){
-        this.northeast.query(range, found);
-        this.northwest.query(range, found);
-        this.southeast.query(range, found);
-        this.southwest.query(range, found);
+        this.northeast.query(range, found, raycaster);
+        this.northwest.query(range, found, raycaster);
+        this.southeast.query(range, found, raycaster);
+        this.southwest.query(range, found, raycaster);
     }
 
     return found;
 }
 
+
+function handle_object(o, found){
+    //var d = camera.position.distanceToSquared(o.pos);
+    if(!object_exists(o.id, found)){
+        Scene[o.id].get_component("decomposer").render();
+        var offset = 0.7
+
+        var box = new THREE.Box3(
+            new THREE.Vector3(o.pos.x-offset, o.pos.y-offset, o.pos.z-offset),
+            new THREE.Vector3(o.pos.x+offset, o.pos.y+offset, o.pos.z+offset),
+        )
+        //var box_helper = new THREE.Box3Helper( box, 0xffff00 );
+
+        //scene.add(box_helper)
+
+        found.push(
+            {
+                id:o.id,
+                box: box,
+               // box_helper:box_helper
+            }
+        );
+    }
+}
+
 function object_exists(id, array) {
     return array.some(function(el) {
-      return el.o.id === id;
+      return el.id === id;
     }); 
-  }
+}
 
 quad_tree.prototype.closest = function(o, count, maxDistance){
 

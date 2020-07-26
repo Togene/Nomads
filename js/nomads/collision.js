@@ -10,7 +10,11 @@ function collision_init(){
 }   
 
 function broad_quad_tree_insert(o){
-    collision_tree.insert(o);
+    collision_tree.insert(
+        new qt_point(
+        o.transform.get_transformed_position(),
+        o.id
+    ));
 }
 
 function collision_update(delta){
@@ -23,20 +27,20 @@ function world_collision(delta){
 
             if(WORLD_COLLISION_ARRAY != null || WORLD_COLLISION_ARRAY.length != 0){
                 var raycaster = new THREE.Raycaster(new THREE.Vector3(
-                    e.transform.position.x,
+                    Scene[e.id].transform.position.x,
                     0,
-                    e.transform.position.z), 
+                    Scene[e.id].transform.position.z), 
                     new THREE.Vector3(0, 1, 0), 0, 5);
             
                 var intersections = raycaster.intersectObjects(WORLD_COLLISION_ARRAY);
             
                 //var onObject = intersections.length > 0;
+                ////e
+                var lb = Scene[e.id].get_component("rigidbody");
                 
-                var lb = e.get_component("rigidbody");
-
                 if(intersections[0] !== undefined){
-                    if( lb != undefined){
-                        if(e.name == "player"){
+                    if(lb != undefined){
+                        if(Scene[e.id].name == "player"){
                             lb.ground(intersections[0].point.y, true);
                         } else {
                             lb.ground(intersections[0].point.y, false);

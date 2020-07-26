@@ -86,7 +86,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 	var uvs = [];
 	var faces = [];
 
-	for (iy = 0; iy < gridY1; iy++) {
+	for (var iy = 0; iy < gridY1; iy++) {
 
 		var y = (iy * segment_height - height_half);
 
@@ -94,7 +94,7 @@ function GenerateTileMesh(heightMap, detialMap, heightMultiplier, _heightCurve, 
 		var y1 = ((iy + 1) * segment_height - height_half);
 		//---------------------- Future verts ------------------------------
 
-		for (ix = 0; ix < gridX1; ix++) {
+		for (var ix = 0; ix < gridX1; ix++) {
 
 			var x = (ix * segment_width - width_half);
 

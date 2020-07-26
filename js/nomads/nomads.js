@@ -1,5 +1,9 @@
 
 var Scene = [];
+var CAMERA_FRUSTUM;
+
+var visible_chunks = [];
+
 var TestQuadTree;
 
 var newobject1 = new gameobject("poop");
@@ -18,15 +22,17 @@ var game_speed = 2;
 var physics_objects = [];
 
 var pool = null;
-
 var found = []
-var old = []
-
+var occluders = []
 
 function game_bootstrap(data){
+    CAMERA_FRUSTUM = new THREE.Frustum().setFromMatrix(
+        new THREE.Matrix4().multiplyMatrices( 
+            camera.projectionMatrix, camera.matrixWorldInverse ));
+
 
     TestQuadTree = new quad_tree(
-        new rectangle(-5000, -5000, 10000, 10000), 2
+        new rectangle(-5000, -5000, 10000, 10000), 25
     )
     
     game_resources = data;
@@ -92,31 +98,43 @@ function game_update(delta){
     shader_update(delta);
     world_update(delta);
     update_sky(delta);
+
     quadtree_testing(delta);
 }
 
 function update(delta){
+    CAMERA_FRUSTUM.setFromMatrix( new THREE.Matrix4().multiplyMatrices( 
+            camera.projectionMatrix, camera.matrixWorldInverse ));
+
     newobject1.transform.rotation.y += 0.05 * delta;
     cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
 }
 
 function quadtree_testing(delta){
-  
+    
     for(var i = 0; i < found.length; i++){
-        found[i].o.get_component("decomposer").derender()
+        Scene[found[i].id].get_component("decomposer").derender()
+        //scene.remove(found[i].box_helper)
     }
+
+    //console.log(occluders.length)
+    //console.log(found.length)
 
     found = []
 
-    var frustrum = new THREE.Frustum().setFromMatrix(
-        new THREE.Matrix4().multiplyMatrices( 
-            camera.projectionMatrix, camera.matrixWorldInverse ));
+    var raycaster = new THREE.Raycaster(
+        new THREE.Vector3(0,0,0), 
+        new THREE.Vector3(0,0,0), 0, 1000);
 
     TestQuadTree.query(
-        frustrum,
-        found
+        CAMERA_FRUSTUM,
+        found,
+        raycaster
     )
+    
+    //console.log(found)
+
 }
 
 

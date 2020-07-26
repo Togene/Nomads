@@ -40,7 +40,6 @@ gameobject.prototype.update = function(delta){
             this.components[i].update(delta);
         }
     }
-    
     if(this.children != null){
         for(var i = 0; i < this.children.length; i++){
             this.children[i].update(delta);
@@ -58,7 +57,6 @@ gameobject.prototype.add_component = function(c){
 }
 
 gameobject.prototype.add_requirements = function(c){
-
     if(c.requires == null){
         return;
     }

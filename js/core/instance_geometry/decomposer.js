@@ -110,7 +110,10 @@ decomposer.prototype.set_transform = function(t){
 
     //append to the buffer after all fields are set
     //this.attributes_refrence.set(this);
-    TestQuadTree.insert(this.parent)
+    TestQuadTree.insert(new qt_point(
+        this.parent.transform.get_transformed_position(), 
+        this.parent.id
+        ))
 }
 
 decomposer.prototype.render = function(){
