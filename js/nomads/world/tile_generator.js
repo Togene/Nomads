@@ -41,7 +41,7 @@ function generete_tile(height_map, detial_map, size) {
             var index = (x + (size) * y);
             var map_step = index * step_diffrence;
 
-     
+                
             var height_colors = map_colors(map_step, height_map.data);
             
            //var vertex = new THREE.Vector3(x, height_colors.r, y);
