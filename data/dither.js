@@ -29,12 +29,13 @@ var Dither3x3 = [
   1, 0, 3,
   5, 2, 7,
 ];
+
 //This is giving Wierd Results at times so will need to test or change later
 var GrayScalePallete = [new THREE.Vector3( 0.0, 0.0, 0.0),
-       new THREE.Vector3( .14, .14, .14 ),
-       new THREE.Vector3( .28, .28, .28 ),
-       new THREE.Vector3( .43, .43, .43 ),
-       new THREE.Vector3( .57, .57, .57 ),
-       new THREE.Vector3( .71, .71, .71 ),
-       new THREE.Vector3( .85, .85, .85 ),
-       new THREE.Vector3( .9, .9, .9)];
+  new THREE.Vector3( .14, .14, .14 ),
+  new THREE.Vector3( .28, .28, .28 ),
+  new THREE.Vector3( .43, .43, .43 ),
+  new THREE.Vector3( .57, .57, .57 ),
+  new THREE.Vector3( .71, .71, .71 ),
+  new THREE.Vector3( .85, .85, .85 ),
+  new THREE.Vector3( .9, .9, .9)];

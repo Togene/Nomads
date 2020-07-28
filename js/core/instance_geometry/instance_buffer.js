@@ -370,7 +370,7 @@ instance_renderer.prototype.bake_buffer = function() {
     material.side = THREE.DoubleSide;
     mesh.frustumCulled = false;
     mesh.castShadow = true;
-    console.log("objects baked: ", this.buffer.index)
+    //console.log("objects baked: ", this.buffer.index)
 
     this.mesh.add(mesh);
 }

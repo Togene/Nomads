@@ -97,7 +97,7 @@ function antlion_fall(i, data){
             i - 1);
     }
 
-    console.log("%cFALLING: " + i, 'color: #FF0000');
+    //console.log("%cFALLING: " + i, 'color: #FF0000');
 }
 
 //push the last data, and flag for done;
@@ -226,7 +226,6 @@ function text_parse(glsl, shadow_text, dither_text) {
 }
 
 function get_data(key){
-
     if(typeof key === 'string'){
         //console.log(key);
 

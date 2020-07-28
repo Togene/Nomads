@@ -21,24 +21,25 @@ function collision_update(delta){
     world_collision(delta);
 }
 
+
 function world_collision(delta){
     if(collision_tree != undefined && player != undefined) {
             collision_tree.forEach(function(e){
 
-            if(WORLD_COLLISION_ARRAY != null || WORLD_COLLISION_ARRAY.length != 0){
                 var raycaster = new THREE.Raycaster(new THREE.Vector3(
                     Scene[e.id].transform.position.x,
                     0,
                     Scene[e.id].transform.position.z), 
                     new THREE.Vector3(0, 1, 0), 0, 5);
-            
+                    
+                //console.log(ZONE_MAP)
                 var intersections = raycaster.intersectObjects(WORLD_COLLISION_ARRAY);
-            
                 //var onObject = intersections.length > 0;
                 ////e
                 var lb = Scene[e.id].get_component("rigidbody");
-                
+
                 if(intersections[0] !== undefined){
+                    console.log("something?")
                     if(lb != undefined){
                         if(Scene[e.id].name == "player"){
                             lb.ground(intersections[0].point.y, true);
@@ -47,7 +48,6 @@ function world_collision(delta){
                         }
                     }
                 }
-            }
         });
     }
 }

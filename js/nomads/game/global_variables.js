@@ -22,6 +22,7 @@ const TEXTURE_RESOLUTION = 256;
 const TILE_GRID_SIZE = 16; //how many times is the tile chopped up into smaller bits
 const WORLD_PHYSICAL = [];
 var WORLD_COLLISION_ARRAY = new Array();
+var ZONE_MAP;
 
 var WORLD_OBJECT = new THREE.Object3D();
 var ANIM_WORLD_OBJECTS = new THREE.Object3D();
@@ -30,6 +31,11 @@ var SEED = 123;
 const W_TILE_SCALE = pixel * 2;
 var wire_framing = false;
 
-var mapindex = [
-    1,
-];
+
+const WORLD_MAP = [
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,1,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+]

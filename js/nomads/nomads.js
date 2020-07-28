@@ -13,8 +13,8 @@ var geometry = new THREE.BoxGeometry(1,1,1);
 var material1 = new THREE.MeshBasicMaterial({color:0x00ff00});
 var material2 = new THREE.MeshBasicMaterial({color:0xff0000});
 
-var cube1 = new THREE.Mesh(geometry, material1);
-var cube2 = new THREE.Mesh(geometry, material2);
+//var cube1 = new THREE.Mesh(geometry, material1);
+//var cube2 = new THREE.Mesh(geometry, material2);
 
 var game_resources;
 var game_time = 0;
@@ -48,25 +48,25 @@ function game_bootstrap(data){
     get_to_work();
     world_init();
 
-    scene.add(cube1);
-    scene.add(cube2);
+    //scene.add(cube1);
+    //scene.add(cube2);
     scene.add(SOLID_SPRITES);
     scene.add(ANIMATED_SPRITES);
 
     console.log("%cGame Initialized", 'color: #DAA45C');
     
-    newobject1.transform.position = new THREE.Vector3(0,0,0);
-    newobject1.transform.scale = new THREE.Vector3(1,10.5,1);
-
-    newobject2.transform.position = new THREE.Vector3(0,1,0);
-    newobject1.add_child(newobject2);
+    //newobject1.transform.position = new THREE.Vector3(0,0,0);
+    //newobject1.transform.scale = new THREE.Vector3(1,10.5,1);
+//
+    //newobject2.transform.position = new THREE.Vector3(0,1,0);
+    //newobject1.add_child(newobject2);
     for(var i = 0; i < Scene.length; i++){
        // Scene[i].information();
     }
-    cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
-    cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
-    cube1.matrixAutoUpdate = false;
-    cube2.matrixAutoUpdate = false;
+    //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
+    //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
+    //cube1.matrixAutoUpdate = false;
+    //cube2.matrixAutoUpdate = false;
     
     for(var i = 0; i < Scene.length; i++){
         if(Scene[i].has_component("rigidbody")){
@@ -103,12 +103,16 @@ function game_update(delta){
 }
 
 function update(delta){
-    CAMERA_FRUSTUM.setFromMatrix( new THREE.Matrix4().multiplyMatrices( 
+    if(CAMERA_FRUSTUM != undefined){
+        CAMERA_FRUSTUM.setFromMatrix( new THREE.Matrix4().multiplyMatrices( 
             camera.projectionMatrix, camera.matrixWorldInverse ));
+    }
+  
 
     newobject1.transform.rotation.y += 0.05 * delta;
-    cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
-    cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
+
+    //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
+    //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
 }
 
 function quadtree_testing(delta){
@@ -127,11 +131,14 @@ function quadtree_testing(delta){
         new THREE.Vector3(0,0,0), 
         new THREE.Vector3(0,0,0), 0, 1000);
 
-    TestQuadTree.query(
-        CAMERA_FRUSTUM,
-        found,
-        raycaster
-    )
+    if(TestQuadTree != undefined){
+        TestQuadTree.query(
+            CAMERA_FRUSTUM,
+            found,
+            raycaster
+        )
+    }
+
     
     //console.log(found)
 
