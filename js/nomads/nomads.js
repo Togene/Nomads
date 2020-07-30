@@ -53,7 +53,7 @@ function game_bootstrap(data){
     scene.add(SOLID_SPRITES);
     scene.add(ANIMATED_SPRITES);
 
-    console.log("%cGame Initialized", 'color: #DAA45C');
+    console.log("%cgame initialized", 'color: #FF6438');
     
     //newobject1.transform.position = new THREE.Vector3(0,0,0);
     //newobject1.transform.scale = new THREE.Vector3(1,10.5,1);

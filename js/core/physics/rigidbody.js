@@ -8,6 +8,8 @@ const GRAVITY = 6.8;
 const GRAVITY_ACC = 10;
 
 function rigidbody(mass, isKin){
+    this.reset_height = 10;
+
     this.mass = mass;
     this.isKinematic = isKin;
     
@@ -56,7 +58,7 @@ rigidbody.prototype.update = function(delta){
         //means rigid bodies and colliders are interlinked
         if (this.parent.transform.position.y <= -50) {
             this.velocity.y = 0;
-            this.parent.transform.position.y = 10;
+            this.parent.transform.position.y = this.reset_height;
         } else {
             if(!this.grounded){
                 this.velocity.y -= (GRAVITY * GRAVITY_ACC) * delta;

@@ -117,7 +117,7 @@ function antlion_pool_load(data){
 
 function meta_data_load(data){
     meta_data = JSON.parse(data);
-    console.log("%cmeta data loaded successful", 'color: #FF0000');
+    console.log("%cmeta data loaded successful", 'color: #FF6438');
 }
 
 function antlion_manifest_load(data){

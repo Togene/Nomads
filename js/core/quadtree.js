@@ -32,19 +32,6 @@ rectangle.prototype.bottom = function(){
 rectangle.prototype.contains = function(o){
 
     if(o == undefined) {return false}
-    //if(!(o instanceof gameobject)){
-    //    console.error("not of type gameobject!");
-    //    return undefined;
-    //} else {
-    //    var p = o.transform.get_transformed_position();
-    //    return (
-    //        p.x >= this.x - this.w &&
-    //        p.x <= this.x + this.w &&
-    //        p.z >= this.y - this.h &&
-    //        p.z <= this.y + this.h);
-    //}
-
-    //var p = o.transform.get_transformed_position();
     return (
         o.pos.x >= this.x - this.w &&
         o.pos.x <= this.x + this.w &&
@@ -70,17 +57,9 @@ function circle(x, y, r){
 }
 
 circle.prototype.contains = function(o){
-    //if(!(o instanceof gameobject)){
-    //    console.error("The fuck asshole, we only take gameobjects");
-    //    return false;
-    //} else {
-    //   var p = o.transform.get_transformed_position();
-    //   var d = Math.pow((p.x - this.x), 2) + Math.pow((p.z - this.y), 2);
-//
-    //   return d <= this.rsqrd;
-    //}
-       var d = Math.pow((o.pos.x - this.x), 2) + Math.pow((o.pos.z - this.y), 2);
-       return d <= this.rsqrd;
+    if(o == undefined) {return false}
+    var d = Math.pow((o.pos.x - this.x), 2) + Math.pow((o.pos.z - this.y), 2);
+    return d <= this.rsqrd;
 }
 
 circle.prototype.intersects = function(range){
@@ -217,15 +196,14 @@ quad_tree.prototype.query = function(range, found, raycaster){
                         handle_object(this.objects[i], found);
 
                     } else {
+                        
                         notOccluded = true;
                     
                         var direction =  camera.position.clone().sub(
                             this.objects[i].pos.clone()).normalize()
                         
-                        raycaster.set(
-                            this.objects[i].pos,
-                            direction
-                        )
+                        raycaster.set(this.objects[i].pos, direction)
+                        
 
                         for(var j = 0; j < found.length; j++) {
                             if(raycaster.ray.intersectsBox(found[j].box)){
@@ -233,8 +211,10 @@ quad_tree.prototype.query = function(range, found, raycaster){
                                 break;
                             }
                         }
+
+                        var intersections = raycaster.intersectObjects(WORLD_OCCLUSION_ARRAY);
                         
-                        if (notOccluded) {
+                        if (notOccluded && intersections[0] == undefined) {
                             handle_object(this.objects[i], found);
                         }
                     }
@@ -270,7 +250,7 @@ function handle_object(o, found){
 
         found.push(
             {
-                id:o.id,
+                id: o.id,
                 box: box,
                // box_helper:box_helper
             }

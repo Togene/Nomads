@@ -29,14 +29,14 @@ function init(){
     window.addEventListener('resize', onWindowResize, false );    
     
     //Grid helper
-    var size = 100;
-    var divisions = 10;
-    var grid_helper = new THREE.GridHelper(size, divisions);
-    grid_helper.position.set(0, 0, 0);
+    //var size = 100;
+    //var divisions = 10;
+    //var grid_helper = new THREE.GridHelper(size, divisions);
+    //grid_helper.position.set(0, 0, 0);
+    //scene.add(grid_helper);
 
     var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
     scene.add(directionalLight);
-    scene.add(grid_helper);
     scene.fog = new THREE.Fog(new THREE.Color(0xffffff), 0.0025, 1000);
 }
 
@@ -59,7 +59,7 @@ function render() {
     renderer.render(scene, camera);
 	
 	// minimap (overhead orthogonal camera)
-    //  lower_left_x, lower_left_y, viewport_width, viewport_height
+    // lower_left_x, lower_left_y, viewport_width, viewport_height
     var width = (map_camera.left)/4;
     
 	renderer.setViewport(w/2 + width, h/2 + width, w, h);

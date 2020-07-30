@@ -49,19 +49,27 @@ function tile_create(maps) {
         fog: true
     });
 
-    var tile_geo = generete_tile(maps.height, maps.detail, 256);
-    //tile_geo.computeBoundingSphere();
-    
+    var tile_geo = generete_tile(maps.height, maps.detail, 0);
+    var tile_geo_collider = generete_tile(maps.height, null, 5);
+
+    tile_geo_collider.computeBoundingSphere();
+    tile_geo.computeBoundingBox();
 
     land_material.side = THREE.DoubleSide;
     land_material.uniforms.texture.value = maps.color
 
     var tile = new THREE.Mesh( tile_geo, land_material );
+    var tile_collider = new THREE.Mesh( tile_geo_collider, new THREE.MeshBasicMaterial({wireframe:true}) );
     
     WORLD_COLLISION_ARRAY.push(tile);
-    var helper = new THREE.VertexNormalsHelper( tile, 2, 0x00ff00, 1 )
+    WORLD_OCCLUSION_ARRAY.push(tile_collider);
+
+    scene.add(tile_collider)
+
+    //var helper = new THREE.VertexNormalsHelper( tile, 2, 0x00ff00, 1)
+    //scene.add( helper );
     scene.add( tile );
-    scene.add( helper );
+  
 }
 
 

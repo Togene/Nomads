@@ -44,7 +44,7 @@ function instance_buffer(prefill = false){
     this.m2 = [];
     this.m3 = [];
     this.index = 0;
-    this.size = 200;
+    this.size = 2000;
 
     if(prefill){
         this.prefill()

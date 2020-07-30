@@ -17,63 +17,102 @@ function map_colors(index, map_data) {
  * @param {*} size 
  */
 
-function generete_tile(height_map, detial_map, size) {
-    map_max =  height_map.width * height_map.height
+function generete_tile(height_map, detial_map, lod) {
 
-    // power diffrence between mesh and texture
-    power_diffrence = (Math.log2(map_max) - Math.log2(size * size));
-
-    step_diffrence = 1;
-
-    if(power_diffrence > 1) {
-        step_diffrence = Math.pow(2, (Math.log2(map_max) - Math.log2(size * size)));
+    if (lod > 6 || lod < 0) {
+        console.error("LOD must be between 1 - 6");
+        lod = 1;
     }
 
-    // mesh variables
-    var vertices = []
-    var indices = []
-    var normals = []
-    var uvs = []
+    var top_left_x = (height_map.width - 1) / -2;
+    var top_left_z = (height_map.width - 1) / 2;
 
-    for(var x = 0; x <= size; x++)
-        for(var y = 0; y <= size; y++){
-            
-            var index = (x + (size) * y);
-            var map_step = index * step_diffrence;
+    var increment = (lod == 0) ? 1 : lod * 2
+    var vertices_per_line = Math.floor(((height_map.width - 1) / increment) + 1)
+    
+    console.log(vertices_per_line)
+    console.log(increment)
 
-                
-            var height_colors = map_colors(map_step, height_map.data);
-            
-           //var vertex = new THREE.Vector3(x, height_colors.r, y);
-           var height = height_colors.r/255;
-           
-           if(map_step >= map_max){
-                height = 1000000;
+    var map_size = vertices_per_line * vertices_per_line
+
+    var vertices = [(map_size) * 3]
+    var indices = [(vertices_per_line - 1) * (vertices_per_line - 1) * 6]
+    var normals = [map_size * 3]
+    var uvs = [map_size * 2]
+
+    vertex_index = 0;
+    triangle_index = 0;
+    normals_index = 0;
+    uv_index = 0;
+
+    var max_height = -Infinity;
+
+    for(var y = 0; y < height_map.height; y+= increment)
+        for(var x = 0; x < height_map.width; x+= increment){
+        
+        var index = (x + (height_map.width) * y);
+        
+        var map_data = map_colors(index, height_map.data);
+        
+
+        var height = 0;
+    
+        if(map_data.r != undefined){
+            height = EasingFunctions.easeInOutQuad(normalize(0, 255, map_data.r/255) * 2000) * -1;
+
+            if (height > max_height){
+                max_height = height
             }
-            
-
-            vertices.push(x - (size/2), height * 5, y - (size/2));
-            // ¯\_(ツ)_/¯
-            normals.push(0, -1, 0);
-            uvs.push((x/size), 1 -  (y/size));
-    }
-
-    for(var x = 0; x < size; x++){
-        for(var y = 0; y < size; y++){
-
-            var a = x + (size + 1) * y;
-            var b = x + (size + 1) * (y + 1);
-            var c = (x + 1) + (size + 1) * (y + 1);
-            var d = (x + 1) + (size + 1) * y;
-
-            indices.push(a, b, d);
-            indices.push(b, c, d);
+        } else {
+            height = 10000
         }
+        
+        if(detial_map != undefined){
+            var detials = map_colors(index, detial_map.data);
+
+            if(detials.g > 100){
+                circle_create(new THREE.Vector3((top_left_x + x), height, (top_left_z - y)), new quaternion())
+            } else {
+               
+            }
+        }
+
+        vertices[(vertex_index * 3) + 0] = (top_left_x + x);
+        vertices[(vertex_index * 3) + 1] = height;
+        vertices[(vertex_index * 3) + 2] = (top_left_z - y);
+        
+        // ¯\_(ツ)_/¯
+       // normals.push(0, 1, 0);
+        normals[(normals_index * 3) + 0] = 0.0;
+        normals[(normals_index * 3) + 1] = 1.0;
+        normals[(normals_index * 3) + 2] = 0.0;
+        normals_index++;
+
+        uvs[(uv_index * 2) + 0] = (x/height_map.width)
+        uvs[(uv_index * 2) + 1] = 1 - (y/height_map.height)
+        uv_index++;
+
+        if(x < height_map.width - increment && y < height_map.height - increment){
+            //console.log(vertex_index)
+            indices[(triangle_index * 6) + 0] = vertex_index;
+            indices[(triangle_index * 6) + 1] = vertex_index + vertices_per_line + 1;
+            indices[(triangle_index * 6) + 2] = vertex_index + vertices_per_line;
+
+            indices[(triangle_index * 6) + 3] = vertex_index + vertices_per_line + 1;
+            indices[(triangle_index * 6) + 4] = vertex_index;
+            indices[(triangle_index * 6) + 5] = vertex_index + 1;
+
+            triangle_index ++;
+        }
+        
+        vertex_index ++;
     }
+
+    player.transform.position.y = max_height
+    player.get_component("rigidbody").reset_height = max_height + player.transform.scale.y*2.5;
 
     var bufferGeometry = new THREE.BufferGeometry();
 
- 
     bufferGeometry.setIndex(indices);
     bufferGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     bufferGeometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
@@ -87,6 +126,4 @@ function generete_tile(height_map, detial_map, size) {
 
     return geo;
 }
-
-
  

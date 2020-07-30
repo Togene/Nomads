@@ -3,13 +3,13 @@ var pool_data;
 
 function shader_init(){
         
-    console.log("%cLoading Pool", 'color: #DAA45C');
+    //console.log("%cLoading Pool", 'color: #DAA45C');
     
     //pool = new rendering_pool(5);
     
     //save(pool.buffer, 'pool_data', 'json');
 
-    console.log("%cPool Done", 'color: #DAA45C');
+    //console.log("%cPool Done", 'color: #DAA45C');
 }
 
 function shader_update(delta){

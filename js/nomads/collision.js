@@ -28,18 +28,17 @@ function world_collision(delta){
 
                 var raycaster = new THREE.Raycaster(new THREE.Vector3(
                     Scene[e.id].transform.position.x,
-                    0,
+                    Scene[e.id].transform.position.y - Scene[e.id].transform.scale.y/2,
                     Scene[e.id].transform.position.z), 
-                    new THREE.Vector3(0, 1, 0), 0, 5);
+                    new THREE.Vector3(0, 1, 0));
                     
-                //console.log(ZONE_MAP)
+
                 var intersections = raycaster.intersectObjects(WORLD_COLLISION_ARRAY);
-                //var onObject = intersections.length > 0;
-                ////e
+
                 var lb = Scene[e.id].get_component("rigidbody");
 
                 if(intersections[0] !== undefined){
-                    console.log("something?")
+                    
                     if(lb != undefined){
                         if(Scene[e.id].name == "player"){
                             lb.ground(intersections[0].point.y, true);

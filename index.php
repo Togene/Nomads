@@ -12,8 +12,6 @@
 			<script src = "js/libs/PointerLockControls.js"></script>
 			
 			<script src = "js/nomads/game/global_variables.js"></script>
-			<script src = "js/nomads/game/world_map.js"></script>
-
 			<script src = "js/core/geometry/polygon2D.js"></script>
 
 			<!--                 INSTANCE GEOMETRY                       -->
