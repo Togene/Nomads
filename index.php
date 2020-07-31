@@ -12,7 +12,7 @@
 			<script src = "js/libs/three.min.js"></script>
 			<script src = "js/libs/PointerLockControls.js"></script>
 			
-			<script src = "js/nomads/game/global_variables.js"></script>
+			<script src = "js/nomads/global_variables.js"></script>
 			<script src = "js/core/geometry/polygon2D.js"></script>
 
 			<!--                 INSTANCE GEOMETRY                       -->
@@ -44,9 +44,6 @@
 			<script src = "js/core/decube.js"></script>
 			<script src = "js/core/gameobject.js"></script>
 			<script src = "js/core/quadtree.js"></script>
-	
-			<script src = "js/nomads/world/tile_generator.js"></script>
-			<script src = "js/nomads/world/world.js"></script>
 
 			<script src = "js/nomads/world/generator_utilities/1D_noise.js"></script>
 			<script src = "js/nomads/world/generator_utilities/2D_noise.js"></script>
@@ -54,6 +51,8 @@
 			<script src = "js/nomads/world/generator_utilities/map_generator.js"></script>
 			<script src = "js/nomads/world/generator_utilities/noise_from_texture.js"></script>
 			<script src = "js/nomads/world/generator_utilities/regions.js"></script>
+
+
 
 			<script src = "js/nomads/creators/utils/yard_stick.js"></script>
 			<script src = "js/nomads/creators/utils/circle_test.js"></script>
@@ -72,12 +71,16 @@
 			<script src = "js/nomads/nomads.js"></script>
 			<script src = "js/rendering/renderer.js"></script>
 			<script src = "js/rendering/rendering_pool.js"></script>
-			<script src = "js/nomads/sky.js"></script>
 
 			<script src = "js/nomads/gui/pause.js"></script>
 
 			<script src = "js/nomads/input/keyboard.js"></script>
 
+			<!-- world -->
+				<script src = "js/nomads/world/tile_generator.js"></script>
+				<script src = "js/nomads/world/world.js"></script>
+				<script src = "js/nomads/world/sky.js"></script>
+			<!-- world -->
 			
 		
 		<div id="blocker">

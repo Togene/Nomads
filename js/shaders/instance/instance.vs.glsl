@@ -6,7 +6,7 @@
 		attribute vec3 position;
 		//attribute vec3 translation;
 		attribute vec4 orientation;
-		//attribute vec3 scale;
+		attribute vec3 scale;
 		attribute vec3 col;
 		attribute vec2 uv;
 		attribute vec2 uvoffset;
@@ -40,7 +40,7 @@
 		varying vec2 spritesheetsizePass;
 
 		uniform mat4 viewMatrix;
-		//uniform mat4 modelMatrix;
+		uniform mat4 modelMatrix;
 		uniform vec3 cameraPosition;
 		varying vec2 viewDirection;
 		varying vec4 posWorld;
@@ -138,7 +138,7 @@
 			} else if (type == 3.0){
 			/* Sprites Face The Camera*/
 				vec4 mvPosition =  viewMatrix * transform_matrix * vec4(vec3(0,0,0),  1.0);
-				mvPosition.xyz += (position * vec3(transform_matrix[0][0], transform_matrix[1][1], transform_matrix[2][2]) * vec3(tile_size.x, tile_size.y, 1));
+				mvPosition.xyz += (position * scale * vec3(tile_size.x, tile_size.y, 1));
 				finalPosition = projectionMatrix * mvPosition;
 
 			} else if (type == 1.0){

@@ -107,7 +107,6 @@ gameobject.prototype.get_component = function(n){
 
 
 gameobject.prototype.has_component = function(n){
-    
     if(typeof n !== "string"){
         console.error("Must Be of Type String.");
         return false;

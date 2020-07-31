@@ -190,10 +190,11 @@ quad_tree.prototype.query = function(range, found, raycaster){
         // if quad section is within the frustrum, check the points inside
         if(range.intersectsBox(bound)){
             for(var i = 0; i < this.objects.length; i++){
-                if(range.containsPoint(this.objects[i].pos)){
+                if(range.containsPoint(Scene[this.objects[i].id].transform.get_transformed_position())){
 
-                    var position = this.objects[i].pos;
-                    var raycaster_set = new THREE.Vector3(position.x, position.y - 2, position.y);
+                    var position = Scene[this.objects[i].id].transform.position;
+
+                    var raycaster_set = new THREE.Vector3(position.x, position.y, position.y);
 
                     var direction =  camera.position.clone().sub(raycaster_set).normalize()
                     raycaster.set(raycaster_set, direction)
@@ -218,9 +219,9 @@ quad_tree.prototype.query = function(range, found, raycaster){
 
                         //var intersections = raycaster.intersectObjects(WORLD_OCCLUSION_ARRAY);
                         //&& intersections[0] == undefined
-                        if (notOccluded) {
+                        //if (notOccluded) {
                             handle_object(this.objects[i], found);
-                        }
+                        //}
                     }
                 }
             }

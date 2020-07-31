@@ -24,21 +24,21 @@ instance_attributes.prototype.populate = function(array, index){
 
     this.uvoffset = array[2]; // ✓
     this.tile_size = array[3]; // ✓
-   // this.scale = array[5]; // ✓
+    this.scale = array[4]; // ✓
 
     // animations
-    this.animation_start = array[4]; // ✓
-    this.animation_end = array[5];  // ✓
-    this.animation_time = array[6]; // ✓
+    this.animation_start = array[5]; // ✓
+    this.animation_end = array[6];  // ✓
+    this.animation_time = array[7]; // ✓
     
-    this.type = array[7]; // ✓
-    this.fog = array[8]; // ✓
+    this.type = array[8]; // ✓
+    this.fog = array[9]; // ✓
     
     //transform
-    this.m0 = array[9]; // ✓
-    this.m1 = array[10]; // ✓
-    this.m2 = array[11]; // ✓
-    this.m3 = array[12]; // ✓
+    this.m0 = array[10]; // ✓
+    this.m1 = array[11]; // ✓
+    this.m2 = array[12]; // ✓
+    this.m3 = array[13]; // ✓
 
     this.index = 0;
     this.max = index;
@@ -72,7 +72,7 @@ instance_attributes.prototype.set = function(decomposer){
     //
     //this.set_translation(index, translation);
     this.set_orientation(index, decomposer.orient);
-    //this.set_scale(index, new THREE.Vector3(1,1,1));
+    this.set_scale(index, decomposer.scale);
     this.set_type(index, decomposer.type);
     this.set_fog(index, decomposer.fog);
 
@@ -92,7 +92,7 @@ instance_attributes.prototype.unset = function(index){
     this.set_tile_size(index, new THREE.Vector2(0,0));
 
     this.set_orientation(index, new THREE.Vector4(0,0,0,0));
-    //this.set_scale(index, new THREE.Vector3(1,1,1));
+    this.set_scale(index, new THREE.Vector3(1,1,1));
     this.set_type(index, 0);
     this.set_fog(index, 0);
     var col_vector = new THREE.Vector3(0, 0, 0);

@@ -57,10 +57,14 @@ function generete_tile(height_map, detial_map, lod) {
         var height = 0;
     
         if(map_data.r != undefined){
-            height = EasingFunctions.easeInOutQuad(normalize(0, 255, map_data.r/255) * 2000) * -1;
+            height = EasingFunctions.easeInOutQuad(normalize(0, 255, map_data.r/255) * 1250) * -1;
 
             if (height > max_height){
                 max_height = height
+            }
+
+            if (height == 0){
+                height = -25;
             }
         } else {
             height = 10000

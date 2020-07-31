@@ -1,6 +1,6 @@
 
 function pass_transforms(o = new THREE.Vector4()){
-        this.orient = o;
+    this.orient = o;
 }
 
 //cyclinder sprite
@@ -17,6 +17,7 @@ function particle(meta, pass_transform){
     return new decomposer(meta, PARTICLE, pass_transform)
 }
 
+
 function decomposer(meta, type, pass_transform){
     if(meta == undefined){ 
         meta = get_meta().default
@@ -27,6 +28,12 @@ function decomposer(meta, type, pass_transform){
     if(renderers.get(meta.map_key) == undefined){ 
         throw new Error("Renderer is required for decomposer!");
     }
+
+    this.skip_occlusion = false;
+
+    if(meta.skip_occlusion != null){ 
+        this.skip_occlusion = meta.skip_occlusion;
+    } 
 
     this.tile_size = new THREE.Vector3(1,1);
 
@@ -43,7 +50,8 @@ function decomposer(meta, type, pass_transform){
     this.attributes_refrence = renderer.attributes;
 
     this.orient;
-
+    this.scale = new THREE.Vector3(1,1,1);
+    
     if(pass_transform == null){
         this.orient = new THREE.Vector4(
             meta.transform.orient.x, meta.transform.orient.y, 
@@ -66,10 +74,10 @@ decomposer.prototype.update = function(){
         //this.attribute_debug();
         if(this.transform != null && this.transform.hasChanged()){  
             
-           //this.matrix = this.transform.get_transformation().toMatrix4();
+           this.matrix = this.transform.get_transformation().toMatrix4();
            //have to tell the buffer/instance_geometry to update aswell
-           //this.attributes_refrence.set_transform(this.buffer_idx, this.matrix)
-           //this.attributes_refrence.set_orientation(this.buffer_idx, this.parent.transform.rotation);
+           this.attributes_refrence.set_transform(this.buffer_idx, this.matrix)
+           this.attributes_refrence.set_orientation(this.buffer_idx, new quaternion(0,0,0,1).to_three_q());
         }
     //}
 }    
@@ -106,14 +114,21 @@ decomposer.prototype.set_parent = function(p){
 
 decomposer.prototype.set_transform = function(t){
     this.transform = t;
+
+    // this is why we need to split up the instance shader :|
+    this.scale = this.transform.scale;
     this.matrix = t.get_transformation().toMatrix4();
 
-    //append to the buffer after all fields are set
-    //this.attributes_refrence.set(this);
-    TestQuadTree.insert(new qt_point(
-        this.parent.transform.get_transformed_position(), 
-        this.parent.id
-        ))
+    // append to the buffer after all fields are set
+    if(!this.skip_occlusion) {
+        TestQuadTree.insert(new qt_point(
+            this.parent.transform.get_transformed_position(), 
+            this.parent.id
+            ))
+    } else {
+        this.attributes_refrence.set(this);
+    }
+ 
 }
 
 decomposer.prototype.render = function(){

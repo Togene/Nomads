@@ -1,5 +1,4 @@
 {
-    
     "default" : {
         "mapping" : [{"x":1, "y":0}],
         "colors" : ["0xFF00FF"],
@@ -85,5 +84,31 @@
         },
         "map_key" : "multi_test",
         "tile_size" : {"x":2, "y":2}
+    },
+    "sun" : {
+        "mapping" : [{"x":0, "y":1}],
+        "frames" :  {"x":1, "y":1},
+        "colors" : ["0xFFD27D"],
+        "transform" : {
+            "position" : {"x":0, "y":0, "z":0},
+            "orient" : {"x":0, "y":0, "z":0, "w":1},
+            "scale" : {"x":1, "y":1, "z":1}
+        },
+        "map_key" : "sky",
+        "tile_size" : {"x":1, "y":1},
+        "skip_occlusion" : true
+    },
+    "moon" : {
+        "mapping" : [{"x":0, "y":2}],
+        "frames" :  {"x":1, "y":1},
+        "colors" : ["0xFFFFFF"],
+        "transform" : {
+            "position" : {"x":0, "y":0, "z":0},
+            "orient" : {"x":0, "y":0, "z":0, "w":1},
+            "scale" : {"x":1, "y":1, "z":1}
+        },
+        "map_key" : "sky",
+        "tile_size" : {"x":1, "y":1},
+        "skip_occlusion" : true
     }
 }

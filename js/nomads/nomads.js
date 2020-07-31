@@ -91,9 +91,11 @@ function game_update(delta){
     physics_update(delta);
     update(delta);
     player_update(delta);
+
     for(var j = 0; j < Scene.length; j++){
         Scene[j].update(delta);
     }
+
     collision_update(delta);
     shader_update(delta);
     world_update(delta);
@@ -102,7 +104,6 @@ function game_update(delta){
     setTimeout(function(){
         quadtree_testing(delta);
     }, 10)
-    
 }
 
 function update(delta){
@@ -112,21 +113,17 @@ function update(delta){
     }
   
 
-    newobject1.transform.rotation.y += 0.05 * delta;
+    //newobject1.transform.rotation.y += 0.05 * delta;
 
     //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
 }
 
 function quadtree_testing(delta){
-    
     for(var i = 0; i < found.length; i++){
         Scene[found[i].id].get_component("decomposer").derender()
         //scene.remove(found[i].box_helper)
     }
-
-    //console.log(occluders.length)
-    //console.log(found.length)
 
     found = []
 
@@ -141,10 +138,6 @@ function quadtree_testing(delta){
             raycaster
         )
     }
-
-    
-    //console.log(found)
-
 }
 
 

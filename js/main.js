@@ -11,7 +11,7 @@ function init(){
 
     document.body.appendChild( renderer.domElement );
     
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000000);
     camera.position.z = 5;
     scene.add(camera);
 
@@ -22,9 +22,11 @@ function init(){
         window.innerHeight / 2,		// Top
         window.innerHeight / -2,	// Bottom
         -5000,            			// Near 
-        10000 );           			// Far 
+        1000 );           			// Far 
         map_camera.up = new THREE.Vector3(0,0,-1);
-        map_camera.lookAt( new THREE.Vector3(0,-1,0) );
+        map_camera.lookAt( new THREE.Vector3(0,-1,0) 
+    );
+
     scene.add(map_camera);
 
     window.addEventListener('resize', onWindowResize, false );    
