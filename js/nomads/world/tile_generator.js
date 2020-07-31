@@ -25,7 +25,7 @@ function generete_tile(height_map, detial_map, lod) {
     }
 
     var top_left_x = (height_map.width - 1) / -2;
-    var top_left_z = (height_map.width - 1) / 2;
+    var top_left_z = (height_map.width - 1) / +2;
 
     var increment = (lod == 0) ? 1 : lod * 2
     var vertices_per_line = Math.floor(((height_map.width - 1) / increment) + 1)
@@ -53,7 +53,6 @@ function generete_tile(height_map, detial_map, lod) {
         var index = (x + (height_map.width) * y);
         
         var map_data = map_colors(index, height_map.data);
-        
 
         var height = 0;
     

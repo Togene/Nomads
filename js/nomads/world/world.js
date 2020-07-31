@@ -50,7 +50,7 @@ function tile_create(maps) {
     });
 
     var tile_geo = generete_tile(maps.height, maps.detail, 0);
-    var tile_geo_collider = generete_tile(maps.height, null, 5);
+    var tile_geo_collider = generete_tile(maps.height, null, 3);
 
     tile_geo_collider.computeBoundingSphere();
     tile_geo.computeBoundingBox();

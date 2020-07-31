@@ -1,4 +1,4 @@
-var scene, renderer, camera, map_camera, clock;
+var scene, renderer, camera, map_camera, clock, stats;
 
 function init(){
     scene = new THREE.Scene();
@@ -14,6 +14,7 @@ function init(){
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     camera.position.z = 5;
     scene.add(camera);
+
     // orthographic cameras
 	map_camera = new THREE.OrthographicCamera(
         window.innerWidth / -2,		// Left
@@ -27,23 +28,28 @@ function init(){
     scene.add(map_camera);
 
     window.addEventListener('resize', onWindowResize, false );    
-    
-    //Grid helper
-    //var size = 100;
-    //var divisions = 10;
-    //var grid_helper = new THREE.GridHelper(size, divisions);
-    //grid_helper.position.set(0, 0, 0);
-    //scene.add(grid_helper);
 
     var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
     scene.add(directionalLight);
     scene.fog = new THREE.Fog(new THREE.Color(0xffffff), 0.0025, 1000);
+
+    stats = new Stats();
+    stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild( stats.dom );
 }
 
 function animate(){
-    requestAnimationFrame(animate);
+    
+    setTimeout( function() {
+        stats.begin();
+            requestAnimationFrame(animate);
+            game_update(clock.getDelta());
+        stats.end();
+        
+    }, 1000 / 60)
+  
     render();
-    game_update(clock.getDelta());
+
   
 }
 

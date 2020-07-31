@@ -169,11 +169,10 @@ rigidbody.prototype.update_aabb_position = function(delta){
 }
 
 // Get current direction of velocity with added direction from rotation
-
 rigidbody.prototype.get_direction = function(){
     return this.velocity.clone().normalize();
 }
-// Get current direction of velocity with added direction from rotation
+// Get current direction of velocity with added direction from rotation...but flipped
 rigidbody.prototype.get_flip_direction = function(){
     return this.get_direction().negate().normalize();
 }

@@ -14,7 +14,7 @@ function shader_init(){
 
 function shader_update(delta){
     for(var i = 0; i < renderers.length; i++){
-    //    object_shader_update(renderers[i].mesh)
+        // object_shader_update(renderers[i].mesh)
     }
 
     //object_shader_update(ANIMATED_SPRITES);

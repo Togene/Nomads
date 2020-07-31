@@ -8,6 +8,7 @@
 			<!-- JQuery <.< -->
 			<script type="text/javascript" src="js/libs/JQ.js"></script>
 			<!-- THREE libs -->
+			<script src = "js/libs/stats.min.js"></script>
 			<script src = "js/libs/three.min.js"></script>
 			<script src = "js/libs/PointerLockControls.js"></script>
 			

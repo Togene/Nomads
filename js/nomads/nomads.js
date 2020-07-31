@@ -99,7 +99,10 @@ function game_update(delta){
     world_update(delta);
     update_sky(delta);
 
-    quadtree_testing(delta);
+    setTimeout(function(){
+        quadtree_testing(delta);
+    }, 10)
+    
 }
 
 function update(delta){

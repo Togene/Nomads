@@ -18,9 +18,10 @@ function broad_quad_tree_insert(o){
 }
 
 function collision_update(delta){
-    world_collision(delta);
+    setTimeout( function() {
+        world_collision(delta);
+    }, 25);
 }
-
 
 function world_collision(delta){
     if(collision_tree != undefined && player != undefined) {

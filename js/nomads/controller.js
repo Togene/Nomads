@@ -8,7 +8,7 @@ var direction = new THREE.Vector3();
 var bounce_distance = 8;
 
 
-var speed = 2;
+var speed = 6;
 var speed_mult = 1;
 
 

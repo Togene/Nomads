@@ -192,19 +192,23 @@ quad_tree.prototype.query = function(range, found, raycaster){
             for(var i = 0; i < this.objects.length; i++){
                 if(range.containsPoint(this.objects[i].pos)){
 
-                    if(found.length == 0) {
-                        handle_object(this.objects[i], found);
+                    var position = this.objects[i].pos;
+                    var raycaster_set = new THREE.Vector3(position.x, position.y - 2, position.y);
 
+                    var direction =  camera.position.clone().sub(raycaster_set).normalize()
+                    raycaster.set(raycaster_set, direction)
+
+                    if(found.length == 0) {
+
+                        //var intersections = raycaster.intersectObjects(WORLD_OCCLUSION_ARRAY);
+
+                        //if(intersections[0] == undefined) {
+                            handle_object(this.objects[i], found);
+                       // }
                     } else {
                         
                         notOccluded = true;
                     
-                        var direction =  camera.position.clone().sub(
-                            this.objects[i].pos.clone()).normalize()
-                        
-                        raycaster.set(this.objects[i].pos, direction)
-                        
-
                         for(var j = 0; j < found.length; j++) {
                             if(raycaster.ray.intersectsBox(found[j].box)){
                                 notOccluded = false;
@@ -212,9 +216,9 @@ quad_tree.prototype.query = function(range, found, raycaster){
                             }
                         }
 
-                        var intersections = raycaster.intersectObjects(WORLD_OCCLUSION_ARRAY);
-                        
-                        if (notOccluded && intersections[0] == undefined) {
+                        //var intersections = raycaster.intersectObjects(WORLD_OCCLUSION_ARRAY);
+                        //&& intersections[0] == undefined
+                        if (notOccluded) {
                             handle_object(this.objects[i], found);
                         }
                     }
