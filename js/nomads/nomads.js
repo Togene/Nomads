@@ -33,7 +33,7 @@ function game_bootstrap(data){
     TestQuadTree = new quad_tree(
         new rectangle(-5000, -5000, 10000, 10000), 25
     )
-    
+     
     game_resources = data;
 
     keyboard_init();
