@@ -30,7 +30,6 @@ function game_bootstrap(data){
         new THREE.Matrix4().multiplyMatrices( 
             camera.projectionMatrix, camera.matrixWorldInverse ));
 
-
     TestQuadTree = new quad_tree(
         new rectangle(-5000, -5000, 10000, 10000), 25
     )

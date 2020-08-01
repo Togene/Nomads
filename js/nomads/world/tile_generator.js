@@ -30,8 +30,8 @@ function generete_tile(height_map, detial_map, lod) {
     var increment = (lod == 0) ? 1 : lod * 2
     var vertices_per_line = Math.floor(((height_map.width - 1) / increment) + 1)
     
-    console.log(vertices_per_line)
-    console.log(increment)
+    //console.log(vertices_per_line)
+    //console.log(increment)
 
     var map_size = vertices_per_line * vertices_per_line
 
