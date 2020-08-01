@@ -21,22 +21,22 @@ uniform vec3 SunLightPosition;
 		//AddShadow
 		AddDither
 	
-		//#if NUM_DIR_LIGHTS > 0
-		//	struct DirectionalLight 
-		//	{
-		//		vec3 color;
-		//		vec3 direction;
-		//		int shadow;
-		//		float shadowBias;
-		//		float shadowRadius;
-		//		vec2 shadowMapSize;
-		//	};
+		#if NUM_DIR_LIGHTS > 0
+			struct DirectionalLight 
+			{
+				vec3 color;
+				vec3 direction;
+				int shadow;
+				float shadowBias;
+				float shadowRadius;
+				vec2 shadowMapSize;
+			};
 //
-		//	uniform DirectionalLight directionalLights[ NUM_DIR_LIGHTS ];
-		//	uniform sampler2D directionalShadowMap[ NUM_DIR_LIGHTS ];
-		//	varying vec4 vDirectionalShadowCoord[ NUM_DIR_LIGHTS ];
-		//
-		//#endif
+			uniform DirectionalLight directionalLights[ NUM_DIR_LIGHTS ];
+			uniform sampler2D directionalShadowMap[ NUM_DIR_LIGHTS ];
+			varying vec4 vDirectionalShadowCoord[ NUM_DIR_LIGHTS ];
+		
+		#endif
 		void main()
 		{
 
@@ -75,16 +75,15 @@ uniform vec3 SunLightPosition;
 
 			vec4 tex = texture2D(texture, vUv);
 			
-			//vec3 lightFactor = vec3(0.0,0.0,1.0);
+			vec3 lightFactor = vec3(0.0,0.0,1.0);
 
 			vec4 final = max(ext, tex);
-			//vec3 ecToLight = normalize(directionalLights[0].direction);
-			
-			//float nDotL = max(0.0, dot(vecNormal.xyz, ecToLight));
 
-			//lightFactor =  directionalLights[0].color * nDotL; 
+			vec3 ecToLight = normalize(directionalLights[0].direction);
+			float nDotL = max(0.0, dot(vecNormal.xyz, ecToLight));
+			lightFactor =  directionalLights[0].color * nDotL; 
 
-			gl_FragColor = vec4(tex.xyz, 1.0); //* vec4(lightFactor, 0.65);// * light;
+			gl_FragColor = vec4(tex.xyz * lightFactor, 1.0); //* vec4(lightFactor, 0.65);// * light;
 
 
 			#ifdef USE_FOG

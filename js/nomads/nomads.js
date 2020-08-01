@@ -56,7 +56,7 @@ function game_bootstrap(data){
     
     //newobject1.transform.position = new THREE.Vector3(0,0,0);
     //newobject1.transform.scale = new THREE.Vector3(1,10.5,1);
-//
+    //
     //newobject2.transform.position = new THREE.Vector3(0,1,0);
     //newobject1.add_child(newobject2);
     for(var i = 0; i < Scene.length; i++){
@@ -113,7 +113,6 @@ function update(delta){
   
 
     //newobject1.transform.rotation.y += 0.05 * delta;
-
     //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();
 }

@@ -1,6 +1,4 @@
-
-
-function map_colors(index, map_data) {
+function map_rgba(index, map_data) {
     var red = map_data[(index * 4) + 0];
     var green = map_data[(index * 4) + 1];
     var blue = map_data[(index * 4) + 2];
@@ -15,7 +13,7 @@ function map_colors(index, map_data) {
  * @param {*} height_map 
  * @param {*} detial_map 
  * @param {*} size 
- */
+*/
 
 function generete_tile(height_map, detial_map, lod) {
 
@@ -52,7 +50,7 @@ function generete_tile(height_map, detial_map, lod) {
         
         var index = (x + (height_map.width) * y);
         
-        var map_data = map_colors(index, height_map.data);
+        var map_data = map_rgba(index, height_map.data);
 
         var height = 0;
     
@@ -71,7 +69,7 @@ function generete_tile(height_map, detial_map, lod) {
         }
         
         if(detial_map != undefined){
-            var detials = map_colors(index, detial_map.data);
+            var detials = map_rgba(index, detial_map.data);
 
             if(detials.g > 100){
                 circle_create(new THREE.Vector3((top_left_x + x), height, (top_left_z - y)), new quaternion())

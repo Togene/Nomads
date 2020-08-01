@@ -1,4 +1,4 @@
-var cycle_length = 24*2;
+var cycle_length = 24 * 3;
 var current_time = 0;
 var time = 0;
 var sky_index = 0;
@@ -60,5 +60,14 @@ function update_sky(delta){
         sky.transform.rotation = new quaternion(null,null,null,null, 
         new THREE.Vector3(1, 0, 0), (step));
     }
+
+    // TODO: find a better formula for this later on :|
+    var index_normal = ((raw_sky_index/sky_colors.length) + 0.25) % 1;
+    
+    if(index_normal > 0.5){
+        index_normal = Math.cos(index_normal + 0.5);
+    }
+
+    sun.intensity = Clamp(EasingFunctions.easeInOutCubic(index_normal) * 4.75, 0.05, 1);
 }
 

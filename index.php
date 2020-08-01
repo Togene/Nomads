@@ -10,6 +10,16 @@
 			<!-- THREE libs -->
 			<script src = "js/libs/stats.min.js"></script>
 			<script src = "js/libs/three.min.js"></script>
+			
+			<script src = "js/libs/EffectComposer.js"></script>
+			
+			<script src = "js/libs/ConvolutionShader.js"></script>
+			<script src = "js/libs/BloomPass.js"></script>
+			<script src = "js/libs/RenderPass.js"></script>
+		
+			<script src = "js/libs/CopyShader.js"></script>
+			<script src = "js/libs/ShaderPass.js"></script>
+			
 			<script src = "js/libs/PointerLockControls.js"></script>
 			
 			<script src = "js/nomads/global_variables.js"></script>
