@@ -46,9 +46,9 @@ function init(){
     composer.setSize( window.innerWidth,window.innerHeight);
     composer.addPass(renderScene)
     
-    var bloomPass = new THREE.BloomPass(0.6, 25, 12, 16);
+    var bloomPass = new THREE.BloomPass(0.6, 25, 125, 512);
     
-    composer.addPass(bloomPass);
+    //composer.addPass(bloomPass);
 
     var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
     composer.addPass(effectCopy);

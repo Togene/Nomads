@@ -62,8 +62,6 @@
 			<script src = "js/nomads/world/generator_utilities/noise_from_texture.js"></script>
 			<script src = "js/nomads/world/generator_utilities/regions.js"></script>
 
-
-
 			<script src = "js/nomads/creators/utils/yard_stick.js"></script>
 			<script src = "js/nomads/creators/utils/circle_test.js"></script>
 			<script src = "js/nomads/creators/utils/default.js"></script>
@@ -73,6 +71,7 @@
 			<script src = "js/nomads/creators/enviroment/tree_01.js"></script>
 			<script src = "js/nomads/creators/entities/lithy.js"></script>
 
+			<script src = "js/nomads/zone.js"></script>
 			<script src = "js/nomads/player.js"></script>
 			<script src = "js/nomads/collision.js"></script>
 			<script src = "js/nomads/physics.js"></script>

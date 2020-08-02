@@ -18,24 +18,30 @@ function shader_update(delta){
     }
 
     //object_shader_update(ANIMATED_SPRITES);
-    object_shader_update(ANIM_WORLD_OBJECTS);
+    object_shader_update(WORLD_ANIM_OBJECTS);
 }
 
 function object_shader_update(o){
     if (o != null) {
-        for (var i = 0; i < o.children.length; i++) {
-            if (o.children[i] != undefined) {
+        o.forEach(function(element){
+            element.material.uniforms.time.value = game_time;
+        });
+    }
+}
 
-                if(o.children[i].material != undefined){
-                    o.children[i].material.uniforms.time.value = game_time;
-                }
+function object_child_update(o){
+    for (var i = 0; i < o.children.length; i++) {
+        if (o.children[i] != undefined) {
 
-                if(o.children[i].children != undefined){
-                    for (var j = 0; j < o.children[i].children.length; j++) {
-                        
-                        if(o.children[i].children[j].material != undefined){
-                            o.children[i].children[j].material.uniforms.time.value = game_time;
-                        }
+            if(o.children[i].material != undefined){
+                o.children[i].material.uniforms.time.value = game_time;
+            }
+
+            if(o.children[i].children != undefined){
+                for (var j = 0; j < o.children[i].children.length; j++) {
+                    
+                    if(o.children[i].children[j].material != undefined){
+                        o.children[i].children[j].material.uniforms.time.value = game_time;
                     }
                 }
             }

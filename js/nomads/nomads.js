@@ -49,8 +49,6 @@ function game_bootstrap(data){
 
     //scene.add(cube1);
     //scene.add(cube2);
-    scene.add(SOLID_SPRITES);
-    scene.add(ANIMATED_SPRITES);
 
     console.log("%cgame initialized", 'color: #FF6438');
     
@@ -96,13 +94,14 @@ function game_update(delta){
     }
 
     collision_update(delta);
-    shader_update(delta);
     world_update(delta);
     update_sky(delta);
 
     setTimeout(function(){
         quadtree_testing(delta);
-    }, 10)
+    }, 10);
+
+    shader_update(delta);
 }
 
 function update(delta){
@@ -110,8 +109,6 @@ function update(delta){
         CAMERA_FRUSTUM.setFromMatrix( new THREE.Matrix4().multiplyMatrices( 
             camera.projectionMatrix, camera.matrixWorldInverse ));
     }
-  
-
     //newobject1.transform.rotation.y += 0.05 * delta;
     //cube1.matrix = newobject1.transform.get_transformation().toMatrix4();
     //cube2.matrix = newobject2.transform.get_transformation().toMatrix4();

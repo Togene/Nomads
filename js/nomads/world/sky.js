@@ -10,8 +10,16 @@ var step = 0;
 var sky_colors = [
     new THREE.Color( 0xEDA479), //Prime Morning
     new THREE.Color( 0x749AC5), //Prime Day
+    new THREE.Color( 0x749AC5), //Prime Day
+    new THREE.Color( 0x749AC5), //Prime Day
+    new THREE.Color( 0x749AC5), //Prime Day
     new THREE.Color( 0xEDA479), //Prime Morning
-    new THREE.Color( 0xAC98D3) // Prime Night
+    new THREE.Color( 0xEDA479), //Prime Morning
+    new THREE.Color( 0xAC98D3), // TRANS Night
+    new THREE.Color( 0x292965), // Prime Night
+    new THREE.Color( 0x170C2E), // Night Tip
+    new THREE.Color( 0x170C2E), // Prime Night
+    new THREE.Color( 0xAC98D3), // TRANS Night
 ];
 
 function sky_init(){
@@ -40,6 +48,9 @@ function update_sky(delta){
     time += delta; 
     current_time = (time % cycle_length);
     
+    ingame_time = (current_time/cycle_length) * 24;
+    //console.log(game_time);
+
     var raw_sky_index = normalize(0, cycle_length, current_time) * sky_colors.length;
 
     sky_index = Math.floor(raw_sky_index);

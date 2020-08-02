@@ -18,7 +18,7 @@ function map_rgba(index, map_data) {
 function generete_tile(height_map, detial_map, lod) {
 
     if (lod > 6 || lod < 0) {
-        console.error("LOD must be between 1 - 6");
+        console.error("LOD must be between 0 - 6");
         lod = 1;
     }
 
@@ -108,7 +108,7 @@ function generete_tile(height_map, detial_map, lod) {
         
         vertex_index ++;
     }
-
+    console.log(vertices.length)
     player.transform.position.y = max_height
     player.get_component("rigidbody").reset_height = max_height + player.transform.scale.y*2.5;
 
