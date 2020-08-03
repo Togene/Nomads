@@ -48,13 +48,11 @@ function init(){
     
     var bloomPass = new THREE.BloomPass(0.6, 25, 125, 512);
     
-    //composer.addPass(bloomPass);
+    composer.addPass(bloomPass);
 
     var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
     composer.addPass(effectCopy);
     effectCopy.renderToScreen = true;
-
-    
 
     create_mini_map()
 

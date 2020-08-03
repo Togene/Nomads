@@ -110,5 +110,18 @@
         "map_key" : "sky",
         "tile_size" : {"x":1, "y":1},
         "skip_occlusion" : true
+    },
+    "star" : {
+        "mapping" : [{"x":0, "y":0}],
+        "frames" :  {"x":1, "y":1},
+        "colors" : ["0xFFFFFF", "0xFFEDB4", "0xFFB8EA", "0xB9CEFB", "0xDFAEFF"],
+        "transform" : {
+            "position" : {"x":0, "y":100, "z":0},
+            "orient" : {"x":0, "y":0, "z":0, "w":1},
+            "scale" : {"x":1, "y":1, "z":1}
+        },
+        "map_key" : "sky",
+        "tile_size" : {"x":1, "y":1},
+        "skip_occlusion" : true
     }
 }

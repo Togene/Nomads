@@ -57,7 +57,7 @@ instance_buffer.prototype.prefill = function(){
         this.orientations.push(0,0,0,1);
         this.vector =  new THREE.Vector4();
         this.scales.push(0,0,0);
-        this.colors.push(0,0,0);
+        this.colors.push(0,0,0,1);
         this.uvoffsets.push(0,0);
         this.tile_size.push(0,0);
         this.animation_start.push(0);
@@ -117,7 +117,8 @@ instance_buffer.prototype.set = function(decomposer, animation){
     this.colors[this.index] = col.r;
     this.colors[this.index + 1] = col.g;
     this.colors[this.index + 2] = col.b;
-
+    this.colors[this.index + 3] = col.a;
+ 
     var uvs = decomposer.ssIndex[randomRangeRound(0, decomposer.ssIndex.length - 1)];
     this.uvoffsets[this.index] = uvs.x;
     this.uvoffsets[this.index + 1] = uvs.x;
@@ -195,8 +196,8 @@ instance_buffer.prototype.append = function(decomposer, animation){
         decomposer.orient.w);
 
     var col = decomposer.colors[randomRangeRound(0, decomposer.colors.length - 1)];
-    this.colors.push(col.r, col.g, col.b);
-
+    this.colors.push(col.r, col.g, col.b, col.a);
+  
     var uvs = decomposer.ssIndex[randomRangeRound(0, decomposer.ssIndex.length - 1)];
 
     this.uvoffsets.push(uvs.x, uvs.y);
@@ -268,7 +269,7 @@ instance_renderer.prototype.bake_buffer = function() {
   
     //var translationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.translation), 3);
     var orientationAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.orientations), 4);
-    var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.colors), 3);
+    var colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.colors), 4);
     var uvOffsetAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.uvoffsets), 2);
     var tileSizeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.tile_size), 2);
     var scaleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(this.buffer.scales), 3);

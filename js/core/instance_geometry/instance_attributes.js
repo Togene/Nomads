@@ -77,9 +77,10 @@ instance_attributes.prototype.set = function(decomposer){
     this.set_fog(index, decomposer.fog);
 
     var col = decomposer.colors[randomRangeRound(0, decomposer.colors.length - 1)];
-    var col_vector = new THREE.Vector3(col.r, col.g, col.b);
+    var col_vector = new THREE.Vector4(col.r, col.g, col.b, 1.0);
 
     this.set_color(index, col_vector)
+
     this.set_transform(index, decomposer.matrix)
 
     decomposer.buffer_idx = index;
@@ -87,7 +88,6 @@ instance_attributes.prototype.set = function(decomposer){
 
 instance_attributes.prototype.unset = function(index){
     //console.log("attributes being reset?", index)
-
     this.set_uvoffset(index, new THREE.Vector2(0,0));
     this.set_tile_size(index, new THREE.Vector2(0,0));
 
@@ -139,7 +139,12 @@ instance_attributes.prototype.set_fog = function(index, fog){
 }
 
 instance_attributes.prototype.set_color = function(index, col){
-    this.col.setXYZ(index, col.x, col.y, col.z);
+    this.col.setXYZW(index, col.x, col.y, col.z, col.w);
+    this.col.needsUpdate = true;
+}
+
+instance_attributes.prototype.set_alpha = function(index, alpha){
+    this.col.setW(index, alpha);
     this.col.needsUpdate = true;
 }
 

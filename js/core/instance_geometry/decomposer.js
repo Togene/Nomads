@@ -17,7 +17,6 @@ function particle(meta, pass_transform){
     return new decomposer(meta, PARTICLE, pass_transform)
 }
 
-
 function decomposer(meta, type, pass_transform){
     if(meta == undefined){ 
         meta = get_meta().default
@@ -105,6 +104,12 @@ decomposer.prototype.attribute_debug = function(){
 decomposer.prototype.set_color = function(hex){
     if(this.attributes_refrence != null){
         this.attributes_refrence.set_color(this.buffer_idx, hex)
+    }
+}
+
+decomposer.prototype.set_alpha = function(alpha){
+    if(this.attributes_refrence != null){
+        this.attributes_refrence.set_alpha(this.buffer_idx, alpha)
     }
 }
 

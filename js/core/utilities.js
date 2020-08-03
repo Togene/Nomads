@@ -41,11 +41,6 @@ function distanceXY(x0, y0, x1, y1) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
-function Clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-};
-
-
 function circlePointCollision(x, y, vec, rad) {
     return distanceXY(x, y, vec.x, vec.y) < rad;
 }

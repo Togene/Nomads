@@ -1,7 +1,7 @@
 		precision highp float;
 		uniform sampler2D map;
 		varying vec2 vUv;
-		varying vec3 colorPass;
+		varying vec4 colorPass;
 
 		uniform vec3 fogColor;
 		uniform float fogNear;
@@ -87,7 +87,7 @@
 			if (tex.a < 1.0) 
 			discard;
 			
-			gl_FragColor = (tex * vec4(colorPass, 1.0));
+			gl_FragColor = (tex * vec4(colorPass));
 
 			if(fog_pass == 1.0)
 			{

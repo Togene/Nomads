@@ -81,16 +81,16 @@ const raw_resources = [
         "land_shader", 
         "s", 
         new shader_resource(
-            'js/Shaders/Land/Land.vs.glsl',
-            'js/Shaders/Land/Land.fs.glsl',
+            'js/Shaders/land/land.vs.glsl',
+            'js/Shaders/land/land.fs.glsl',
             {wf:false, trans:true, anim:false}  
         )),
     new raw_resource(
-        "Water_Shader", 
+        "water_Shader", 
         "s", 
         new shader_resource(
-            'js/Shaders/Water/Water.vs.glsl',
-            'js/Shaders/Water/Water.fs.glsl',
+            'js/Shaders/water/water.vs.glsl',
+            'js/Shaders/water/water.fs.glsl',
             {wf:false, trans:true, anim:true}  
         )),
     new raw_resource(

@@ -7,7 +7,7 @@
 		//attribute vec3 translation;
 		attribute vec4 orientation;
 		attribute vec3 scale;
-		attribute vec3 col;
+		attribute vec4 col;
 		attribute vec2 uv;
 		attribute vec2 uvoffset;
 		attribute vec2 tile_size;
@@ -35,7 +35,7 @@
 		varying float animation_end_pass;
 		varying float animation_time_pass;
 
-		varying vec3 colorPass;
+		varying vec4 colorPass;
 		varying vec2 uvoffsetPass;
 		varying vec2 spritesheetsizePass;
 
@@ -153,7 +153,7 @@
 			vUv = vec2(((uv.x/spriteSheetX) + (uvoffset.x)) * tile_size.x, ((uv.y/spriteSheetY) + (uvoffset.y)) * tile_size.y);
 
 
-			colorPass = col.rgb;
+			colorPass = col;
 
 			//animationframePass = animationFrame;
 			uvoffsetPass = uvoffset;
