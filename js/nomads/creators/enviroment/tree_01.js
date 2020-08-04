@@ -7,13 +7,11 @@ function tree_01_create(p, q){
     create_face(45, tree);
     create_face(135, tree);
 
-    leaves = new gameobject("leaves", new THREE.Vector3(0, 1.6, 0));
+    leaves = new gameobject("leaves", new THREE.Vector3(0, 1.6, 0), new THREE.Vector3(2, 2, 2));
     tree.add_child(leaves);
 
-    leaves.add_component(new decomposer(
+    leaves.add_component(new sprite(
         get_meta().tree_01.leaves,
-        SPRITE,
-        TREE_RENDERER,
     ));
 
     return tree;
@@ -31,10 +29,8 @@ function create_face(y_rot, tree){
     root.transform.rotation = new quaternion(0, 0, 0, 1, 
         new THREE.Vector3(0, 1, 0), dag_to_rad(y_rot));
 
-    root.add_component(new decomposer(
+    root.add_component(new solid(
         get_meta().tree_01.root,
-        SOLID,
-        TREE_RENDERER,
         new pass_transforms(
             root.transform.get_transformed_position(), 
             root.transform.get_transformed_rotation(), 
@@ -44,10 +40,8 @@ function create_face(y_rot, tree){
 
     trunk.transform.position = new THREE.Vector3(0, pixel*3, 0);
 
-    trunk.add_component(new decomposer(
+    trunk.add_component(new solid(
         get_meta().tree_01.trunk,
-        SOLID,
-        TREE_RENDERER,
         new pass_transforms(
             trunk.transform.get_transformed_position(), 
             trunk.transform.get_transformed_rotation(),  
@@ -57,10 +51,8 @@ function create_face(y_rot, tree){
 
     branch.transform.position = new THREE.Vector3(0, 1, 0);
 
-    branch.add_component(new decomposer(
+    branch.add_component(new solid(
         get_meta().tree_01.branch,
-        SOLID,
-        TREE_RENDERER,
         new pass_transforms(
             branch.transform.get_transformed_position(),
             branch.transform.get_transformed_rotation(),  

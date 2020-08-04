@@ -70,12 +70,12 @@ function init(){
 
 function animate(){
     
-    setTimeout( function() {
+   // setTimeout( function() {
         stats.begin();
             requestAnimationFrame(animate);
             game_update(clock.getDelta());
         stats.end();
-    }, 1000 / 60)
+  //  }, 1000 / 60)
 
     //renderer.render( scene, camera);
     composer.render();

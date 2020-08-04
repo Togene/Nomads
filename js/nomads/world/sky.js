@@ -53,7 +53,7 @@ function sky_init(){
    moon.get_component("decomposer").set_alpha(0.5);
 
    var stars = new gameobject("stars", new THREE.Vector3(0,0,0), new THREE.Vector3(1, 1, 1), new quaternion(0,0,0,1));
-   genenerate_stars(stars)
+   //genenerate_stars(stars)
    sky.add_child(stars);
 }
 

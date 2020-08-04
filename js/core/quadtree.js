@@ -104,6 +104,11 @@ function quad_tree(boundary, capacity){
     this.divided = false;
 
     this.visule = this.visulize();
+
+    this.box_bound = new THREE.Box3(
+        new THREE.Vector3(this.boundary.x - this.boundary.w, 0.1, this.boundary.y - this.boundary.h),
+        new THREE.Vector3(this.boundary.x + this.boundary.w, 0.1, this.boundary.y + this.boundary.h))
+
 }
 
 quad_tree.prototype.visulize = function(){
@@ -177,52 +182,19 @@ quad_tree.prototype.query = function(range, found, raycaster){
         }
     } else {
         // bounding "box" of the quad-tree section
-        var bound = new THREE.Box3(
-            new THREE.Vector3(this.boundary.x - this.boundary.w, 0.1, this.boundary.y - this.boundary.h),
-            new THREE.Vector3(this.boundary.x + this.boundary.w, 0.1, this.boundary.y + this.boundary.h))
-
-        this.objects.sort(function(a,b){
-            var ad = camera.position.distanceToSquared(a.pos);
-            var bd = camera.position.distanceToSquared(b.pos);
-            return ad-bd
-        });
+       
+        //this.objects.sort(function(a,b){
+        //    var ad = camera.position.distanceToSquared(a.pos);
+        //    var bd = camera.position.distanceToSquared(b.pos);
+        //    return ad-bd
+        //});
 
         // if quad section is within the frustrum, check the points inside
-        if(range.intersectsBox(bound)){
+        if(range.intersectsBox(this.box_bound)){
             for(var i = 0; i < this.objects.length; i++){
+                Scene[this.objects[i].id].get_component("decomposer").render();
                 if(range.containsPoint(Scene[this.objects[i].id].transform.get_transformed_position())){
-
-                    var position = Scene[this.objects[i].id].transform.position;
-
-                    var raycaster_set = new THREE.Vector3(position.x, position.y, position.y);
-
-                    var direction =  camera.position.clone().sub(raycaster_set).normalize()
-                    raycaster.set(raycaster_set, direction)
-
-                    if(found.length == 0) {
-
-                        //var intersections = raycaster.intersectObjects(WORLD_OCCLUSION_ARRAY);
-
-                        //if(intersections[0] == undefined) {
-                            handle_object(this.objects[i], found);
-                       // }
-                    } else {
-                        
-                        notOccluded = true;
-                    
-                        for(var j = 0; j < found.length; j++) {
-                            if(raycaster.ray.intersectsBox(found[j].box)){
-                                notOccluded = false;
-                                break;
-                            }
-                        }
-
-                        //var intersections = raycaster.intersectObjects(WORLD_OCCLUSION_ARRAY);
-                        //&& intersections[0] == undefined
-                        //if (notOccluded) {
-                            handle_object(this.objects[i], found);
-                        //}
-                    }
+                    Scene[this.objects[i].id].get_component("decomposer").render();
                 }
             }
         }
@@ -236,31 +208,6 @@ quad_tree.prototype.query = function(range, found, raycaster){
     }
 
     return found;
-}
-
-
-function handle_object(o, found){
-    //var d = camera.position.distanceToSquared(o.pos);
-    if(!object_exists(o.id, found)){
-        Scene[o.id].get_component("decomposer").render();
-        var offset = 0.7
-
-        var box = new THREE.Box3(
-            new THREE.Vector3(o.pos.x-offset, o.pos.y-offset, o.pos.z-offset),
-            new THREE.Vector3(o.pos.x+offset, o.pos.y+offset, o.pos.z+offset),
-        )
-        //var box_helper = new THREE.Box3Helper( box, 0xffff00 );
-
-        //scene.add(box_helper)
-
-        found.push(
-            {
-                id: o.id,
-                box: box,
-               // box_helper:box_helper
-            }
-        );
-    }
 }
 
 function object_exists(id, array) {

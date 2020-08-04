@@ -31,7 +31,7 @@ function game_bootstrap(data){
             camera.projectionMatrix, camera.matrixWorldInverse ));
 
     TestQuadTree = new quad_tree(
-        new rectangle(-5000, -5000, 10000, 10000), 25
+        new rectangle(-5000, -5000, 10000, 10000), 5
     )
     
     game_resources = data;
@@ -115,13 +115,10 @@ function update(delta){
 }
 
 function quadtree_testing(delta){
-    for(var i = 0; i < found.length; i++){
-        Scene[found[i].id].get_component("decomposer").derender()
-        //scene.remove(found[i].box_helper)
-    }
+    //console.log(found.length)
 
     found = []
-
+    
     var raycaster = new THREE.Raycaster(
         new THREE.Vector3(0,0,0), 
         new THREE.Vector3(0,0,0), 0, 1000);

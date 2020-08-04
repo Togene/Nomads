@@ -16,7 +16,6 @@ function map_rgba(index, map_data) {
 */
 
 function generete_tile(height_map, detial_map, lod) {
-
     if (lod > 6 || lod < 0) {
         console.error("LOD must be between 0 - 6");
         lod = 1;
@@ -28,9 +27,6 @@ function generete_tile(height_map, detial_map, lod) {
     var increment = (lod == 0) ? 1 : lod * 2
     var vertices_per_line = Math.floor(((height_map.width - 1) / increment) + 1)
     
-    //console.log(vertices_per_line)
-    //console.log(increment)
-
     var map_size = vertices_per_line * vertices_per_line
 
     var vertices = [(map_size) * 3]
@@ -49,7 +45,6 @@ function generete_tile(height_map, detial_map, lod) {
         for(var x = 0; x < height_map.width; x+= increment){
         
         var index = (x + (height_map.width) * y);
-        
         var map_data = map_rgba(index, height_map.data);
 
         var height = 0;
@@ -72,7 +67,7 @@ function generete_tile(height_map, detial_map, lod) {
             var detials = map_rgba(index, detial_map.data);
 
             if(detials.g > 100){
-                circle_create(new THREE.Vector3((top_left_x + x), height, (top_left_z - y)), new quaternion())
+                tree_01_create(new THREE.Vector3((top_left_x + x), height, (top_left_z - y)), new quaternion())
             } else {
                
             }
@@ -108,7 +103,7 @@ function generete_tile(height_map, detial_map, lod) {
         
         vertex_index ++;
     }
-    console.log(vertices.length)
+    //console.log(vertices.length)
     player.transform.position.y = max_height
     player.get_component("rigidbody").reset_height = max_height + player.transform.scale.y*2.5;
 
