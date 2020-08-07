@@ -148,6 +148,11 @@ instance_attributes.prototype.set_alpha = function(index, alpha){
     this.col.needsUpdate = true;
 }
 
+instance_attributes.prototype.set_type = function(index, type){
+    this.type.setX(index, type);
+    this.type.needsUpdate = true;
+}
+
 instance_attributes.prototype.set_animation = function(index, s, e, t) {
     this.animation_start.setX  (index, s);
     this.animation_end.setX  (index, e);

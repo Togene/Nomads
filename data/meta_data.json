@@ -41,7 +41,8 @@
                 "orient" : {"x":0, "y":0, "z":0, "w":1},
                 "scale" : {"x":2, "y":2, "z":2}
             },
-            "map_key" : "trees"
+            "map_key" : "trees",
+            "skip_occlusion" : true
             
         },
         "root" : {
@@ -53,7 +54,8 @@
                 "orient" : {"x":0, "y":0, "z":0, "w":1},
                 "scale" : {"x":1, "y":1, "z":1}
             },
-            "map_key" : "trees"
+            "map_key" : "trees",
+            "skip_occlusion" : true
             
         },
         "trunk" : {
@@ -65,7 +67,8 @@
                 "orient" : {"x":0, "y":0, "z":0, "w":1},
                 "scale" : {"x":1, "y":1, "z":1}
             },
-            "map_key" : "trees"
+            "map_key" : "trees",
+            "skip_occlusion" : true
          
         },
         "branch" : {
@@ -77,7 +80,8 @@
                 "orient" : {"x":0, "y":0, "z":0, "w":1},
                 "scale" : {"x":1, "y":1, "z":1}
             },
-            "map_key" : "trees"
+            "map_key" : "trees",
+            "skip_occlusion" : true
            
         }
     },

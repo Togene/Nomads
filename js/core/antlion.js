@@ -27,9 +27,10 @@ function load_renderers(){
     for(var i = 0; i < renderer_text_info.length; i++){
         var inst_renderer = new instance_renderer(
             i,
-            renderer_text_info[i].container = new THREE.Object3D(),
+            renderer_text_info[i].container,
             renderer_text_info[i].animate,
-            renderer_text_info[i].is3D
+            renderer_text_info[i].is3D,
+            get_data(renderer_text_info[i].shader),
         );
     
         renderers.set(renderer_text_info[i].name, inst_renderer);
@@ -105,9 +106,10 @@ function antlion_done(i, data){
     compiled_data.push(data);
     elapsed_time = Date.now() - async_time;
 
-    // start up init after data loaded
+    // loading renderers here as they need textures/shaders loaded first
     load_renderers();
-    
+
+    // start up init after data loaded
     game_bootstrap(compiled_data);
 }
 

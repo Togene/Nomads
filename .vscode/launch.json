@@ -13,7 +13,7 @@
             "runtimeArgs": [
                 "--disk-cache-size=1"
               ],
-
+            "disableNetworkCache" : true
             
         }
     ],

@@ -1,9 +1,19 @@
-function instance_renderer(map_index, mesh, animate, is3D = false) {
+function instance_renderer(map_index, mesh, animate, is3D = false, shader) {
     this.buffer = new instance_buffer(true);
     this.attributes = new instance_attributes();
     this.mesh = mesh;
     this.map_index = map_index;
-    this.shader = get_data("instance_shader");
+    
+    this.shader = null;
+
+    if(shader == undefined){
+        //console.warn("shader not found, using defualt!")
+        this.shader = get_data("instance_shader");
+    } else {
+        this.shader = shader;
+    }
+
+    
     this.animate = animate;
     this.is3D = is3D
 }

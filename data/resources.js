@@ -4,45 +4,52 @@ const renderer_text_info = [
         map:'img/sprite_sheets/critters.png', 
         animate:true, 
         is3D:false, 
-        container: new THREE.Object3D()
+        container : new THREE.Object3D(), 
+        shader: ""
     },
     {
         name: "trees", 
         map:'img/sprite_sheets/trees.png', 
         animate:false, 
         is3D:false, 
-        container: new THREE.Object3D()},
+        container : new THREE.Object3D(), 
+        shader: ""},
     {
         name: "sky", 
         map:'img/sprite_sheets/sky.png', 
         animate:false, 
         is3D:false, 
-        container: new THREE.Object3D()
+        container : new THREE.Object3D(), 
+        shader: ""
     },
     {
         name: "structures", 
         map:'img/sprite_sheets/structures.png', 
         animate:false, 
         is3D:false,
-        container: new THREE.Object3D()},
+        container : new THREE.Object3D(), 
+        shader: ""},
     {
         name: "lithies", 
         map:'img/sprite_sheets/lithies.png', 
         animate:true, 
         is3D:true, 
-        container: new THREE.Object3D()},
+        container : new THREE.Object3D(), 
+        shader: ""},
     {
         name: "debug", 
         map:'img/sprite_sheets/debug.png', 
         animate:false, 
         is3D:false, 
-        container: new THREE.Object3D()},
+        container : new THREE.Object3D(), 
+        shader: ""},
     {
         name: "multi_test", 
         map:'img/sprite_sheets/multi_test.png', 
         animate:true, 
-        is3D:true, 
-        container: new THREE.Object3D()
+        is3D:true,
+        container : new THREE.Object3D(), 
+        shader: ""
     },
 ];
 
@@ -75,6 +82,14 @@ const raw_resources = [
         new shader_resource(
             'js/shaders/instance/instance.vs.glsl',
             'js/shaders/instance/instance.fs.glsl',
+            {wf:false, trans:false, anim:false} 
+        )),
+    new raw_resource(
+        "tree_shader", 
+        "s", 
+        new shader_resource(
+            'js/shaders/tree/tree.vs.glsl',
+            'js/shaders/tree/tree.fs.glsl',
             {wf:false, trans:true, anim:false} 
         )),
     new raw_resource(

@@ -192,9 +192,22 @@ quad_tree.prototype.query = function(range, found, raycaster){
         // if quad section is within the frustrum, check the points inside
         if(range.intersectsBox(this.box_bound)){
             for(var i = 0; i < this.objects.length; i++){
-                Scene[this.objects[i].id].get_component("decomposer").render();
-                if(range.containsPoint(Scene[this.objects[i].id].transform.get_transformed_position())){
-                    Scene[this.objects[i].id].get_component("decomposer").render();
+
+                var batch = Scene[this.objects[i].id].get_component("batch_decomposer");
+
+                if(batch != undefined){
+                    batch.derender();
+                }
+
+                var object_pos = Scene[this.objects[i].id].transform.get_transformed_position();
+
+                if(range.containsPoint(object_pos)){
+                    if(batch != undefined){
+                        batch.render(
+                            camera.position.distanceToSquared(object_pos)
+                        );
+                    }
+                   
                 }
             }
         }

@@ -113,6 +113,16 @@ decomposer.prototype.set_alpha = function(alpha){
     }
 }
 
+decomposer.prototype.set_type = function(type){
+    if(type < 0 || type > 3){
+        console.error("type must be in range 0 - 3");
+        return
+    }
+    if(this.attributes_refrence != null){
+        this.attributes_refrence.set_type(this.buffer_idx, type)
+    }
+}
+
 decomposer.prototype.set_parent = function(p){
     this.parent = p;
 }
@@ -131,13 +141,16 @@ decomposer.prototype.set_transform = function(t){
             this.parent.id
             ))
     } else {
-        this.attributes_refrence.set(this);
+        //this.attributes_refrence.set(this);
     }
- 
 }
 
-decomposer.prototype.render = function(){
+decomposer.prototype.render = function(type){
     if(!this.rendering){
+        if(type != undefined){
+            this.set_type(type);
+        }
+        
         this.attributes_refrence.set(this)
         this.rendering = true;
     }

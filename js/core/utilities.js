@@ -30,6 +30,8 @@ function array_map_to_ss(a){
     return ss;
 }
 //map to Sprite Shader Texture Index
+
+//2 ^ 8 = 256 
 function MapToSS(x, y) {
     return new THREE.Vector2((1 / 8) * x, (1 / 8) * y);
 }

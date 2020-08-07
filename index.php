@@ -29,6 +29,7 @@
 			<script src = "js/core/instance_geometry/instance_buffer.js"></script>
 			<script src = "js/core/instance_geometry/instance_attributes.js"></script>
 			<script src = "js/core/instance_geometry/decomposer.js"></script>
+			<script src = "js/core/instance_geometry/batch_decomposer.js"></script>
 			<!--                 INSTANCE GEOMETRY                       -->
 
 			<script src = "data/dither.js"></script>
