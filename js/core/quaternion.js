@@ -25,6 +25,7 @@ quaternion.prototype.constructor_matrix = function(rot){
             var trace = rot.get(0, 0) + rot.get(1, 1) + rot.get(2, 2);
 
             if(trace > 0){
+               
                var s = 0.5 / Math.sqrt(trace + 1.0);
                this.w = 0.25 / s;
                this.x = (rot.get(1, 2) - rot.get(2, 1)) * s;

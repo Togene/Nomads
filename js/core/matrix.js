@@ -70,6 +70,7 @@ matrix.prototype.init_rotation = function(x, y, z){
 }
 
 matrix.prototype.init_rotation_fur = function(forward, up, right){
+    
     var f = forward.clone();
     var r = right.clone();
     var u = up.clone();
@@ -100,6 +101,8 @@ matrix.prototype.transform = function(r){
         this.m[2][0] * r.x + this.m[2][1] * r.y + this.m[2][2] * r.z + this.m[2][3],
     );
 }
+
+
 
 matrix.prototype.get = function(x, y){return this.m[x][y];};
 matrix.prototype.set = function(x, y, v){this.m[x][y] = v;};

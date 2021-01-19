@@ -155,7 +155,7 @@ function get_meta(){
 }
 
 // Credit to THeK3nger - https://gist.github.com/THeK3nger/300b6a62b923c913223fbd29c8b5ac73
-// Sorry to any soul that bare's witness to this Abomination....May the gods have mercy on me
+//Sorry to any soul that bare's witness to this Abomination....May the gods have mercy on me
 function shader_loader(name, vertex_url, fragment_url, onLoad, custom, i, onProgress, onError) {
     var vertex_loader = new THREE.FileLoader(THREE.DefaultLoadingManager);
     vertex_loader.setResponseType('text');
