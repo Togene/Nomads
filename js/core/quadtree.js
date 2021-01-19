@@ -2,9 +2,6 @@
 // http://codingtra.in
 // http://patreon.com/codingtrain
 
-
-
-
 //Quad Tree Responsible for Checking for nearby objects
 function rectangle(x, y, w, h){
     this.x = x; // CENTER X
@@ -106,8 +103,10 @@ function quad_tree(boundary, capacity){
     this.visule = this.visulize();
 
     this.box_bound = new THREE.Box3(
-        new THREE.Vector3(this.boundary.x - this.boundary.w, 0.1, this.boundary.y - this.boundary.h),
-        new THREE.Vector3(this.boundary.x + this.boundary.w, 0.1, this.boundary.y + this.boundary.h))
+        new THREE.Vector3(this.boundary.x - 
+            this.boundary.w, 0.1, this.boundary.y - this.boundary.h),
+        new THREE.Vector3(this.boundary.x + 
+            this.boundary.w, 0.1, this.boundary.y + this.boundary.h))
 
 }
 
@@ -257,7 +256,6 @@ quad_tree.prototype.closest = function(o, count, maxDistance){
     }
 
     //Binary search with circle queries
-
     var inner = 0;
     var outer = maxDistance;
     var limit = 8; //limit to avoid infinite loops caused by ties
@@ -324,7 +322,7 @@ quad_tree.prototype.merge = function(other, capacity){
 quad_tree.prototype.length = function(){
     var count = this.objects.length;
 
-    if(this.divided){
+    if(this.divided){ 
         count += this.northwest.length;
         count += this.northeast.length;
         count += this.southwest.length;

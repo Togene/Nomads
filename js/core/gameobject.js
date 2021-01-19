@@ -80,7 +80,7 @@ gameobject.prototype.add_requirements = function(c){
 gameobject.prototype.information = function(){
     console.log("Object:", this);
     console.log("Transform: ", this.transform);
-}
+} 
 
 gameobject.prototype.get_component = function(n){
     var components = [];

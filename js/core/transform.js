@@ -67,15 +67,15 @@ transform.prototype.get_parent_inverse_matrix = function(){
 }
 
 transform.prototype.update = function(delta){
-        if(this.old_position != null) {
-            this.old_position.set(this.position.x, this.position.y, this.position.z);
-            this.old_scale.set(this.scale.x, this.scale.y, this.scale.z);
-            this.old_rotation.set(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w);
-        } else {
-            this.old_position = new THREE.Vector3(this.position.x + 1, this.position.y + 1, this.position.z + 1);
-            this.old_scale = new THREE.Vector3(this.scale.x * 0.5, this.scale.y * 0.5, this.scale.z * 0.5);
-            this.old_rotation = new quaternion(this.rotation.x + 1, this.rotation.y + 1, this.rotation.z + 1,  this.rotation.w + 1);
-        }
+    if(this.old_position != null) {
+        this.old_position.set(this.position.x, this.position.y, this.position.z);
+        this.old_scale.set(this.scale.x, this.scale.y, this.scale.z);
+        this.old_rotation.set(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w);
+    } else {
+        this.old_position = new THREE.Vector3(this.position.x + 1, this.position.y + 1, this.position.z + 1);
+        this.old_scale = new THREE.Vector3(this.scale.x * 0.5, this.scale.y * 0.5, this.scale.z * 0.5);
+        this.old_rotation = new quaternion(this.rotation.x + 1, this.rotation.y + 1, this.rotation.z + 1,  this.rotation.w + 1);
+    }
 }
 
 transform.prototype.rotate = function(ax, an){

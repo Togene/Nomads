@@ -3,15 +3,15 @@ function tree_01_create(p, q){
     new THREE.Vector3 (p.x, p.y + .5, p.z), 
     new THREE.Vector3(1,1,1), q);
 
-    tree.add_component( new batch_decomposer());
+    tree.add_component( new decomposer());
 
-    var face0_batch = new batch_decomposer();
+    var face0_batch = new decomposer();
     create_face(0, tree,  face0_batch);
 
-    var face1_batch = new batch_decomposer();
+    var face1_batch = new decomposer();
     create_face(45, tree,  face1_batch);
 
-    var face2_batch = new batch_decomposer();
+    var face2_batch = new decomposer();
     create_face(135, tree,  face2_batch);
 
     leaves = new gameobject("leaves", new THREE.Vector3(0, 1.6, 0), 
@@ -23,18 +23,11 @@ function tree_01_create(p, q){
     );
     leaves.add_component(leaves_decomp);
 
-    face0_batch.push(leaves_decomp)
-    tree.get_component("batch_decomposer").push(face0_batch);
-    tree.get_component("batch_decomposer").push(face1_batch);
-    tree.get_component("batch_decomposer").push(face2_batch);
-
-    tree.get_component("batch_decomposer").set_head(true);
-
     return tree;
 }
 
 
-function create_face(y_rot, tree, batch){
+function create_face(y_rot, tree){
     var root = new gameobject("root");
     var trunk = new gameobject("trunk");
     var branch = new gameobject("branch");
@@ -55,7 +48,7 @@ function create_face(y_rot, tree, batch){
         )
     )
     root.add_component(root_decomp);
-    batch.push(root_decomp);
+    //batch.push(root_decomp);
 
     trunk.transform.position = new THREE.Vector3(0, pixel*3, 0);
 
@@ -69,7 +62,7 @@ function create_face(y_rot, tree, batch){
     );
 
     trunk.add_component(trunk_decomp);
-    batch.push(trunk_decomp);
+    //batch.push(trunk_decomp);
 
     branch.transform.position = new THREE.Vector3(0, 1, 0);
 
@@ -83,7 +76,7 @@ function create_face(y_rot, tree, batch){
     );
 
     branch.add_component(branch_decomp);
-    batch.push(branch_decomp);
+    //batch.push(branch_decomp);
     
     return branch.transform.get_transformed_position().y;
 }
